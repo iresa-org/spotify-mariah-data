@@ -25,14 +25,14 @@ jobs:
     - name: Install and Build
       run: |
           npm install --legacy-peer-deps
-          npm run build
+          npm run build -- --base-href 'https://${{github.actor}}.github.io/${{ github.event.repository.name }}/'
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages
-          FOLDER: dist/${{ github.event.repository.name }}
+          FOLDER: dist/${{ github.event.repository.name }}/browser
 
         
 
