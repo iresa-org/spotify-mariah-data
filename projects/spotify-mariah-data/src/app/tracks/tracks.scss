@@ -1,16 +1,19 @@
-table {
-    border-collapse: collapse;
+table.table-striped {
+    border-collapse: separate;
     width: 100%;
 
     tr {
         text-align: left;
-        border-bottom: 1px solid black;
-        padding: 2px 16px;
     }
 
     th,
     td {
-        padding: 2px 16px;
+        padding: 4px;
+    }
+
+    tbody tr:nth-child(odd) td,
+    tbody tr:nth-child(odd) th {
+        background-color: #f9f9f9;
     }
 }
 
@@ -55,6 +58,59 @@ table {
                 color: black;
                 text-decoration: none;
             }
+        }
+    }
+}
+
+@media only screen and (max-width: 800px) {
+
+    /* Force table to not be like tables anymore */
+    table.table-striped {
+
+        thead,
+        tbody,
+        th,
+        td,
+        tr {
+            display: block;
+        }
+
+
+        /* Hide table headers (but not display: none;, for accessibility) */
+        thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+
+
+        td {
+            /* Behave  like a "row" */
+            border: none;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            padding-left: 30%;
+            white-space: normal;
+            text-align: left;
+        }
+
+        td:before {
+            /* Now like a table header */
+            position: absolute;
+            /* Top/left values mimic padding */
+            left: 4px;
+            width: 45%;
+            padding-right: 8x;
+            white-space: nowrap;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        /*
+	Label the data
+	*/
+        td:before {
+            content: attr(data-title);
         }
     }
 }

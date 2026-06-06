@@ -1,18 +1,20 @@
-<table>
-    <tr>
-        <th style="width:64px">#</th>
-        <th>Name</th>
-        <th>Play Count</th>
-        <th>Change</th>
-    </tr>
-
-    @for (item of albums; track $index) {
-
-    <tr class="item">
-        <td>{{$index + 1}}</td>
-        <td>{{item.name}}</td>
-        <td>{{item.playcount | number}}</td>
-        <td>{{item.change | number}}</td>
-    </tr>
-    }
+<table class="table-striped">
+    <thead>
+        <tr>
+            <th style="width:64px">#</th>
+            <th>Name</th>
+            <th>Play Count</th>
+            <th>Change</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (item of albums; track $index) {
+        <tr class="item">
+            <td data-title="#">{{$index + 1}}</td>
+            <td data-title="Name">{{item.name}}</td>
+            <td data-title="Play Count">{{item.playcount | number}}</td>
+            <td data-title="Change">{{item.change | number}}</td>
+        </tr>
+        }
+    </tbody>
 </table>
