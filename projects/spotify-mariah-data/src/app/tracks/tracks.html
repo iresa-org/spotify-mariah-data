@@ -1,0 +1,31 @@
+<div class="menu">
+    <ul>
+        <li><a href="javascript:void(0)" (click)="changeList('T')">Total {{counts.total | number}}</a></li>
+        <li><a href="javascript:void(0)" (click)="changeList('L')">Lead {{counts.lead | number}}</a></li>
+        <li><a href="javascript:void(0)" (click)="changeList('S')">Solo {{counts.solo | number}}</a></li>
+        <li><a href="javascript:void(0)" (click)="changeList('F')">Featured {{counts.featured | number}}</a></li>
+        <li><a href="javascript:void(0)" (click)="changeList('V')">Stand. Videos {{counts.videos | number}}</a></li>
+    </ul>
+</div>
+
+
+<table>
+    <tr>
+        <th style="width:64px">#</th>
+        <th>Name</th>
+        <th>Play Count</th>
+        <th>Change</th>
+        <!-- <th style="width:84px">Change %</th> -->
+    </tr>
+
+    @for (item of list(); track $index) {
+
+    <tr class="item">
+        <td>{{$index + 1}}</td>
+        <td>{{item.name}} {{item.mediaType === 'VIDEO' ? '- VIDEO' : ''}}</td>
+        <td>{{item.playcount | number}}</td>
+        <td>{{item.change | number}}</td>
+        <!-- <td>{{item.changePercentage | percent}}</td> -->
+    </tr>
+    }
+</table>

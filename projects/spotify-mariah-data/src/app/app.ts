@@ -1,12 +1,28 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { TrackHandler } from './track-handler';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, RouterLink],
   templateUrl: './app.html',
-  styleUrl: './app.scss',
+  styleUrl: './app.scss'
 })
-export class App {
-  protected readonly title = signal('spotify-mariah-data');
+export class App implements OnInit {
+
+  trackHandler = inject(TrackHandler);
+
+  loaded = signal<boolean>(false);
+
+  ngOnInit() {
+    this.loadTracks();
+  }
+
+  loadTracks() {
+    this.trackHandler.loadTracks().subscribe({
+      complete: () => this.loaded.set(true)
+    });
+  }
+
+
 }

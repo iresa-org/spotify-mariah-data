@@ -1,0 +1,18 @@
+<table>
+    <tr>
+        <th style="width:64px">#</th>
+        <th>Name</th>
+        <th>Play Count</th>
+        <th>Change</th>
+    </tr>
+
+    @for (item of albums; track $index) {
+
+    <tr class="item">
+        <td>{{$index + 1}}</td>
+        <td>{{item.name}}</td>
+        <td>{{item.playcount | number}}</td>
+        <td>{{item.change | number}}</td>
+    </tr>
+    }
+</table>
