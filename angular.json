@@ -24,6 +24,7 @@
             "tsConfig": "projects/spotify-mariah-data/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
+               "projects/spotify-mariah-data/src/404.html",
               {
                 "glob": "**/*",
                 "input": "projects/spotify-mariah-data/public"
