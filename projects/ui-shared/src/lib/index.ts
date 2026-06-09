@@ -2,4 +2,4 @@
  * Public API Surface of ui-shared
  */
 
-export * from './lib/index';
+export * from './common';

@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UiShared } from './ui-shared';
+import { FileUpload } from './file-upload';
 
-describe('UiShared', () => {
-  let component: UiShared;
-  let fixture: ComponentFixture<UiShared>;
+describe('FileUpload', () => {
+  let component: FileUpload;
+  let fixture: ComponentFixture<FileUpload>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UiShared],
+      imports: [FileUpload],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(UiShared);
+    fixture = TestBed.createComponent(FileUpload);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

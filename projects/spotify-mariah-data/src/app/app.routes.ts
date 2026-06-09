@@ -11,6 +11,11 @@ export const routes: Routes = [
         loadComponent: () => import('./albums/albums').then((c) => c.Albums),
         title: 'Albums',
     },
+        {
+        path: 'test',
+        loadComponent: () => import('./test/test').then((c) => c.Test),
+        title: 'Albums',
+    },
     { path: '', redirectTo: 'tracks', pathMatch: 'full' },
     { path: '**', redirectTo: 'tracks' },
 ];

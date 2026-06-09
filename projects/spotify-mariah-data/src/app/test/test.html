@@ -1,0 +1,13 @@
+<div class="upload-file">
+    File 1 (Today)
+    <lib-file-upload (fileSelected)="onCurrFileSelected($event)"></lib-file-upload>
+</div>
+
+<div class="upload-file">
+    File 2 (Yesterday)
+    <lib-file-upload (fileSelected)="onPrevFileSelected($event)"></lib-file-upload>
+</div>
+
+<div class="upload-file">
+    <button (click)="submit()">Submit</button>
+</div>
