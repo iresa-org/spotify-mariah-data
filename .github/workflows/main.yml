@@ -13,12 +13,21 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build-and-deploy:
+  run-daily:
     runs-on: ubuntu-latest
+
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # added or changed files to the repository.
+      contents: write
 
     steps:
     - name: Checkout
       uses: actions/checkout@v6
+      with:
+        ref: ${{ github.head_ref }}
+        # Value already defaults to true, but `persist-credentials` is required to push new commits to the repository.
+        persist-credentials: true
 
     - name: Use Node.js 24.16
       uses: actions/setup-node@v6
@@ -30,6 +39,9 @@ jobs:
 
     - name: Run daily
       run: node scripts/daily.ts
+
+    # Commit all changed files back to the repository
+    - uses: stefanzweifel/git-auto-commit-action@v7
 
         
 
