@@ -31,8 +31,8 @@ export class TrackHandler {
       return of(true).pipe(take(1))
     }
     return forkJoin({
-      curr: this.http.get<any[]>("2026-06-10.json"),
-      prev: this.http.get<any[]>("2026-06-09.json")
+      curr: this.http.get<any[]>("2026-06-11.json"),
+      prev: this.http.get<any[]>("2026-06-10.json")
     }).pipe(
       tap(({ curr, prev }) => this.processDailyChanges(curr, prev))
     )
