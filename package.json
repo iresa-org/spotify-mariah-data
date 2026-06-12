@@ -13,9 +13,13 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/iresa-org/spotify-mariah-data/issues"
   },
-  "homepage": "https://github.com/iresa-org/spotify-mariah-data#readme"
+  "homepage": "https://github.com/iresa-org/spotify-mariah-data#readme",
+  "devDependencies": {
+    "@types/node": "^24.13.1",
+    "typescript": "^6.0.3"
+  }
 }
