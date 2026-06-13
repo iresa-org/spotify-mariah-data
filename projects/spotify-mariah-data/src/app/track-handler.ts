@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, of, take, tap } from 'rxjs';
 
@@ -30,7 +30,9 @@ export class TrackHandler {
     if (this.currMap.size > 0) {
       return of(true).pipe(take(1))
     }
-    return this.http.get<any[]>(GET_DATA_URL).pipe(
+    let params = new HttpParams();
+    params = params.append('salt', (new Date()).getTime())
+    return this.http.get<any[]>(GET_DATA_URL, { params }).pipe(
       tap((data) => this.processTrackList(data))
     )
   }
@@ -40,12 +42,13 @@ export class TrackHandler {
       const { org, dailyChanges } = item;
       const { uid, itemV2 } = org;
       if (uid && !this.currMap.has(uid)) {
+        const percent = Number(dailyChanges.prevChange) ? (Number(dailyChanges.change) - Number(dailyChanges.prevChange)) / Number(dailyChanges.prevChange) : 0
         this.currMap.set(uid, {
           uid,
           name: itemV2?.data?.name,
           playcount: dailyChanges.currTotal,
           change: dailyChanges.change,
-          percent: dailyChanges.percent,
+          percent: String(percent),
           artists: itemV2?.data?.artists.items,
           album: itemV2?.data.albumOfTrack,
           discNumber: itemV2?.data?.discNumber,
