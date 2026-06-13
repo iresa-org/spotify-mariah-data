@@ -17,10 +17,13 @@ export async function getLatestFile(targetDir: string, acceptedExt: string[] = [
 
     // 2. Iterate through each item to find the latest file
     const promises = [];
+    const selectedItems: string[] = [];
+
     for (const item of items) {
       if (!acceptedExt.length || acceptedExt.some(ext => item.includes(ext))) {
         const fullPath = path.join(targetDir, item);
         promises.push(fs.stat(fullPath));
+        selectedItems.push(item)
       }
     }
 
@@ -32,7 +35,7 @@ export async function getLatestFile(targetDir: string, acceptedExt: string[] = [
 
         if (fileMtime > latestMtime) {
           latestMtime = fileMtime;
-          latestFile = path.join(targetDir, items[i] ?? '');
+          latestFile = path.join(targetDir, selectedItems[i] ?? '');
         }
       }
     })
