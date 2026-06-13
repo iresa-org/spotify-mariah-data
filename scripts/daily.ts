@@ -69,17 +69,19 @@ async function main() {
   try {
 
     // Read the latest file from /upload directory
-    const uploadFilePath = await getLatestFile('./upload');
+    const uploadFilePath = await getLatestFile('./upload', ['.json']);
     if (!uploadFilePath) {
       console.log('No upload. Skip');
       return;
     }
+    console.log('Upload file:', uploadFilePath);
 
     // Read previous file from current directory
-    const prevFilePath = await getLatestFile('./daily');
+    const prevFilePath = await getLatestFile('./daily', ['.txt']);
     if (prevFilePath) {
       const prevFileContents = await readFile(prevFilePath!, 'utf-8');
       prevMap = processPrevChangeContent(prevFileContents)
+      console.log('Previous change found:', prevFilePath);
     } else {
       prevMap = new Map<string, TrackDailyChange>
     }
@@ -102,7 +104,7 @@ async function main() {
     writeToFile(`./daily`, `${formatDate(getTomorrowDate(prevDate))}.txt`, list.join('\n'))
 
     // Clean upload folder
-    clearFilesFromFolder('./upload')
+    clearFilesFromFolder('./upload', ['.txt'])
 
   } catch (error) {
     console.error('Error writing file:', error);
