@@ -7,7 +7,7 @@ export class AlbumHandler {
 
   private albumMap: Map<string, any[]> | null = null;
 
-  getAlbumsFromTracks(currTrackMap: Map<string, any> | null, prevTrackMap: Map<string, any> | null): Map<string, any[]> {
+  getAlbumsFromTracks(currTrackMap: Map<string, any> | null): Map<string, any[]> {
     if (this.albumMap) {
       return this.albumMap;
     }

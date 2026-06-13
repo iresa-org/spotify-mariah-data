@@ -14,9 +14,9 @@
         <tr>
             <th style="width:64px">#</th>
             <th>Name</th>
-            <th style="width:200px">Play Count</th>
-            <th style="width:200px">Change</th>
-            <!-- <th style="width:84px">Change %</th> -->
+            <th style="width:150px">Play Count</th>
+            <th style="width:150px">Change</th>
+            <th style="width:150px">%</th>
         </tr>
     </thead>
 
@@ -28,7 +28,7 @@
             <td data-title="Name">{{item.name}} {{item.mediaType === 'VIDEO' ? '- VIDEO' : ''}}</td>
             <td data-title="Play Count">{{item.playcount | number}}</td>
             <td data-title="Change">{{item.change | number}}</td>
-            <!-- <td>{{item.changePercentage | percent}}</td> -->
+            <td data-title="%">{{item.percent | percent}}</td>
         </tr>
         }
     </tbody>

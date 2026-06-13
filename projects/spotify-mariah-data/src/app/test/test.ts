@@ -26,7 +26,7 @@ export class Test {
 
   submit() {
     if (this.curr && this.prev)
-      this.trackHandler.processDailyChanges(JSON.parse(this.curr), JSON.parse(this.prev))
-    this.router.navigate(['/tracks'])
+      //this.trackHandler.processDailyChanges(JSON.parse(this.curr), JSON.parse(this.prev))
+      this.router.navigate(['/tracks'])
   }
 }

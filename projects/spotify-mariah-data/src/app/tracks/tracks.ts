@@ -28,11 +28,7 @@ export class Tracks {
   }
 
   transformList(list: any[]): any[] {
-    return list.map(item => ({
-      ...item,
-      change: String(BigInt(item.playcount) - BigInt(item.prevcount ?? 0)),
-      // changePercentage: item.prevcount > 0 ? (item.playcount - item.prevcount) * 100 / item.prevcount : 0
-    }))
+    return list
       .sort((a, b) => b.change - a.change)
   }
 }

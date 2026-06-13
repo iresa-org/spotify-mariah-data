@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { forkJoin, Observable, of, take, tap } from 'rxjs';
+import { Observable, of, take, tap } from 'rxjs';
+
+const GET_DATA_URL = 'https://raw.githubusercontent.com/iresa-org/spotify-mariah-data/refs/heads/data/result/current.json'
 
 @Injectable({
   providedIn: 'root',
@@ -8,9 +10,7 @@ import { forkJoin, Observable, of, take, tap } from 'rxjs';
 export class TrackHandler {
 
 
-  private currMap: Map<string, any> | null = null;
-
-  private prevMap: Map<string, any> | null = null;
+  private currMap = new Map<string, any>;
 
   private countIdMap = new Map<number, string[]>();
 
@@ -27,57 +27,34 @@ export class TrackHandler {
   private http = inject(HttpClient);
 
   loadTracks(): Observable<any> {
-    if (this.currMap) {
+    if (this.currMap.size > 0) {
       return of(true).pipe(take(1))
     }
-    return forkJoin({
-      curr: this.http.get<any[]>("2026-06-11.json"),
-      prev: this.http.get<any[]>("2026-06-10.json")
-    }).pipe(
-      tap(({ curr, prev }) => this.processDailyChanges(curr, prev))
+    return this.http.get<any[]>(GET_DATA_URL).pipe(
+      tap((data) => this.processTrackList(data))
     )
   }
 
-  processDailyChanges(curr: any[], prev: any[]): void {
-    // all today's tracks including duplicated stream counts
-    const currMap = this.processTrackList(curr)
-
-    // all yesterday's tracks including duplicated stream counts
-    this.prevMap = this.processTrackList(prev)
-
-    for (let [key, value] of currMap) {
-      const prevDay = this.prevMap.get(key);
-      currMap.set(key, { ...value, prevcount: prevDay ? prevDay.playcount : 0 })
-    }
-
-    this.currMap = new Map(currMap);
-  }
-
-  processTrackList(list: any[]): Map<string, any> {
-    const map = new Map<string, any>();
-    list.forEach((el) => {
-      const content = el.data.playlistV2?.content;
-      if (content?.items) {
-        content.items.forEach((item: any) => {
-          if (item?.uid && !map.has(item.uid)) {
-            const { uid, itemV2 } = item;
-            map.set(item.uid, {
-              uid,
-              name: itemV2?.data?.name,
-              playcount: itemV2?.data?.playcount || 0,
-              artists: itemV2?.data?.artists.items,
-              album: itemV2?.data.albumOfTrack,
-              discNumber: itemV2?.data?.discNumber,
-              trackNumber: itemV2?.data?.trackNumber,
-              associationsV3: itemV2?.data?.associationsV3,
-              mediaType: itemV2?.data?.mediaType
-            });
-          }
+  processTrackList(list: any[]) {
+    list.forEach((item) => {
+      const { org, dailyChanges } = item;
+      const { uid, itemV2 } = org;
+      if (uid && !this.currMap.has(uid)) {
+        this.currMap.set(uid, {
+          uid,
+          name: itemV2?.data?.name,
+          playcount: dailyChanges.currTotal,
+          change: dailyChanges.change,
+          percent: dailyChanges.percent,
+          artists: itemV2?.data?.artists.items,
+          album: itemV2?.data.albumOfTrack,
+          discNumber: itemV2?.data?.discNumber,
+          trackNumber: itemV2?.data?.trackNumber,
+          associationsV3: itemV2?.data?.associationsV3,
+          mediaType: itemV2?.data?.mediaType
         });
       }
-    }
-    )
-    return map;
+    });
   }
 
   getAll = () => {
@@ -141,10 +118,6 @@ export class TrackHandler {
 
   getCurrMap() {
     return this.currMap;
-  }
-
-  getPrevMap() {
-    return this.prevMap;
   }
 
   getDuplicates(map: Map<number, string[]>): Set<string> {
