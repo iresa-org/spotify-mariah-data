@@ -13,12 +13,11 @@ function calcDailyChanges(item: ContentItem, prevMap: Map<string, TrackDailyChan
   }
   const currTotal = itemV2?.data?.playcount || 0;
   const change = BigInt(currTotal) - BigInt(prevTotal);
-  const perctChange = prevChange ? (BigInt(change) - prevChange) / prevChange : 0
+
   return {
     currTotal: String(currTotal),
     change: String(change),
-    prevChange: String(prevChange),
-    percent: String(perctChange)
+    prevChange: String(prevChange)
   }
 }
 

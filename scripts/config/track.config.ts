@@ -11,7 +11,6 @@ export interface TrackDailyChange {
   currTotal: string;
   change: string;
   prevChange?: string;
-  percent?: string;
 }
 
 export interface SpotifyTrackData {
