@@ -33,7 +33,7 @@ export async function getLatestFile(targetDir: string, acceptedExt: string[] = [
       if (stats.isFile()) {
         const fileMtime = stats.mtime.getTime();
 
-        if (fileMtime > latestMtime) {
+        if (fileMtime >= latestMtime) {
           latestMtime = fileMtime;
           latestFile = path.join(targetDir, selectedItems[i] ?? '');
         }
