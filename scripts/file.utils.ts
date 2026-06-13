@@ -16,22 +16,26 @@ export async function getLatestFile(targetDir: string, acceptedExt: string[] = [
     let latestMtime = 0; // Epoch time placeholder
 
     // 2. Iterate through each item to find the latest file
+    const promises = [];
     for (const item of items) {
       if (!acceptedExt.length || acceptedExt.some(ext => item.includes(ext))) {
         const fullPath = path.join(targetDir, item);
-        const stats = await fs.stat(fullPath);
-
-        // Only check files, ignore sub-directories
-        if (stats.isFile()) {
-          const fileMtime = stats.mtime.getTime();
-
-          if (fileMtime > latestMtime) {
-            latestMtime = fileMtime;
-            latestFile = fullPath;
-          }
-        }
+        promises.push(fs.stat(fullPath));
       }
     }
+
+    const results = await Promise.all(promises);
+    results.forEach((stats, i) => {
+      // Only check files, ignore sub-directories
+      if (stats.isFile()) {
+        const fileMtime = stats.mtime.getTime();
+
+        if (fileMtime > latestMtime) {
+          latestMtime = fileMtime;
+          latestFile = path.join(targetDir, items[i] ?? '');
+        }
+      }
+    })
     return latestFile;
   } catch (error) {
     console.error(`Error reading directory "${targetDir}":`, error);
