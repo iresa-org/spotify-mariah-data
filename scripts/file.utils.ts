@@ -10,36 +10,12 @@ import { writeFile, readdir, unlink, stat, access } from 'fs/promises';
 export async function getLatestFile(targetDir: string, acceptedExt: string[] = []): Promise<string | null> {
   try {
     // 1. Read all items inside the directory
-    const items = await fs.readdir(targetDir);
+    const items: string[] = await fs.readdir(targetDir);
 
-    let latestFile: string | null = null;
-    let latestMtime = 0; // Epoch time placeholder
+    // 2. Sort list by descending order
+    const list = items.filter(item => !acceptedExt.length || acceptedExt.some(ext => item.includes(ext))).sort().reverse()
 
-    // 2. Iterate through each item to find the latest file
-    const promises = [];
-    const selectedItems: string[] = [];
-
-    for (const item of items) {
-      if (!acceptedExt.length || acceptedExt.some(ext => item.includes(ext))) {
-        const fullPath = path.join(targetDir, item);
-        promises.push(fs.stat(fullPath));
-        selectedItems.push(item)
-      }
-    }
-
-    const results = await Promise.all(promises);
-    results.forEach((stats, i) => {
-      // Only check files, ignore sub-directories
-      if (stats.isFile()) {
-        const fileMtime = stats.mtime.getTime();
-
-        if (fileMtime >= latestMtime) {
-          latestMtime = fileMtime;
-          latestFile = path.join(targetDir, selectedItems[i] ?? '');
-        }
-      }
-    })
-    return latestFile;
+    return list.length ? path.join(targetDir, list[0]) : null
   } catch (error) {
     console.error(`Error reading directory "${targetDir}":`, error);
     throw error;
