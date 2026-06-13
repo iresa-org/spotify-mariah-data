@@ -92,7 +92,7 @@ async function main() {
 
     // Write to result
     const result = JSON.stringify(Array.from(currMap.values()));
-    writeToFile(`./result`, 'current.txt', result)
+    writeToFile(`./result`, 'current.json', result)
 
     // Write to daily
     let list: any[] = [];

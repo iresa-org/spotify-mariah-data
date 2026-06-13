@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
-import { writeFile, readdir, unlink, stat } from 'fs/promises';
+import { writeFile, readdir, unlink, stat, access } from 'fs/promises';
 
 /**
  * Finds the file with the latest modification timestamp in a given directory.
@@ -49,6 +49,25 @@ export async function getLatestFile(targetDir: string, acceptedExt: string[] = [
 export async function writeToFile(dir: string, fileName: string, data: string) {
   const filePath = path.join(dir, fileName);
 
+  try {
+    // 1. Check if the file already exists
+    // 'access' throws an error if the file does NOT exist
+    await access(filePath);
+
+    writeDataToFile(filePath, data)
+
+  } catch (error: any) {
+    // 2. If the error code is 'ENOENT', it means the file does not exist (which is what we want)
+    if (error.code === 'ENOENT') {
+      writeDataToFile(filePath, data)
+    } else {
+      // Handle other potential errors (like permission issues 'EACCES')
+      console.error(`Unexpected error checking file: ${error.message}`);
+    }
+  }
+}
+
+async function writeDataToFile(filePath: string, data: string) {
   try {
     await writeFile(filePath, data, 'utf8');
     console.log(`Successfully wrote to ${filePath}`);
