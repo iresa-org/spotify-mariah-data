@@ -5,6 +5,7 @@
             <th>Name</th>
             <th>Play Count</th>
             <th>Change</th>
+            <th>%</th>
         </tr>
     </thead>
     <tbody>
@@ -12,8 +13,9 @@
         <tr class="item">
             <td data-title="#">{{$index + 1}}</td>
             <td data-title="Name">{{item.name}}</td>
-            <td data-title="Play Count">{{item.playcount | number}}</td>
-            <td data-title="Change">{{item.change | number}}</td>
+            <td data-title="Play Count" style="width:200px">{{item.playcount | number}}</td>
+            <td data-title="Change" style="width:150px">{{item.change | number}}</td>
+            <td data-title="%" style="width:150px">{{item.percent | percent}}</td>
         </tr>
         }
     </tbody>

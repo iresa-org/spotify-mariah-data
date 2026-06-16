@@ -70,28 +70,28 @@ export class TrackHandler {
 
   getLead = () => {
     if (!this.leadList) {
-      this.leadList = Array.from(this.currMap!.values()).filter(item => item.categories.includes('L'));
+      this.leadList = Array.from(this.getAll()).filter(item => item.categories.includes('L'));
     }
     return this.leadList
   }
 
   getSolo = () => {
     if (!this.soloList) {
-      this.soloList = Array.from(this.currMap!.values()).filter(item => item.categories.includes('S'));
+      this.soloList = Array.from(this.getLead()).filter(item => item.categories.includes('S'));
     }
     return this.soloList
   }
 
   getFeatured = () => {
     if (!this.featuredList) {
-      this.featuredList = Array.from(this.currMap!.values()).filter(item => item.categories.includes('F'));
+      this.featuredList = Array.from(this.getAll()).filter(item => item.categories.includes('F'));
     }
     return this.featuredList
   }
 
   getVideos = () => {
     if (!this.videoList) {
-      this.videoList = Array.from(this.currMap!.values()).filter(item => item.categories.includes('V'));
+      this.videoList = Array.from(this.getAll()).filter(item => item.categories.includes('V'));
     }
     return this.videoList
   }
