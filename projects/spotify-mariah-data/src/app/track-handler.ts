@@ -40,7 +40,7 @@ export class TrackHandler {
     this.trackListResp = resp;
 
     resp['tracks'].forEach((item: any) => {
-      const { trackDetails, dailyChanges, categories } = item;
+      const { trackDetails, dailyChanges, categories, countMerged } = item;
       const { uid, itemV2 } = trackDetails;
       if (uid && !this.currMap.has(uid)) {
         this.currMap.set(uid, {
@@ -54,7 +54,8 @@ export class TrackHandler {
           discNumber: itemV2?.data?.discNumber,
           trackNumber: itemV2?.data?.trackNumber,
           associationsV3: itemV2?.data?.associationsV3,
-          categories
+          categories,
+          countMerged
         });
       }
     });
@@ -63,7 +64,6 @@ export class TrackHandler {
   getAll = () => {
     if (!this.allList) {
       this.allList = Array.from(this.currMap!.values()).filter(item => !item.countMerged);
-
     }
     return this.allList
   }
