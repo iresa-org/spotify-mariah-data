@@ -53,7 +53,7 @@ export interface TrackData {
 
 export interface AlbumData {
   albumDetails: {
-    tracks: TrackData[]
+    tracks: string[]
   },
   dailyChanges: TrackDailyChange,
 }

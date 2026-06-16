@@ -82,10 +82,11 @@ export function convertToAlbumList(map: Map<string, TrackData[]>): AlbumData[] {
   for (let [_, value] of map) {
     const playcount = value.reduce((sum, item) => sum + BigInt(item.dailyChanges.playCount), BigInt(0));
     const change = value.reduce((sum, item) => sum + BigInt(item.dailyChanges.change), BigInt(0));
-
+    const firstTrack = value[0];
     arr.push({
       albumDetails: {
-        tracks: value,
+        ...firstTrack?.trackDetails.itemV2.data.albumOfTrack,
+        tracks: value.map(item => item.trackDetails.uid),
       },
       dailyChanges: {
         playCount: String(playcount),
