@@ -25,7 +25,7 @@ export interface TrackDailyChange {
   playCount: string;
   change: string;
   prevChange?: string;
-  percentChange: string;
+  percentChange?: string;
 }
 
 export interface SpotifyTrackData {
