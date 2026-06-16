@@ -1,6 +1,6 @@
 import { readFile } from "fs/promises";
-import type { ContentItem, SpotifyTrackData, TrackDailyChange, TrackData } from "./config/track.config.ts";
-import { writeToFile } from "./file.utils.ts";
+import type { ContentItem, SpotifyTrackData } from "./config/track.config.ts";
+import { writeToFile } from "./utils/file.utils.ts";
 
 function processUploadContent(list: SpotifyTrackData[]): Map<string, ContentItem> {
   const map = new Map<string, ContentItem>();

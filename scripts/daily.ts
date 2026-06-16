@@ -1,27 +1,10 @@
 import { readFile } from "fs/promises";
-import { clearFilesFromFolder, getLatestFile, writeToFile } from "./file.utils.ts";
-import type { ContentItem, SpotifyTrackData, TrackDailyChange, TrackData } from "./config/track.config.ts";
-import { formatDate, getTomorrowDate, parseLocalDate } from "./date.utils.ts";
+import { clearFilesFromFolder, getLatestFile, writeToFile } from "./utils/file.utils.ts";
+import type { GetTrackDetailResp, SpotifyTrackData, TrackDailyChange, TrackData } from "./config/track.config.ts";
+import { formatDate, getTomorrowDate, parseLocalDate } from "./utils/date.utils.ts";
+import { calcDailyChanges, getAll, getTotalStreams, getTrackCategories } from "./utils/count.utils.ts";
 
-function calcDailyChanges(item: ContentItem, prevMap: Map<string, TrackDailyChange>): TrackDailyChange {
-  const { uid, itemV2 } = item;
-  let prevTotal = BigInt(0), prevChange = BigInt(0);
-  if (prevMap.has(uid)) {
-    const prev = prevMap.get(uid);
-    prevTotal = BigInt(prev!.currTotal);
-    prevChange = BigInt(prev!.change);
-  }
-  const currTotal = itemV2?.data?.playcount || 0;
-  const change = BigInt(currTotal) - BigInt(prevTotal);
-
-  return {
-    currTotal: String(currTotal),
-    change: String(change),
-    prevChange: String(prevChange)
-  }
-}
-
-function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, TrackDailyChange>): Map<string, TrackData> {
+function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, TrackDailyChange>): GetTrackDetailResp {
   const map = new Map<string, TrackData>();
 
   list.forEach((el) => {
@@ -29,13 +12,31 @@ function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, Tra
     if (content?.items) {
       content.items.forEach((item) => {
         map.set(item.uid, {
-          org: item,
-          dailyChanges: calcDailyChanges(item, prevMap)
+          trackDetails: item,
+          dailyChanges: calcDailyChanges(item, prevMap),
+          categories: getTrackCategories(item)
         });
       })
     }
   })
-  return map
+
+  const tracks = Array.from(map.values());
+  const listWoDupl = getAll(tracks);
+  const leadList = listWoDupl.filter(item => item.categories.includes('L'))
+  const soloList = leadList.filter(item => item.categories.includes('S'))
+  const featuredList = listWoDupl.filter(item => item.categories.includes('F'))
+  const video = listWoDupl.filter(item => item.categories.includes('V'))
+
+  return {
+    tracks,
+    playCounts: {
+      total: getTotalStreams(listWoDupl),
+      lead: getTotalStreams(leadList),
+      solo: getTotalStreams(soloList),
+      featured: getTotalStreams(featuredList),
+      video: getTotalStreams(video),
+    }
+  }
 }
 
 function processPrevChangeContent(input: string): Map<string, TrackDailyChange> {
@@ -45,7 +46,7 @@ function processPrevChangeContent(input: string): Map<string, TrackDailyChange> 
   const separateLines = input.split(/\r?\n|\r|\n/g);
   separateLines.forEach((element: any) => {
     const [uid, currTotal, change] = element.trim().split(/\s*[\s,]\s*/);
-    map.set(uid, { currTotal, change })
+    map.set(uid, { playCount: currTotal, change })
   });
   return map;
 }
@@ -62,7 +63,6 @@ function extractDateFromPath(filePath: string): string {
 async function main() {
   console.log('Build daily changes...');
 
-  let currMap: Map<string, TrackData> | null = null;
   let prevMap: Map<string, TrackDailyChange> | null = null;
 
   try {
@@ -87,17 +87,14 @@ async function main() {
 
     // Parse data and calculate changes
     const uploadFileContents = await readFile(uploadFilePath!, 'utf-8');
-    currMap = processUploadContent(JSON.parse(uploadFileContents), prevMap!)
+    const resp = processUploadContent(JSON.parse(uploadFileContents), prevMap!)
 
     // Write to result
-    const result = JSON.stringify(Array.from(currMap.values()));
+    const result = JSON.stringify(resp);
     writeToFile(`./result`, 'current.json', result)
 
     // Write to daily
-    let list: any[] = [];
-    for (const [uid, value] of currMap) {
-      list.push(`${uid} ${value.dailyChanges.currTotal} ${value.dailyChanges.change}`)
-    }
+    let list = resp.tracks.map(track => `${track.trackDetails.uid} ${track.dailyChanges.playCount} ${track.dailyChanges.change}`);
     const prevDateStr = extractDateFromPath(prevFilePath ?? '');
     const prevDate = parseLocalDate(prevDateStr) ?? new Date();
     writeToFile(`./daily`, `${formatDate(getTomorrowDate(prevDate))}.txt`, list.join('\n'))

@@ -1,14 +1,28 @@
+/**
+ * S: Solo
+ * F: Featured
+ * L: Lead
+ * V: Video
+ */
+export type TrackCategory = 'S' | 'F' | 'L' | 'V';
+
+export interface TrackArtists {
+  items: { profile: { name: string } }[]
+}
+
 export interface ContentItem {
   uid: string;
   itemV2: {
     data: {
       playcount: string;
+      artists: TrackArtists;
+      mediaType: string;
     }
   }
 }
 
 export interface TrackDailyChange {
-  currTotal: string;
+  playCount: string;
   change: string;
   prevChange?: string;
 }
@@ -24,6 +38,18 @@ export interface SpotifyTrackData {
 }
 
 export interface TrackData {
-  org: ContentItem,
-  dailyChanges: TrackDailyChange
+  trackDetails: ContentItem,
+  dailyChanges: TrackDailyChange,
+  categories: TrackCategory[];
+}
+
+export interface GetTrackDetailResp {
+  tracks: TrackData[];
+  playCounts: {
+    total: string;
+    lead: string;
+    solo: string;
+    featured: string;
+    video: string
+  }
 }
