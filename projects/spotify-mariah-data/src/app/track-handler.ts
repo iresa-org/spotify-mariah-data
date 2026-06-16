@@ -43,13 +43,12 @@ export class TrackHandler {
       const { trackDetails, dailyChanges, categories } = item;
       const { uid, itemV2 } = trackDetails;
       if (uid && !this.currMap.has(uid)) {
-        const percent = Number(dailyChanges.prevChange) ? (Number(dailyChanges.change) - Number(dailyChanges.prevChange)) / Number(dailyChanges.prevChange) : 0
         this.currMap.set(uid, {
           uid,
           name: itemV2?.data?.name,
           playcount: dailyChanges.playCount,
           change: dailyChanges.change,
-          percent: String(percent),
+          percent: dailyChanges.percentChange,
           artists: itemV2?.data?.artists.items,
           album: itemV2?.data.albumOfTrack,
           discNumber: itemV2?.data?.discNumber,
