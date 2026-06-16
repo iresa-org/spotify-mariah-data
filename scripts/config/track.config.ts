@@ -41,6 +41,7 @@ export interface TrackData {
   trackDetails: ContentItem,
   dailyChanges: TrackDailyChange,
   categories: TrackCategory[];
+  countMerged?: boolean;
 }
 
 export interface GetTrackDetailResp {

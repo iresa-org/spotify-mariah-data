@@ -12,7 +12,7 @@ function getDuplicates(map: Map<string, string[]>): Set<string> {
   return new Set(arr);
 }
 
-export function getAll(list: TrackData[]) {
+export function getDuplicateIds(list: TrackData[]) {
   const countIdMap = new Map<string, string[]>();
 
   list.forEach(item => {
@@ -23,8 +23,8 @@ export function getAll(list: TrackData[]) {
       countIdMap.set(item.dailyChanges.playCount, [...countIdMap.get(playCount)!, item.trackDetails.uid])
     }
   })
-  const duplicates = getDuplicates(countIdMap);
-  return list.filter(item => !duplicates.has(item.trackDetails.uid));
+
+  return getDuplicates(countIdMap);
 }
 
 export function getTotalStreams(list: TrackData[]): string {

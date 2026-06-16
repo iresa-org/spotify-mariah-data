@@ -2,7 +2,7 @@ import { readFile } from "fs/promises";
 import { clearFilesFromFolder, getLatestFile, writeToFile } from "./utils/file.utils.ts";
 import type { GetTrackDetailResp, SpotifyTrackData, TrackDailyChange, TrackData } from "./config/track.config.ts";
 import { formatDate, getTomorrowDate, parseLocalDate } from "./utils/date.utils.ts";
-import { calcDailyChanges, getAll, getTotalStreams, getTrackCategories } from "./utils/count.utils.ts";
+import { calcDailyChanges, getDuplicateIds, getTotalStreams, getTrackCategories } from "./utils/count.utils.ts";
 
 function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, TrackDailyChange>): GetTrackDetailResp {
   const map = new Map<string, TrackData>();
@@ -20,8 +20,9 @@ function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, Tra
     }
   })
 
-  const tracks = Array.from(map.values());
-  const listWoDupl = getAll(tracks);
+  const duplicates = getDuplicateIds(Array.from(map.values()));
+  const tracks = Array.from(map.values()).map(item => duplicates.has(item.trackDetails.uid) ? ({ ...item, countMerged: true }) : item);
+  const listWoDupl = tracks.filter(item => !item.countMerged);
   const leadList = listWoDupl.filter(item => item.categories.includes('L'))
   const soloList = leadList.filter(item => item.categories.includes('S'))
   const featuredList = listWoDupl.filter(item => item.categories.includes('F'))
