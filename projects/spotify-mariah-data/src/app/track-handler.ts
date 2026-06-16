@@ -96,6 +96,11 @@ export class TrackHandler {
     return this.videoList
   }
 
+  getAlbums = () => {
+    const albums: any[] = this.trackListResp?.['albums'];
+    return albums.map(album => ({ ...album, albumDetails: { ...album.albumDetails, tracks: album.albumDetails.tracks.map((track: string) => this.currMap.get(track)) } }))
+  }
+
   getPlayCountsByAllType() {
     return this.trackListResp?.['playCounts'];
   }
