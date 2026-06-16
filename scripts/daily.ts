@@ -30,7 +30,7 @@ function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, Tra
   const albumMap = filterAlbums(getAlbumsFromTracks(map))
 
   return {
-    tracks: [],
+    tracks,
     playCounts: {
       total: getTotalStreams(listWoDupl),
       lead: getTotalStreams(leadList),
