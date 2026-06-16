@@ -41,11 +41,13 @@ export function calcDailyChanges(item: ContentItem, prevMap: Map<string, TrackDa
   }
   const currTotal = itemV2?.data?.playcount || 0;
   const change = BigInt(currTotal) - BigInt(prevTotal);
-
+  const percentChange = Number(prevChange) ? (Number(change) - Number(prevChange)) / Number(prevChange) : 0
+  
   return {
     playCount: String(currTotal),
     change: String(change),
-    prevChange: String(prevChange)
+    prevChange: String(prevChange),
+    percentChange: String(percentChange)
   }
 }
 
