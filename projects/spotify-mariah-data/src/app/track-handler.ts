@@ -9,10 +9,9 @@ const GET_DATA_URL = 'https://raw.githubusercontent.com/iresa-org/spotify-mariah
 })
 export class TrackHandler {
 
+  private trackListResp: Record<string, any> | null = null
 
   private currMap = new Map<string, any>;
-
-  private countIdMap = new Map<number, string[]>();
 
   private allList: any[] | null = null;
 
@@ -32,21 +31,23 @@ export class TrackHandler {
     }
     let params = new HttpParams();
     params = params.append('salt', (new Date()).getTime())
-    return this.http.get<any[]>(GET_DATA_URL, { params }).pipe(
+    return this.http.get(GET_DATA_URL, { params }).pipe(
       tap((data) => this.processTrackList(data))
     )
   }
 
-  processTrackList(list: any[]) {
-    list.forEach((item) => {
-      const { org, dailyChanges } = item;
-      const { uid, itemV2 } = org;
+  processTrackList(resp: Record<string, any>) {
+    this.trackListResp = resp;
+
+    resp['tracks'].forEach((item: any) => {
+      const { trackDetails, dailyChanges, categories } = item;
+      const { uid, itemV2 } = trackDetails;
       if (uid && !this.currMap.has(uid)) {
         const percent = Number(dailyChanges.prevChange) ? (Number(dailyChanges.change) - Number(dailyChanges.prevChange)) / Number(dailyChanges.prevChange) : 0
         this.currMap.set(uid, {
           uid,
           name: itemV2?.data?.name,
-          playcount: dailyChanges.currTotal,
+          playcount: dailyChanges.playCount,
           change: dailyChanges.change,
           percent: String(percent),
           artists: itemV2?.data?.artists.items,
@@ -54,7 +55,7 @@ export class TrackHandler {
           discNumber: itemV2?.data?.discNumber,
           trackNumber: itemV2?.data?.trackNumber,
           associationsV3: itemV2?.data?.associationsV3,
-          mediaType: itemV2?.data?.mediaType
+          categories
         });
       }
     });
@@ -62,86 +63,46 @@ export class TrackHandler {
 
   getAll = () => {
     if (!this.allList) {
-      const list = Array.from(this.currMap!.values());
-      list.forEach(item => {
-        if (!this.countIdMap.has(item.playcount)) {
-          this.countIdMap.set(item.playcount, [item.uid])
-        } else {
-          this.countIdMap.set(item.playcount, [...this.countIdMap.get(item.playcount)!, item.uid])
-        }
-      })
-      const duplicates = this.getDuplicates(this.countIdMap);
-      this.allList = list.filter(item => !duplicates.has(item.uid));
+      this.allList = Array.from(this.currMap!.values()).filter(item => !item.countMerged);
+
     }
     return this.allList
   }
 
   getLead = () => {
     if (!this.leadList) {
-      this.leadList = this.getAll().filter(item => this.containsMainArtist(item.artists));
+      this.leadList = Array.from(this.currMap!.values()).filter(item => item.categories.includes('L'));
     }
     return this.leadList
   }
 
   getSolo = () => {
     if (!this.soloList) {
-      this.soloList = this.getLead().filter(item => item.artists.length === 1);
+      this.soloList = Array.from(this.currMap!.values()).filter(item => item.categories.includes('S'));
     }
     return this.soloList
   }
 
   getFeatured = () => {
     if (!this.featuredList) {
-      this.featuredList = this.getAll().filter(item => item.artists.length > 1 && !this.containsMainArtist(item.artists))
+      this.featuredList = Array.from(this.currMap!.values()).filter(item => item.categories.includes('F'));
     }
     return this.featuredList
   }
 
   getVideos = () => {
     if (!this.videoList) {
-      this.videoList = this.getAll().filter(item => this.includeStr(item.mediaType, 'VIDEO'))
+      this.videoList = Array.from(this.currMap!.values()).filter(item => item.categories.includes('V'));
     }
     return this.videoList
   }
 
   getPlayCountsByAllType() {
-    return {
-      // total
-      total: this.getTotalStreams(this.getAll()),
-      // lead
-      lead: this.getTotalStreams(this.getLead()),
-      // solo
-      solo: this.getTotalStreams(this.getSolo()),
-      // featured
-      featured: this.getTotalStreams(this.getFeatured()),
-      // standalone videos
-      videos: this.getTotalStreams(this.getVideos()),
-    }
+    return this.trackListResp?.['playCounts'];
   }
 
   getCurrMap() {
     return this.currMap;
-  }
-
-  getDuplicates(map: Map<number, string[]>): Set<string> {
-    const arr: string[] = [];
-    for (let [_, value] of map) {
-      if (value.length > 1) {
-        const [_, ...rest] = value;
-        arr.push(...rest)
-      }
-    }
-
-    return new Set(arr);
-  }
-
-  getTotalStreams(list: any[]): string {
-    return String(list.reduce((total, item) => total + BigInt(item.playcount), BigInt(0)));
-  }
-
-  containsMainArtist(artists: any[]): boolean {
-    const artistName = artists[0].profile.name;
-    return !!artists.length && this.includeStr(artistName, 'Mariah Carey');
   }
 
   includeStr(value: string, search: string): boolean {
