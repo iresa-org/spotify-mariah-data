@@ -51,6 +51,6 @@ export interface GetTrackDetailResp {
     lead: string;
     solo: string;
     featured: string;
-    video: string
+    videos: string
   }
 }

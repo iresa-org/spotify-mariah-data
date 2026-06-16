@@ -26,7 +26,7 @@ function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, Tra
   const leadList = listWoDupl.filter(item => item.categories.includes('L'))
   const soloList = leadList.filter(item => item.categories.includes('S'))
   const featuredList = listWoDupl.filter(item => item.categories.includes('F'))
-  const video = listWoDupl.filter(item => item.categories.includes('V'))
+  const videos = listWoDupl.filter(item => item.categories.includes('V'))
 
   return {
     tracks,
@@ -35,7 +35,7 @@ function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, Tra
       lead: getTotalStreams(leadList),
       solo: getTotalStreams(soloList),
       featured: getTotalStreams(featuredList),
-      video: getTotalStreams(video),
+      videos: getTotalStreams(videos),
     }
   }
 }
