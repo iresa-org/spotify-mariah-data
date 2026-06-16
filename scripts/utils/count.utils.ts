@@ -1,4 +1,5 @@
-import type { ContentItem, TrackArtists, TrackCategory, TrackDailyChange, TrackData } from "../config/track.config.ts";
+import { SELECTED_ALBUMS } from "../config/album.config.ts";
+import type { AlbumData, ContentItem, TrackArtists, TrackCategory, TrackDailyChange, TrackData } from "../config/track.config.ts";
 
 function getDuplicates(map: Map<string, string[]>): Set<string> {
   const arr: string[] = [];
@@ -42,7 +43,7 @@ export function calcDailyChanges(item: ContentItem, prevMap: Map<string, TrackDa
   const currTotal = itemV2?.data?.playcount || 0;
   const change = BigInt(currTotal) - BigInt(prevTotal);
   const percentChange = Number(prevChange) ? (Number(change) - Number(prevChange)) / Number(prevChange) : 0
-  
+
   return {
     playCount: String(currTotal),
     change: String(change),
@@ -74,4 +75,56 @@ export function getTrackCategories(item: ContentItem): TrackCategory[] {
   }
 
   return categories
+}
+
+export function convertToAlbumList(map: Map<string, TrackData[]>): AlbumData[] {
+  const arr: AlbumData[] = [];
+  for (let [_, value] of map) {
+    const playcount = value.reduce((sum, item) => sum + BigInt(item.dailyChanges.playCount), BigInt(0));
+    const change = value.reduce((sum, item) => sum + BigInt(item.dailyChanges.change), BigInt(0));
+
+    arr.push({
+      albumDetails: {
+        tracks: value,
+      },
+      dailyChanges: {
+        playCount: String(playcount),
+        change: String(change)
+      }
+    })
+  }
+  return arr;
+}
+
+export function filterAlbums(map: Map<string, any[]>): Map<string, any[]> {
+  const albumMap = new Map<string, any[]>();
+  const selectedSet = new Set(SELECTED_ALBUMS);
+
+  for (let [key, value] of map) {
+    if (selectedSet.has(key)) {
+      albumMap.set(key, value)
+    }
+  }
+
+  return albumMap;
+}
+
+export function getAlbumsFromTracks(currTrackMap: Map<string, TrackData>): Map<string, TrackData[]> {
+
+  const albumMap = new Map<string, TrackData[]>();
+  for (let [_, value] of currTrackMap) {
+    const album = value.trackDetails.itemV2.data.albumOfTrack;
+    albumMap.has(album.uri) ?
+      albumMap.set(album.uri, sortTracksOnAlbum([...albumMap.get(album.uri)!, value])) :
+      albumMap.set(album.uri, [value])
+  }
+  return albumMap
+}
+
+export function sortTracksOnAlbum(list: TrackData[]): any[] {
+  return list.sort((a, b) => {
+    const item1 = a.trackDetails.itemV2.data;
+    const item2 = b.trackDetails.itemV2.data;
+    return item1.discNumber - item2.discNumber || item1.trackNumber - item2.trackNumber
+  })
 }

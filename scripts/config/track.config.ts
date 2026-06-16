@@ -17,6 +17,12 @@ export interface ContentItem {
       playcount: string;
       artists: TrackArtists;
       mediaType: string;
+      albumOfTrack: {
+        name: string;
+        uri: string
+      },
+      discNumber: number;
+      trackNumber: number;
     }
   }
 }
@@ -45,6 +51,13 @@ export interface TrackData {
   countMerged?: boolean;
 }
 
+export interface AlbumData {
+  albumDetails: {
+    tracks: TrackData[]
+  },
+  dailyChanges: TrackDailyChange,
+}
+
 export interface GetTrackDetailResp {
   tracks: TrackData[];
   playCounts: {
@@ -53,5 +66,6 @@ export interface GetTrackDetailResp {
     solo: string;
     featured: string;
     videos: string
-  }
+  },
+  albums: AlbumData[]
 }
