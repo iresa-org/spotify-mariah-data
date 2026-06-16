@@ -82,6 +82,8 @@ export function convertToAlbumList(map: Map<string, TrackData[]>): AlbumData[] {
   for (let [_, value] of map) {
     const playcount = value.reduce((sum, item) => sum + BigInt(item.dailyChanges.playCount), BigInt(0));
     const change = value.reduce((sum, item) => sum + BigInt(item.dailyChanges.change), BigInt(0));
+    const prevChange = value.reduce((sum, item) => sum + BigInt(item.dailyChanges.prevChange ?? 0), BigInt(0));
+    const percentChange = Number(prevChange) ? (Number(change) - Number(prevChange)) / Number(prevChange) : 0
     const firstTrack = value[0];
     arr.push({
       albumDetails: {
@@ -90,7 +92,8 @@ export function convertToAlbumList(map: Map<string, TrackData[]>): AlbumData[] {
       },
       dailyChanges: {
         playCount: String(playcount),
-        change: String(change)
+        change: String(change),
+        percentChange: String(percentChange)
       }
     })
   }
