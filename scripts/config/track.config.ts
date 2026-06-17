@@ -27,11 +27,14 @@ export interface ContentItem {
   }
 }
 
-export interface TrackDailyChange {
+export interface BaseDailyChange {
   playCount: string;
   change: string;
-  prevChange?: string;
   percentChange?: string;
+}
+
+export interface TrackDailyChange extends BaseDailyChange {
+  prevChange?: string;
 }
 
 export interface SpotifyTrackData {
@@ -61,11 +64,11 @@ export interface AlbumData {
 export interface GetTrackDetailResp {
   tracks: TrackData[];
   playCounts: {
-    total: string;
-    lead: string;
-    solo: string;
-    featured: string;
-    videos: string
+    total: BaseDailyChange;
+    lead: BaseDailyChange;
+    solo: BaseDailyChange;
+    featured: BaseDailyChange;
+    videos: BaseDailyChange;
   },
   albums: AlbumData[]
 }

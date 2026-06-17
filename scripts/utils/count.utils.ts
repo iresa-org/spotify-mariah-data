@@ -1,5 +1,5 @@
 import { SELECTED_ALBUMS } from "../config/album.config.ts";
-import type { AlbumData, ContentItem, TrackArtists, TrackCategory, TrackDailyChange, TrackData } from "../config/track.config.ts";
+import type { AlbumData, BaseDailyChange, ContentItem, TrackArtists, TrackCategory, TrackDailyChange, TrackData } from "../config/track.config.ts";
 
 function getDuplicates(map: Map<string, string[]>): Set<string> {
   const arr: string[] = [];
@@ -28,8 +28,16 @@ export function getDuplicateIds(list: TrackData[]) {
   return getDuplicates(countIdMap);
 }
 
-export function getTotalStreams(list: TrackData[]): string {
-  return String(list.reduce((total, item) => total + BigInt(item.dailyChanges.playCount), BigInt(0)));
+export function getTotalStreams(list: TrackData[]): BaseDailyChange {
+  const prevChange = list.reduce((total, item) => total + BigInt(item.dailyChanges.prevChange ?? 0), BigInt(0));
+  const newSum = list.reduce((total, item) => total + BigInt(item.dailyChanges.playCount), BigInt(0));
+  const newChange = list.reduce((total, item) => total + BigInt(item.dailyChanges.change), BigInt(0));
+
+  return {
+    playCount: String(newSum),
+    change: String(newChange),
+    percentChange: String(calcPercentChange(prevChange, newChange))
+  }
 }
 
 export function calcDailyChanges(item: ContentItem, prevMap: Map<string, TrackDailyChange>): TrackDailyChange {
@@ -42,7 +50,7 @@ export function calcDailyChanges(item: ContentItem, prevMap: Map<string, TrackDa
   }
   const currTotal = itemV2?.data?.playcount || 0;
   const change = BigInt(currTotal) - BigInt(prevTotal);
-  const percentChange = Number(prevChange) ? (Number(change) - Number(prevChange)) / Number(prevChange) : 0
+  const percentChange = calcPercentChange(prevChange, change)
 
   return {
     playCount: String(currTotal),
@@ -77,13 +85,18 @@ export function getTrackCategories(item: ContentItem): TrackCategory[] {
   return categories
 }
 
+export function calcPercentChange(prevChange: BigInt, newChange: BigInt): number {
+  return Number(prevChange) ? (Number(newChange) - Number(prevChange)) / Number(prevChange) : 0
+
+}
+
 export function convertToAlbumList(map: Map<string, TrackData[]>): AlbumData[] {
   const arr: AlbumData[] = [];
   for (let [_, value] of map) {
     const playcount = value.reduce((sum, item) => sum + BigInt(item.dailyChanges.playCount), BigInt(0));
     const change = value.reduce((sum, item) => sum + BigInt(item.dailyChanges.change), BigInt(0));
     const prevChange = value.reduce((sum, item) => sum + BigInt(item.dailyChanges.prevChange ?? 0), BigInt(0));
-    const percentChange = Number(prevChange) ? (Number(change) - Number(prevChange)) / Number(prevChange) : 0
+    const percentChange = calcPercentChange(prevChange, change)
     const firstTrack = value[0];
     arr.push({
       albumDetails: {
