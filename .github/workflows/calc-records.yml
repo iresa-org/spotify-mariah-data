@@ -9,7 +9,7 @@ on:
     branches:
       - data
     paths:
-      - upload/**
+      - daily/**
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -38,7 +38,7 @@ jobs:
       run: npm install
 
     - name: Run daily
-      run: node scripts/daily.ts
+      run: node scripts/record.ts
 
     # Commit all changed files back to the repository
     - uses: stefanzweifel/git-auto-commit-action@v7

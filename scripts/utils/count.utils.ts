@@ -1,6 +1,14 @@
 import { SELECTED_ALBUMS } from "../config/album.config.ts";
 import type { AlbumData, BaseDailyChange, ContentItem, TrackArtists, TrackCategory, TrackDailyChange, TrackData } from "../config/track.config.ts";
 
+export function compareNumbers(number1: number | string, number2: number | string): boolean {
+  return Boolean(Number(number1) - Number(number2));
+}
+
+export function addNumbers(number1: string, number2: string): BigInt {
+  return BigInt(number1) + BigInt(number2) 
+}
+
 function getDuplicates(map: Map<string, string[]>): Set<string> {
   const arr: string[] = [];
   for (let [_, value] of map) {

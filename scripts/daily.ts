@@ -1,7 +1,7 @@
 import { readFile } from "fs/promises";
 import { clearFilesFromFolder, getLatestFile, writeToFile } from "./utils/file.utils.ts";
 import type { GetTrackDetailResp, SpotifyTrackData, TrackDailyChange, TrackData } from "./config/track.config.ts";
-import { formatDate, getTomorrowDate, parseLocalDate } from "./utils/date.utils.ts";
+import { extractDateFromPath, formatDate, getTomorrowDate, parseLocalDate } from "./utils/date.utils.ts";
 import { calcDailyChanges, convertToAlbumList, filterAlbums, getAlbumsFromTracks, getDuplicateIds, getTotalStreams, getTrackCategories } from "./utils/count.utils.ts";
 
 function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, TrackDailyChange>): GetTrackDetailResp {
@@ -48,19 +48,10 @@ function processPrevChangeContent(input: string): Map<string, TrackDailyChange> 
 
   const separateLines = input.split(/\r?\n|\r|\n/g);
   separateLines.forEach((element: any) => {
-    const [uid, currTotal, change] = element.trim().split(/\s*[\s,]\s*/);
-    map.set(uid, { playCount: currTotal, change })
+    const [uid, playCount, change] = element.trim().split(/\s*[\s,]\s*/);
+    map.set(uid, { playCount, change })
   });
   return map;
-}
-
-function extractDateFromPath(filePath: string): string {
-  // Regex to match exactly 4 digits, a dash, 2 digits, a dash, and 2 digits
-  const dateRegex = /\d{4}-\d{2}-\d{2}/;
-  const match = filePath.match(dateRegex);
-
-  // If a match is found, return it; otherwise, return null
-  return match ? match[0] : new Date().toDateString();
 }
 
 async function main() {
