@@ -21,9 +21,8 @@ function processRecordContent(input: string, dailyChangeMap: Map<string, BaseDai
 
   const result: RecordModel[] = [];
 
-  const separateLines = input.split(/\r?\n|\r|\n/g);
-  separateLines.forEach((element: any) => {
-    const [uid, change, date] = element.trim().split(/\s*[\s,]\s*/);
+  JSON.parse(input).forEach((element: any) => {
+    const { uid, change, date } = element;
     const currChange = dailyChangeMap.get(uid);
     if (currChange && compareNumbers(currChange.change, change)) {
       result.push({ uid, change: currChange.change, date: formatDate(new Date()) })
@@ -38,9 +37,8 @@ function processYtdSumContent(input: string, dailyChangeMap: Map<string, BaseDai
 
   const result: YTDSumModel[] = [];
 
-  const separateLines = input.split(/\r?\n|\r|\n/g);
-  separateLines.forEach((element: any) => {
-    const [uid, sum] = element.trim().split(/\s*[\s,]\s*/);
+  JSON.parse(input).forEach((element: any) => {
+    const { uid, sum } = element;
     const currChange = dailyChangeMap.get(uid);
     if (currChange) {
       result.push({ uid, sum: String(addNumbers(sum, currChange.change)) })
@@ -92,6 +90,15 @@ async function main() {
       const ytdSumContents = await readFile(ytdSumFile, 'utf-8');
       const ytdSum = processYtdSumContent(ytdSumContents, dailyChanges);
       writeToFile(`./records`, 'ytd.json', JSON.stringify(ytdSum))
+    } else {
+      const result = [];
+      for (let [uid, value] of dailyChanges) {
+        result.push({
+          uid,
+          sum: value.change
+        })
+      }
+      writeToFile(`./records`, 'ytd.json', JSON.stringify(result))
     }
 
   } catch (error) {
