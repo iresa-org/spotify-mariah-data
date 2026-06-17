@@ -2,4 +2,5 @@
  * Public API Surface of ui-shared
  */
 
-export * from './common';
+export * from './file-upload';
+export * from './pipes';

@@ -1,10 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { TrackHandler } from '../track-handler';
 import { DecimalPipe, PercentPipe } from '@angular/common';
+import { NumberWithSignPipe } from 'ui-shared';
 
 @Component({
   selector: 'app-tracks',
-  imports: [DecimalPipe, PercentPipe],
+  imports: [DecimalPipe, PercentPipe, NumberWithSignPipe],
   templateUrl: './tracks.html',
   styleUrl: './tracks.scss',
 })

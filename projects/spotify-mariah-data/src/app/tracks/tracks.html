@@ -1,10 +1,16 @@
 <div class="menu">
     <ul>
-        <li><a href="javascript:void(0)" (click)="changeList('T')">Total {{counts.total | number}}</a></li>
-        <li><a href="javascript:void(0)" (click)="changeList('L')">Lead {{counts.lead | number}}</a></li>
-        <li><a href="javascript:void(0)" (click)="changeList('S')">Solo {{counts.solo | number}}</a></li>
-        <li><a href="javascript:void(0)" (click)="changeList('F')">Featured {{counts.featured | number}}</a></li>
-        <li><a href="javascript:void(0)" (click)="changeList('V')">Stand. Videos {{counts.videos | number}}</a></li>
+        <li><a href="javascript:void(0)" (click)="changeList('T')">Total {{counts.total.playCount | number}}
+                {{counts.total.change | numberWithSign}}</a></li>
+        <li><a href="javascript:void(0)" (click)="changeList('L')">Lead {{counts.lead.playCount | number}}
+                {{counts.lead.change | numberWithSign}}</a></li>
+        <li><a href="javascript:void(0)" (click)="changeList('S')">Solo {{counts.solo.playCount | number}}
+                {{counts.solo.change | numberWithSign}}</a></li>
+        <li><a href="javascript:void(0)" (click)="changeList('F')">Featured {{counts.featured.playCount | number}}
+                {{counts.featured.change | numberWithSign}}</a></li>
+        <li><a href="javascript:void(0)" (click)="changeList('V')">Videos <span
+                    style="display: block;">{{counts.videos.playCount | number}}</span>
+                <span style="display: block;">{{counts.videos.change | numberWithSign}}</span></a></li>
     </ul>
 </div>
 
