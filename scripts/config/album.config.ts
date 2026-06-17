@@ -20,4 +20,5 @@ export const SELECTED_ALBUMS = [
   'spotify:album:6aouVhqJ9SkEUS2gAR0xBS',
   'spotify:album:6fC6BRXbuHSVobwWcwe6M7',
   'spotify:album:6yitEMT7G4qfIcV3jWXP8I',
+  'spotify:album:0gTbDhU0tDmXdXn2RNWO2l'
 ]
