@@ -44,7 +44,7 @@ jobs:
       run: node scripts/record.ts
   
     - name: Calculate YTD
-    run: node scripts/ytd.ts
+      run: node scripts/ytd.ts
 
     # Commit all changed files back to the repository
     - uses: stefanzweifel/git-auto-commit-action@v7
