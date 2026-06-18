@@ -9,6 +9,10 @@ export function addNumbers(number1: string, number2: string): BigInt {
   return BigInt(number1) + BigInt(number2) 
 }
 
+export function subtractNumbers(number1: string, number2: string): BigInt {
+  return BigInt(number2) - BigInt(number1) 
+}
+
 function getDuplicates(map: Map<string, string[]>): Set<string> {
   const arr: string[] = [];
   for (let [_, value] of map) {

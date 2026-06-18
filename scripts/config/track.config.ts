@@ -70,5 +70,6 @@ export interface GetTrackDetailResp {
     featured: BaseDailyChange;
     videos: BaseDailyChange;
   },
-  albums: AlbumData[]
+  albums: AlbumData[];
+  lastUpdate: string;
 }

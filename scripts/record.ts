@@ -1,23 +1,21 @@
 import { readFile } from "fs/promises";
 import { getLatestFile, writeToFile } from "./utils/file.utils.ts";
 import type { BaseDailyChange } from "./config/track.config.ts";
-import type { RecordModel, YTDSumModel } from "./config/record.config.ts";
-import { addNumbers, compareNumbers } from "./utils/count.utils.ts";
-import { formatDate } from "./utils/date.utils.ts";
+import type { RecordModel } from "./config/record.config.ts";
+import { compareNumbers } from "./utils/count.utils.ts";
+import { extractDateFromPath } from "./utils/date.utils.ts";
 
 function processDailyChangeContent(input: string): Map<string, BaseDailyChange> {
 
   const map = new Map<string, BaseDailyChange>();
 
-  const separateLines = input.split(/\r?\n|\r|\n/g);
-  separateLines.forEach((element: any) => {
-    const [uid, playCount, change] = element.trim().split(/\s*[\s,]\s*/);
-    map.set(uid, { playCount, change })
+  JSON.parse(input).forEach((element: any) => {
+    map.set(element.uid, { playCount: element.playCount, change: element.change })
   });
   return map;
 }
 
-function processRecordContent(input: string, dailyChangeMap: Map<string, BaseDailyChange>): RecordModel[] {
+function processRecordContent(input: string, dailyChangeMap: Map<string, BaseDailyChange>, lastUpdate: string): RecordModel[] {
 
   const result: RecordModel[] = [];
 
@@ -25,25 +23,9 @@ function processRecordContent(input: string, dailyChangeMap: Map<string, BaseDai
     const { uid, change, date } = element;
     const currChange = dailyChangeMap.get(uid);
     if (currChange && compareNumbers(currChange.change, change)) {
-      result.push({ uid, change: currChange.change, date: formatDate(new Date()) })
+      result.push({ uid, change: currChange.change, date: lastUpdate })
     } else {
       result.push({ uid, change, date })
-    }
-  });
-  return result;
-}
-
-function processYtdSumContent(input: string, dailyChangeMap: Map<string, BaseDailyChange>): YTDSumModel[] {
-
-  const result: YTDSumModel[] = [];
-
-  JSON.parse(input).forEach((element: any) => {
-    const { uid, sum } = element;
-    const currChange = dailyChangeMap.get(uid);
-    if (currChange) {
-      result.push({ uid, sum: String(addNumbers(sum, currChange.change)) })
-    } else {
-      result.push({ uid, sum })
     }
   });
   return result;
@@ -55,50 +37,34 @@ async function main() {
   try {
 
     // Read the latest file from /daily directory
-    const dailyChangeFile = await getLatestFile('./daily', ['.txt']);
-    if (!dailyChangeFile) {
-      console.log('No daily changes. Skip');
+    const lastestDailyChangeFile = await getLatestFile('./daily', ['.json']);
+    if (!lastestDailyChangeFile) {
+      console.log('No latest daily changes. Skip');
       return;
     }
-    console.log('Daily Change file:', dailyChangeFile);
-    const dailyChangeContents = await readFile(dailyChangeFile, 'utf-8');
-    const dailyChanges = processDailyChangeContent(dailyChangeContents);
+    console.log('Latest daily Change file:', lastestDailyChangeFile);
+    const latestDailyChangeContents = await readFile(lastestDailyChangeFile, 'utf-8');
+    const latestDailyChanges = processDailyChangeContent(latestDailyChangeContents);
 
     // Process all time records
     const allTimeRecFile = await getLatestFile('./records', ['allTime.json']);
+    const lastestUpdateDayStr = extractDateFromPath(lastestDailyChangeFile ?? '');
     if (allTimeRecFile) {
       console.log('All Time Record file:', allTimeRecFile);
       const allTimeRecContents = await readFile(allTimeRecFile, 'utf-8');
-      const allTimeRec = processRecordContent(allTimeRecContents, dailyChanges);
+      const allTimeRec = processRecordContent(allTimeRecContents, latestDailyChanges, lastestUpdateDayStr);
       writeToFile(`./records`, 'allTime.json', JSON.stringify(allTimeRec))
     } else {
+      console.error('Error reading all time record. Initializing...');
       const result = [];
-      for (let [uid, value] of dailyChanges) {
+      for (let [uid, value] of latestDailyChanges) {
         result.push({
           uid,
           change: value.change,
-          date: formatDate(new Date())
+          date: lastestUpdateDayStr
         })
       }
       writeToFile(`./records`, 'allTime.json', JSON.stringify(result))
-    }
-
-    // Process YTD records
-    const ytdSumFile = await getLatestFile('./records', ['ytd.json']);
-    if (ytdSumFile) {
-      console.log('YTD Sum file:', ytdSumFile);
-      const ytdSumContents = await readFile(ytdSumFile, 'utf-8');
-      const ytdSum = processYtdSumContent(ytdSumContents, dailyChanges);
-      writeToFile(`./records`, 'ytd.json', JSON.stringify(ytdSum))
-    } else {
-      const result = [];
-      for (let [uid, value] of dailyChanges) {
-        result.push({
-          uid,
-          sum: value.change
-        })
-      }
-      writeToFile(`./records`, 'ytd.json', JSON.stringify(result))
     }
 
   } catch (error) {

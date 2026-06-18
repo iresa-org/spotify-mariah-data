@@ -19,6 +19,27 @@ export async function getLatestFile(targetDir: string, acceptedExt: string[] = [
   } catch (error) {
     console.error(`Error reading directory "${targetDir}":`, error);
   }
+  return Promise.resolve(null)
+}
+
+/**
+ * Finds the file with the latest modification timestamp in a given directory.
+ * @param targetDir The directory path to scan.
+ * @returns The absolute path of the latest file, or null if no files are found.
+ */
+export async function getOldestFile(targetDir: string, acceptedExt: string[] = []): Promise<string | null> {
+  try {
+    // 1. Read all items inside the directory
+    const items: string[] = await fs.readdir(targetDir);
+
+    // 2. Sort list by descending order
+    const list = items.filter(item => !acceptedExt.length || acceptedExt.some(ext => item.includes(ext))).sort()
+
+    return list.length ? path.join(targetDir, list[0]) : null
+  } catch (error) {
+    console.error(`Error reading directory "${targetDir}":`, error);
+  }
+  return Promise.resolve(null)
 }
 
 export async function writeToFile(dir: string, fileName: string, data: string) {

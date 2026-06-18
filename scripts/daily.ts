@@ -38,7 +38,8 @@ function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, Tra
       featured: getTotalStreams(featuredList),
       videos: getTotalStreams(videos),
     },
-    albums: convertToAlbumList(albumMap)
+    albums: convertToAlbumList(albumMap),
+    lastUpdate: formatDate(new Date())
   }
 }
 
@@ -88,10 +89,10 @@ async function main() {
     writeToFile(`./result`, 'current.json', result)
 
     // Write to daily
-    let list = resp.tracks.map(track => `${track.trackDetails.uid} ${track.dailyChanges.playCount} ${track.dailyChanges.change}`);
+    let list = resp.tracks.map(track => ({ uid: track.trackDetails.uid, playCount: track.dailyChanges.playCount, change: track.dailyChanges.change }));
     const prevDateStr = extractDateFromPath(prevFilePath ?? '');
     const prevDate = parseLocalDate(prevDateStr) ?? new Date();
-    writeToFile(`./daily`, `${formatDate(getTomorrowDate(prevDate))}.txt`, list.join('\n'))
+    writeToFile(`./daily`, `${formatDate(getTomorrowDate(prevDate))}.json`, JSON.stringify(list))
 
     // Clean upload folder
     clearFilesFromFolder('./upload', ['.txt'])

@@ -3,9 +3,3 @@ export interface RecordModel {
   change: string;
   date: string;
 }
-
-export interface YTDSumModel {
-  uid: string;
-  sum: string;
-}
-
