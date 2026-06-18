@@ -18,7 +18,6 @@ export async function getLatestFile(targetDir: string, acceptedExt: string[] = [
     return list.length ? path.join(targetDir, list[0]) : null
   } catch (error) {
     console.error(`Error reading directory "${targetDir}":`, error);
-    throw error;
   }
 }
 
