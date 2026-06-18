@@ -71,7 +71,7 @@ async function main() {
     console.log('Upload file:', uploadFilePath);
 
     // Read previous file from current directory
-    const prevFilePath = await getLatestFile('./daily', ['.txt']);
+    const prevFilePath = await getLatestFile('./daily', ['.json']);
     if (prevFilePath) {
       const prevFileContents = await readFile(prevFilePath!, 'utf-8');
       prevMap = processPrevChangeContent(prevFileContents)
