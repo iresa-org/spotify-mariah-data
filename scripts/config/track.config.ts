@@ -61,15 +61,27 @@ export interface AlbumData {
   dailyChanges: TrackDailyChange,
 }
 
+export interface PlayCountOutput {
+  total: BaseDailyChange;
+  lead: BaseDailyChange;
+  solo: BaseDailyChange;
+  featured: BaseDailyChange;
+  videos: BaseDailyChange;
+
+}
+
 export interface GetTrackDetailResp {
   tracks: TrackData[];
-  playCounts: {
-    total: BaseDailyChange;
-    lead: BaseDailyChange;
-    solo: BaseDailyChange;
-    featured: BaseDailyChange;
-    videos: BaseDailyChange;
-  },
+  playCounts: PlayCountOutput,
   albums: AlbumData[];
   lastUpdate: string;
+}
+
+export interface DailyCountOutput {
+  tracks: {
+    uid: string;
+    playCount: string;
+    change: string;
+  }[];
+  playCounts: PlayCountOutput
 }

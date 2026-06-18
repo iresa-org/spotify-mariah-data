@@ -89,10 +89,13 @@ async function main() {
     writeToFile(`./result`, 'current.json', result)
 
     // Write to daily
-    let list = resp.tracks.map(track => ({ uid: track.trackDetails.uid, playCount: track.dailyChanges.playCount, change: track.dailyChanges.change }));
+    let tracks = resp.tracks.map(track => ({ uid: track.trackDetails.uid, playCount: track.dailyChanges.playCount, change: track.dailyChanges.change }));
     const prevDateStr = extractDateFromPath(prevFilePath ?? '');
     const prevDate = parseLocalDate(prevDateStr) ?? new Date();
-    writeToFile(`./daily`, `${formatDate(getTomorrowDate(prevDate))}.json`, JSON.stringify(list))
+    writeToFile(`./daily`, `${formatDate(getTomorrowDate(prevDate))}.json`, JSON.stringify({
+      tracks,
+      playCounts: resp.playCounts
+    }))
 
     // Clean upload folder
     clearFilesFromFolder('./upload', ['.txt'])

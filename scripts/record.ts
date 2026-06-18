@@ -1,6 +1,6 @@
 import { readFile } from "fs/promises";
 import { getLatestFile, writeToFile } from "./utils/file.utils.ts";
-import type { BaseDailyChange } from "./config/track.config.ts";
+import type { BaseDailyChange, DailyCountOutput } from "./config/track.config.ts";
 import type { RecordModel } from "./config/record.config.ts";
 import { compareNumbers } from "./utils/count.utils.ts";
 import { extractDateFromPath } from "./utils/date.utils.ts";
@@ -9,7 +9,9 @@ function processDailyChangeContent(input: string): Map<string, BaseDailyChange> 
 
   const map = new Map<string, BaseDailyChange>();
 
-  JSON.parse(input).forEach((element: any) => {
+  const dailyCountOutput = JSON.parse(input) as DailyCountOutput;
+
+  dailyCountOutput.tracks.forEach((element: any) => {
     map.set(element.uid, { playCount: element.playCount, change: element.change })
   });
   return map;
