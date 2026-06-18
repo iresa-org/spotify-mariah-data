@@ -1,6 +1,6 @@
 import { readFile } from "fs/promises";
 import { clearFilesFromFolder, getLatestFile, writeToFile } from "./utils/file.utils.ts";
-import type { GetTrackDetailResp, SpotifyTrackData, TrackDailyChange, TrackData } from "./config/track.config.ts";
+import type { DailyCountOutput, GetTrackDetailResp, SpotifyTrackData, TrackDailyChange, TrackData } from "./config/track.config.ts";
 import { extractDateFromPath, formatDate, getTomorrowDate, parseLocalDate } from "./utils/date.utils.ts";
 import { calcDailyChanges, convertToAlbumList, filterAlbums, getAlbumsFromTracks, getDuplicateIds, getTotalStreams, getTrackCategories } from "./utils/count.utils.ts";
 
@@ -47,10 +47,10 @@ function processPrevChangeContent(input: string): Map<string, TrackDailyChange> 
 
   const map = new Map<string, TrackDailyChange>();
 
-  const separateLines = input.split(/\r?\n|\r|\n/g);
-  separateLines.forEach((element: any) => {
-    const [uid, playCount, change] = element.trim().split(/\s*[\s,]\s*/);
-    map.set(uid, { playCount, change })
+  const dailyCountOutput = JSON.parse(input) as DailyCountOutput;
+
+  dailyCountOutput.tracks.forEach((element: any) => {
+    map.set(element.uid, { playCount: element.playCount, change: element.change })
   });
   return map;
 }
