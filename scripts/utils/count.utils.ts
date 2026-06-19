@@ -157,3 +157,13 @@ export function sortTracksOnAlbum(list: TrackData[]): any[] {
     return item1.discNumber - item2.discNumber || item1.trackNumber - item2.trackNumber
   })
 }
+
+export function calculateSum(arr: string[]): string {
+  let total = BigInt(0);
+  
+  for (const num of arr) {
+    total += BigInt(num);
+  }
+  
+  return String(total);
+}

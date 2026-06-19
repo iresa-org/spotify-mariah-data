@@ -1,7 +1,7 @@
 import { readFile } from "fs/promises";
 import { clearFilesFromFolder, getLatestFile, writeToFile } from "./utils/file.utils.ts";
 import type { DailyCountOutput, GetTrackDetailResp, SpotifyTrackData, TrackDailyChange, TrackData } from "./config/track.config.ts";
-import { extractDateFromPath, formatDate, getTomorrowDate, parseLocalDate } from "./utils/date.utils.ts";
+import { extractDateFromPath, formatDate, getTomorrowDate, getYesterdayDate, parseLocalDate } from "./utils/date.utils.ts";
 import { calcDailyChanges, convertToAlbumList, filterAlbums, getAlbumsFromTracks, getDuplicateIds, getTotalStreams, getTrackCategories } from "./utils/count.utils.ts";
 
 function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, TrackDailyChange>): GetTrackDetailResp {
@@ -91,8 +91,8 @@ async function main() {
     // Write to daily
     let tracks = resp.tracks.map(track => ({ uid: track.trackDetails.uid, playCount: track.dailyChanges.playCount, change: track.dailyChanges.change }));
     const prevDateStr = extractDateFromPath(prevFilePath ?? '');
-    const prevDate = parseLocalDate(prevDateStr) ?? new Date();
-    writeToFile(`./daily`, `${formatDate(getTomorrowDate(prevDate))}.json`, JSON.stringify({
+    const prevDate = getTomorrowDate(parseLocalDate(prevDateStr)) ?? getYesterdayDate();
+    writeToFile(`./daily`, `${formatDate(prevDate)}.json`, JSON.stringify({
       tracks,
       playCounts: resp.playCounts
     }))

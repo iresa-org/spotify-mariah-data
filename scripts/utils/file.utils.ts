@@ -15,7 +15,7 @@ export async function getLatestFile(targetDir: string, acceptedExt: string[] = [
     // 2. Sort list by descending order
     const list = items.filter(item => !acceptedExt.length || acceptedExt.some(ext => item.includes(ext))).sort().reverse()
 
-    return list.length ? path.join(targetDir, list[0]) : null
+    return list.length ? path.join(targetDir, list[0] ?? '') : null
   } catch (error) {
     console.error(`Error reading directory "${targetDir}":`, error);
   }
@@ -35,7 +35,7 @@ export async function getOldestFile(targetDir: string, acceptedExt: string[] = [
     // 2. Sort list by descending order
     const list = items.filter(item => !acceptedExt.length || acceptedExt.some(ext => item.includes(ext))).sort()
 
-    return list.length ? path.join(targetDir, list[0]) : null
+    return list.length ? path.join(targetDir, list[0] ?? '') : null
   } catch (error) {
     console.error(`Error reading directory "${targetDir}":`, error);
   }
