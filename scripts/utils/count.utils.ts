@@ -54,7 +54,7 @@ export function getTotalStreams(list: TrackData[]): BaseDailyChange {
 
 export function calcDailyChanges(item: ContentItem, prevMap: Map<string, TrackDailyChange>): TrackDailyChange {
   const { uid, itemV2 } = item;
-  let prevTotal = BigInt(0), prevChange = BigInt(item.itemV2.data.playcount);
+  let prevTotal = BigInt(item.itemV2.data.playcount), prevChange = BigInt(0);
   if (prevMap.has(uid)) {
     const prev = prevMap.get(uid);
     prevTotal = BigInt(prev!.playCount);
