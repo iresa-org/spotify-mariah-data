@@ -54,6 +54,7 @@ export class TrackHandler {
           discNumber: itemV2?.data?.discNumber,
           trackNumber: itemV2?.data?.trackNumber,
           associationsV3: itemV2?.data?.associationsV3,
+          isVideo: categories.includes('V'),
           categories,
           countMerged
         });

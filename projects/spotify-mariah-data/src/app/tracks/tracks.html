@@ -31,7 +31,7 @@
 
         <tr class="item">
             <td data-title="#">{{$index + 1}}</td>
-            <td data-title="Name">{{item.name}} {{item.mediaType === 'VIDEO' ? '- VIDEO' : ''}}</td>
+            <td data-title="Name">{{item.name}} {{item.isVideo ? '- VIDEO' : ''}}</td>
             <td data-title="Play Count">{{item.playcount | number}}</td>
             <td data-title="Change">{{item.change | number}}</td>
             <td data-title="%">{{item.percent | percent}}</td>
