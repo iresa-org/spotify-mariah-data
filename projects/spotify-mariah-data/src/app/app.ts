@@ -21,6 +21,8 @@ export class App implements OnInit {
 
   renderer = inject(Renderer2);
 
+  lastUpdated = signal<string>('');
+
   @HostListener('window:scroll')
   onScroll() {
     this.onWindowScroll();
@@ -32,7 +34,10 @@ export class App implements OnInit {
 
   loadTracks() {
     this.trackHandler.loadTracks().subscribe({
-      complete: () => this.loaded.set(true)
+      complete: () => {
+        this.lastUpdated.set(this.trackHandler.getLastUpdated())
+        this.loaded.set(true)
+      }
     });
   }
 

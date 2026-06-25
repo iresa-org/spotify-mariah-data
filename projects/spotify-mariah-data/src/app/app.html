@@ -1,8 +1,9 @@
 @if (loaded()) {
+<div class="pagetitle">Mariah Carey - Spotify Top Songs | Last Updated: {{lastUpdated()}}</div>
 <div class="menu">
     <ul>
         <li><a [routerLink]="['/tracks']">Tracks</a></li>
-        <li><a [routerLink]="['/albums']" >Albums</a></li>
+        <li><a [routerLink]="['/albums']">Albums</a></li>
     </ul>
 </div>
 <router-outlet></router-outlet>

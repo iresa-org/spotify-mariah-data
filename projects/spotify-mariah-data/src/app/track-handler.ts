@@ -110,6 +110,10 @@ export class TrackHandler {
     return this.currMap;
   }
 
+  getLastUpdated() {
+    return this.trackListResp?.['lastUpdate']
+  }
+
   includeStr(value: string, search: string): boolean {
     return typeof value == "string" && value.indexOf(search) > -1
   }
