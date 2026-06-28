@@ -1,3 +1,5 @@
+import { ContentItem } from "./source.config.ts";
+
 /**
  * S: Solo
  * F: Featured
@@ -5,27 +7,6 @@
  * V: Video
  */
 export type TrackCategory = 'S' | 'F' | 'L' | 'V';
-
-export interface TrackArtists {
-  items: { profile: { name: string } }[]
-}
-
-export interface ContentItem {
-  uid: string;
-  itemV2: {
-    data: {
-      playcount: string;
-      artists: TrackArtists;
-      mediaType: string;
-      albumOfTrack: {
-        name: string;
-        uri: string
-      },
-      discNumber: number;
-      trackNumber: number;
-    }
-  }
-}
 
 export interface BaseDailyChange {
   playCount: string;
@@ -35,16 +16,6 @@ export interface BaseDailyChange {
 
 export interface TrackDailyChange extends BaseDailyChange {
   prevChange?: string;
-}
-
-export interface SpotifyTrackData {
-  data: {
-    playlistV2: {
-      content: {
-        items: ContentItem[]
-      }
-    }
-  }
 }
 
 export interface TrackData {

@@ -22,8 +22,8 @@ function processYtdSumContent(oldestDailyChangeMap: Map<string, BaseDailyChange>
 
   for (let [uid, value] of latestDailyChangeMap) {
     if (oldestDailyChangeMap.has(uid)) {
-      const start = oldestDailyChangeMap.get(uid)?.change ?? '0';
-      const end = value.change;
+      const start = oldestDailyChangeMap.get(uid)?.playCount ?? '0';
+      const end = value.playCount;
       const diff = start === end ? end : subtractNumbers(start, end);
       tracks.push({ uid, ytd: String(diff)})
     }

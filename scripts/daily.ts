@@ -1,8 +1,9 @@
 import { readFile } from "fs/promises";
 import { clearFilesFromFolder, getLatestFile, writeToFile } from "./utils/file.utils.ts";
-import type { DailyCountOutput, GetTrackDetailResp, SpotifyTrackData, TrackDailyChange, TrackData } from "./config/track.config.ts";
+import type { DailyCountOutput, GetTrackDetailResp, TrackDailyChange, TrackData } from "./config/track.config.ts";
 import { extractDateFromPath, formatDate, getTomorrowDate, getYesterdayDate, parseLocalDate } from "./utils/date.utils.ts";
 import { calcDailyChanges, convertToAlbumList, filterAlbums, getAlbumsFromTracks, getDuplicateIds, getTotalStreams, getTrackCategories } from "./utils/count.utils.ts";
+import type { SpotifyTrackData } from "./config/source.config.ts";
 
 function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, TrackDailyChange>): GetTrackDetailResp {
   const map = new Map<string, TrackData>();
