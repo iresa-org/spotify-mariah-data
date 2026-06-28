@@ -2,8 +2,8 @@ import { SELECTED_ALBUMS } from "../config/album.config.ts";
 import type { ContentItem, TrackArtists } from "../config/source.config.ts";
 import type { AlbumData, BaseDailyChange, TrackCategory, TrackDailyChange, TrackData } from "../config/track.config.ts";
 
-export function compareNumbers(number1: number | string, number2: number | string): boolean {
-  return Boolean(Number(number1) - Number(number2));
+export function isBiggerNumber(number1: number | string, number2: number | string): boolean {
+  return Number(number1) > Number(number2);
 }
 
 export function addNumbers(number1: string, number2: string): BigInt {
