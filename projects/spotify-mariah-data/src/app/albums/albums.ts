@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { TrackHandler } from '../track-handler';
-import { DecimalPipe, PercentPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
+import { PercentWithSignPipe } from 'ui-shared';
 
 @Component({
   selector: 'app-albums',
-  imports: [DecimalPipe, PercentPipe],
+  imports: [DecimalPipe, PercentWithSignPipe],
   templateUrl: './albums.html',
   styleUrl: './albums.scss',
 })

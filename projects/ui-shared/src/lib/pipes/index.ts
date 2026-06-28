@@ -3,3 +3,4 @@
  */
 
 export { NumberWithSignPipe } from './number-with-sign-pipe';
+export { PercentWithSignPipe } from './percent-with-sign-pipe';

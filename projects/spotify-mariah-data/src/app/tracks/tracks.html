@@ -34,7 +34,7 @@
             <td data-title="Name">{{item.name}} {{item.isVideo ? '- VIDEO' : ''}}</td>
             <td data-title="Play Count">{{item.playcount | number}}</td>
             <td data-title="Change">{{item.change | number}}</td>
-            <td data-title="%">{{item.percent | percent}}</td>
+            <td data-title="%">{{item.percent | percentWithSign: '1.0-2'}}</td>
         </tr>
         }
     </tbody>
