@@ -50,7 +50,7 @@ jobs:
       run: node scripts/monthly.ts
 
     - name: Update historical
-    run: node scripts/historical.ts
+      run: node scripts/historical.ts
 
     # Commit all changed files back to the repository
     - uses: stefanzweifel/git-auto-commit-action@v7
