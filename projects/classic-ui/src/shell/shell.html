@@ -1,0 +1,13 @@
+@if (loaded()) {
+<div class="pagetitle">Mariah Carey - Spotify Top Songs | Last Updated: {{lastUpdated()}}</div>
+<div class="menu">
+    <ul>
+        <li><a [routerLink]="['/classic/tracks']">Tracks</a></li>
+        <li><a [routerLink]="['/classic/albums']">Albums</a></li>
+    </ul>
+</div>
+<router-outlet></router-outlet>
+<button (click)="scrollToTop()" class="scroll-top-btn" title="Go to top" #scrollTop>Top</button>
+} @else {
+<div>Loading...</div>
+}

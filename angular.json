@@ -24,13 +24,15 @@
             "tsConfig": "projects/spotify-mariah-data/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-               "projects/spotify-mariah-data/src/404.html",
+              "projects/spotify-mariah-data/src/404.html",
               {
                 "glob": "**/*",
                 "input": "projects/spotify-mariah-data/public"
               }
             ],
-            "styles": ["projects/spotify-mariah-data/src/styles.scss"]
+            "styles": [
+              "projects/spotify-mariah-data/src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {
@@ -81,6 +83,11 @@
       "root": "projects/ui-shared",
       "sourceRoot": "projects/ui-shared/src",
       "prefix": "lib",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular/build:ng-packagr",
@@ -98,6 +105,68 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "projects/ui-shared/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "classic-ui": {
+      "projectType": "library",
+      "root": "projects/classic-ui",
+      "sourceRoot": "projects/classic-ui/src",
+      "prefix": "lib",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/classic-ui/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/classic-ui/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/classic-ui/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "ui": {
+      "projectType": "library",
+      "root": "projects/ui",
+      "sourceRoot": "projects/ui/src",
+      "prefix": "lib",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ui/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ui/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/ui/tsconfig.spec.json"
           }
         }
       }
