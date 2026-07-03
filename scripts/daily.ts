@@ -5,7 +5,7 @@ import { extractDateFromPath, formatDate, getTomorrowDate, getYesterdayDate, par
 import { calcDailyChanges, convertToAlbumList, filterAlbums, getAlbumsFromTracks, getDuplicateIds, getTotalStreams, getTrackCategories } from "./utils/count.utils.ts";
 import type { SpotifyTrackData } from "./config/source.config.ts";
 
-function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, TrackDailyChange>): GetTrackDetailResp {
+function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, TrackDailyChange>, prevDate: string): GetTrackDetailResp {
   const map = new Map<string, TrackData>();
 
   list.forEach((el) => {
@@ -40,7 +40,7 @@ function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, Tra
       videos: getTotalStreams(videos),
     },
     albums: convertToAlbumList(albumMap),
-    lastUpdate: formatDate(new Date())
+    lastUpdate: prevDate
   }
 }
 
@@ -81,9 +81,13 @@ async function main() {
       prevMap = new Map<string, TrackDailyChange>
     }
 
+    // get previous date
+    const prevDateStr = extractDateFromPath(prevFilePath ?? '');
+    const prevDate = getTomorrowDate(parseLocalDate(prevDateStr)) ?? getYesterdayDate();
+
     // Parse data and calculate changes
     const uploadFileContents = await readFile(uploadFilePath!, 'utf-8');
-    const resp = processUploadContent(JSON.parse(uploadFileContents), prevMap!)
+    const resp = processUploadContent(JSON.parse(uploadFileContents), prevMap!, prevDate)
 
     // Write to result
     const result = JSON.stringify(resp);
@@ -91,8 +95,6 @@ async function main() {
 
     // Write to daily
     let tracks = resp.tracks.map(track => ({ uid: track.trackDetails.uid, playCount: track.dailyChanges.playCount, change: track.dailyChanges.change }));
-    const prevDateStr = extractDateFromPath(prevFilePath ?? '');
-    const prevDate = getTomorrowDate(parseLocalDate(prevDateStr)) ?? getYesterdayDate();
     writeToFile(`./daily`, `${formatDate(prevDate)}.json`, JSON.stringify({
       tracks,
       playCounts: resp.playCounts
