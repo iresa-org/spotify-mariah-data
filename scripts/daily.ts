@@ -5,8 +5,8 @@ import { extractDateFromPath, formatDate, getTomorrowDate, getYesterdayDate, par
 import { calcDailyChanges, convertToAlbumList, filterAlbums, getAlbumsFromTracks, getDuplicateIds, getTotalStreams, getTrackCategories } from "./utils/count.utils.ts";
 import type { SpotifyTrackData } from "./config/source.config.ts";
 
-function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, TrackDailyChange>, prevDate: string): GetTrackDetailResp {
-  const map = new Map<string, TrackData>();
+function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, TrackDailyChange>, prevDate: Date): GetTrackDetailResp {
+  const map = new Map<Date, TrackData>();
 
   list.forEach((el) => {
     const content = el.data.playlistV2?.content;
@@ -40,7 +40,7 @@ function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, Tra
       videos: getTotalStreams(videos),
     },
     albums: convertToAlbumList(albumMap),
-    lastUpdate: prevDate
+    lastUpdate: formatDate(prevDate)
   }
 }
 
