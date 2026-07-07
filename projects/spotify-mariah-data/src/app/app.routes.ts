@@ -18,6 +18,10 @@ export const routes: Routes = [
             { path: '', redirectTo: 'tracks', pathMatch: 'full' },
         ]
     },
+    {
+        path: 'ui',
+        loadComponent: () => import('ui').then((c) => c.Shell),
+    },
     { path: '', redirectTo: 'classic', pathMatch: 'full' },
     { path: '**', redirectTo: 'tracks' },
 ];

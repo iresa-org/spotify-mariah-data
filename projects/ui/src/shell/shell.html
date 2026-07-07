@@ -1,0 +1,113 @@
+<section class="dashboard" aria-label="Mariah Carey Spotify dashboard">
+  <aside class="dashboard__sidebar" aria-label="Dashboard navigation">
+    <div class="brand">
+      <div class="brand__badge" aria-hidden="true">MC</div>
+      <div>
+        <p class="brand__eyebrow">Artist Overview</p>
+        <h1 class="brand__title">Mariah Carey</h1>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="nav__link nav__link--active" href="#" aria-current="page">Overview</a>
+      <a class="nav__link" href="#">Tracks</a>
+      <a class="nav__link" href="#">Audience</a>
+      <a class="nav__link" href="#">Playlists</a>
+      <a class="nav__link" href="#">Territories</a>
+    </nav>
+
+    <dl class="sidebar-stats">
+      <div>
+        <dt>Peak Month</dt>
+        <dd>
+          {{ peakStreamMonth().month }} {{ peakStreamMonth().streamsInMillions }}M
+        </dd>
+      </div>
+      <div>
+        <dt>Current Rank</dt>
+        <dd>#42 Global Pop</dd>
+      </div>
+    </dl>
+  </aside>
+
+  <main class="dashboard__content">
+    <header class="content-header">
+      <div>
+        <p class="content-header__eyebrow">Spotify Performance</p>
+        <h2 class="content-header__title">Streaming Intelligence</h2>
+      </div>
+      <button class="content-header__button" type="button">Export Report</button>
+    </header>
+
+    <section class="kpis" aria-label="Key performance indicators">
+      @for (kpi of kpis(); track kpi.label) {
+        <article class="kpi-card">
+          <p class="kpi-card__label">{{ kpi.label }}</p>
+          <p class="kpi-card__value">{{ formatCompact(kpi.value) }}</p>
+          <p
+            class="kpi-card__delta"
+            [class.kpi-card__delta--positive]="kpi.delta >= 0"
+            [class.kpi-card__delta--negative]="kpi.delta < 0"
+          >
+            {{ kpi.delta >= 0 ? '+' : '' }}{{ kpi.delta }}%
+          </p>
+        </article>
+      }
+    </section>
+
+    <section class="panel panel--chart" aria-label="Monthly stream trend">
+      <div class="panel__heading">
+        <h3>Monthly Streams</h3>
+        <p>Millions of streams in the last 6 months</p>
+      </div>
+
+      <div class="bars" role="img" aria-label="Bar chart of monthly streams">
+        @for (month of monthlyStreams(); track month.month) {
+          <div class="bar-group">
+            <div
+              class="bar-group__bar"
+              [style.height.%]="(month.streamsInMillions / 200) * 100"
+              [attr.aria-label]="month.month + ' ' + month.streamsInMillions + ' million'"
+            ></div>
+            <span class="bar-group__month">{{ month.month }}</span>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="panel" aria-label="Top tracks list">
+      <div class="panel__heading">
+        <h3>Top Tracks</h3>
+        <p>Most streamed Mariah Carey songs on Spotify</p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <caption class="sr-only">
+            Top tracks and stream counts
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Track</th>
+              <th scope="col">Album</th>
+              <th scope="col">Streams</th>
+              <th scope="col">30D</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (track of topTracks(); track track.title) {
+              <tr>
+                <th scope="row">{{ track.title }}</th>
+                <td>{{ track.album }}</td>
+                <td>{{ formatCompact(track.streams) }}</td>
+                <td [class.delta-positive]="track.growth >= 0" [class.delta-negative]="track.growth < 0">
+                  {{ track.growth >= 0 ? '+' : '' }}{{ track.growth }}%
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</section>
