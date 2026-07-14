@@ -1,0 +1,165 @@
+<section class="albums-page" aria-label="Albums">
+
+  <header class="page-header">
+    <div>
+      <p class="page-header__eyebrow">Spotify Streams</p>
+      <h2 class="page-header__title">Albums</h2>
+    </div>
+  </header>
+
+  @if (chartData().length > 0) {
+    <section class="panel" aria-label="Albums daily streams chart">
+      <div class="panel__heading">
+        <h3>Top Albums by Daily Streams</h3>
+        <p>Albums with the most streams today</p>
+      </div>
+      <div class="chart-wrap" role="img" aria-label="Bar chart of top albums by daily streams">
+        <ngx-charts-bar-vertical
+          [results]="chartData()"
+          [scheme]="colorScheme"
+          [xAxis]="true"
+          [yAxis]="true"
+          [showDataLabel]="true"
+          [yAxisTickFormatting]="yAxisTickFormat"
+          [dataLabelFormatting]="yAxisTickFormat"
+          [roundEdges]="true"
+        />
+      </div>
+    </section>
+  }
+
+  <section aria-label="Albums grid">
+    <h3 class="section-title">All Albums</h3>
+    <div class="album-grid">
+      @for (album of albums(); track album.albumDetails.uri) {
+        <article class="album-card" [class.album-card--selected]="selectedAlbum() === album.albumDetails.uri">
+          <button
+            type="button"
+            class="album-card__art-btn"
+            [attr.aria-expanded]="selectedAlbum() === album.albumDetails.uri"
+            [attr.aria-controls]="'album-tracks-' + album.albumDetails.uri"
+            (click)="toggleAlbum(album.albumDetails.uri)"
+          >
+            @if (getCoverArt(album)) {
+              <img
+                class="album-card__art"
+                [src]="getCoverArt(album)"
+                [alt]="album.albumDetails.name + ' album cover'"
+                loading="lazy"
+                width="160"
+                height="160"
+              />
+            } @else {
+              <div class="album-card__art album-card__art--placeholder" aria-hidden="true">
+                <span>♪</span>
+              </div>
+            }
+            <div class="album-card__overlay" aria-hidden="true">
+              <span class="album-card__expand-icon">{{ selectedAlbum() === album.albumDetails.uri ? '▲' : '▼' }}</span>
+            </div>
+          </button>
+
+          <div class="album-card__body">
+            <p class="album-card__name" [title]="album.albumDetails.name">{{ album.albumDetails.name }}</p>
+            <dl class="album-card__stats">
+              <div>
+                <dt>Total</dt>
+                <dd>{{ formatCompact(album.dailyChanges.playCount) }}</dd>
+              </div>
+              <div>
+                <dt>Today</dt>
+                <dd
+                  [class.delta-positive]="+album.dailyChanges.change >= 0"
+                  [class.delta-negative]="+album.dailyChanges.change < 0"
+                >
+                  +{{ formatCompact(album.dailyChanges.change) }}
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  @if (selectedAlbum()) {
+    @for (album of albums(); track album.albumDetails.uri) {
+      @if (album.albumDetails.uri === selectedAlbum()) {
+        <section
+          class="panel album-tracks"
+          [id]="'album-tracks-' + album.albumDetails.uri"
+          aria-live="polite"
+        >
+          <div class="album-tracks__header">
+            @if (getLargeCoverArt(album)) {
+              <img
+                class="album-tracks__cover"
+                [src]="getLargeCoverArt(album)"
+                [alt]="album.albumDetails.name + ' album cover'"
+                width="80"
+                height="80"
+              />
+            }
+            <div>
+              <p class="album-tracks__eyebrow">Album Tracks</p>
+              <h3 class="album-tracks__title">{{ album.albumDetails.name }}</h3>
+              <p class="album-tracks__meta">
+                {{ album.albumDetails.tracks.length }} tracks &bull;
+                {{ formatCompact(album.dailyChanges.playCount) }} total streams
+              </p>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <caption class="sr-only">{{ album.albumDetails.name }} track list</caption>
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Track</th>
+                  <th scope="col">Total Streams</th>
+                  <th scope="col">Daily Streams</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (track of $any(albumTracks()); track track.uid; let i = $index) {
+                  <tr>
+                    <td class="rank">{{ i + 1 }}</td>
+                    <th scope="row" class="track-cell">
+                      @if (track.album?.coverArt?.sources?.[0]?.url) {
+                        <img
+                          class="track-art"
+                          [src]="track.album.coverArt.sources[0].url"
+                          [alt]="album.albumDetails.name + ' album art'"
+                          loading="lazy"
+                          width="36"
+                          height="36"
+                        />
+                      }
+                      <div class="track-info">
+                        <span class="track-name">{{ track.name }}</span>
+                        <span class="track-artists">
+                          @for (artist of track.artists; track artist.uri; let last = $last) {
+                            {{ artist.profile?.name }}{{ last ? '' : ', ' }}
+                          }
+                        </span>
+                      </div>
+                    </th>
+                    <td>{{ formatCompact(track.playcount) }}</td>
+                    <td
+                      [class.delta-positive]="track.change >= 0"
+                      [class.delta-negative]="track.change < 0"
+                    >
+                      +{{ formatCompact(track.change) }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+      }
+    }
+  }
+
+</section>

@@ -1,0 +1,103 @@
+<section class="tracks-page" aria-label="Tracks">
+
+  <header class="page-header">
+    <div>
+      <p class="page-header__eyebrow">Spotify Streams</p>
+      <h2 class="page-header__title">Tracks</h2>
+    </div>
+  </header>
+
+  <div role="tablist" aria-label="Track category filter" class="filters">
+    @for (tab of filterTabs; track tab.value) {
+      <button
+        role="tab"
+        type="button"
+        class="filter-btn"
+        [class.filter-btn--active]="activeFilter() === tab.value"
+        [attr.aria-selected]="activeFilter() === tab.value"
+        (click)="activeFilter.set(tab.value)"
+      >
+        {{ tab.label }}
+      </button>
+    }
+  </div>
+
+  @if (chartData().length > 0) {
+    <section class="panel" aria-label="Top tracks by daily streams">
+      <div class="panel__heading">
+        <h3>Top 15 by Daily Streams</h3>
+        <p>Tracks with the highest stream count today</p>
+      </div>
+      <div class="chart-wrap" role="img" aria-label="Horizontal bar chart of top tracks by daily streams">
+        <ngx-charts-bar-horizontal
+          [results]="chartData()"
+          [scheme]="colorScheme"
+          [xAxis]="true"
+          [yAxis]="true"
+          [showDataLabel]="true"
+          [xAxisTickFormatting]="xAxisTickFormat"
+          [dataLabelFormatting]="xAxisTickFormat"
+          [roundEdges]="true"
+        />
+      </div>
+    </section>
+  }
+
+  <section class="panel" aria-label="Tracks list">
+    <div class="panel__heading">
+      <h3>All Tracks</h3>
+      <p>{{ list().length }} tracks &mdash; sorted by total streams</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption class="sr-only">Tracks sorted by total streams</caption>
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Track</th>
+            <th scope="col">Total Streams</th>
+            <th scope="col">Daily Streams</th>
+            <th scope="col">Daily Change</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (track of $any(list()); track track.uid; let i = $index) {
+            <tr>
+              <td class="rank">{{ i + 1 }}</td>
+              <th scope="row" class="track-cell">
+                @if (getAlbumArt(track)) {
+                  <img
+                    class="track-art"
+                    [src]="getAlbumArt(track)"
+                    [alt]="track.album?.name + ' album art'"
+                    loading="lazy"
+                    width="40"
+                    height="40"
+                  />
+                }
+                <div class="track-info">
+                  <span class="track-name">{{ track.name }}</span>
+                  <span class="track-artists">
+                    @for (artist of track.artists; track artist.uri; let last = $last) {
+                      {{ artist.profile?.name }}{{ last ? '' : ', ' }}
+                    }
+                  </span>
+                </div>
+              </th>
+              <td>{{ formatCompact(track.playcount) }}</td>
+              <td>{{ formatCompact(track.change) }}</td>
+              <td
+                [class.delta-positive]="+track.percent >= 0"
+                [class.delta-negative]="+track.percent < 0"
+              >
+                {{ (+track.percent * 100).toFixed(2) }}%
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</section>

@@ -108,8 +108,10 @@
 }
 
 .dashboard__content {
-  display: grid;
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: auto;
   padding: 24px;
 }
 
@@ -331,4 +333,27 @@ thead th {
   .kpis {
     grid-template-columns: 1fr;
   }
+}
+
+.loading {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.loading__spinner {
+  animation: spin 1s linear infinite;
+  border: 3px solid theme.$theme-border;
+  border-radius: 50%;
+  border-top-color: theme.$theme-accent;
+  display: block;
+  height: 40px;
+  width: 40px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }

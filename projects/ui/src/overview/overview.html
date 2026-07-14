@@ -1,0 +1,119 @@
+<section class="overview" aria-label="Mariah Carey Spotify overview">
+
+  <header class="page-header">
+    <div>
+      <p class="page-header__eyebrow">Spotify Performance</p>
+      <h2 class="page-header__title">Streaming Intelligence</h2>
+    </div>
+  </header>
+
+  @if (playCounts(); as counts) {
+    <section class="kpis" aria-label="Key performance indicators">
+      <article class="kpi-card">
+        <p class="kpi-card__label">Total Streams</p>
+        <p class="kpi-card__value">{{ formatCompact(counts['total'].playCount) }}</p>
+        <p
+          class="kpi-card__delta"
+          [class.kpi-card__delta--positive]="+counts['total'].percentChange >= 0"
+          [class.kpi-card__delta--negative]="+counts['total'].percentChange < 0"
+        >
+          {{ formatPercent(counts['total'].percentChange) }}
+        </p>
+      </article>
+
+      <article class="kpi-card">
+        <p class="kpi-card__label">Daily Streams</p>
+        <p class="kpi-card__value">{{ formatCompact(counts['total'].change) }}</p>
+        <p class="kpi-card__label kpi-card__label--sub">streams today</p>
+      </article>
+
+      <article class="kpi-card">
+        <p class="kpi-card__label">Lead Streams</p>
+        <p class="kpi-card__value">{{ formatCompact(counts['lead'].playCount) }}</p>
+        <p
+          class="kpi-card__delta"
+          [class.kpi-card__delta--positive]="+counts['lead'].percentChange >= 0"
+          [class.kpi-card__delta--negative]="+counts['lead'].percentChange < 0"
+        >
+          {{ formatPercent(counts['lead'].percentChange) }}
+        </p>
+      </article>
+
+      <article class="kpi-card">
+        <p class="kpi-card__label">Featured Streams</p>
+        <p class="kpi-card__value">{{ formatCompact(counts['featured'].playCount) }}</p>
+        <p
+          class="kpi-card__delta"
+          [class.kpi-card__delta--positive]="+counts['featured'].percentChange >= 0"
+          [class.kpi-card__delta--negative]="+counts['featured'].percentChange < 0"
+        >
+          {{ formatPercent(counts['featured'].percentChange) }}
+        </p>
+      </article>
+    </section>
+  }
+
+  <div class="charts-grid">
+    @if (monthlyChart().length > 0) {
+      <section class="panel" aria-label="Monthly streams chart">
+        <div class="panel__heading">
+          <h3>Monthly Streams (YTD)</h3>
+          <p>Total streams per month this year</p>
+        </div>
+        <div class="chart-wrap" role="img" aria-label="Bar chart showing monthly stream totals">
+          <ngx-charts-bar-vertical
+            [results]="monthlyChart()"
+            [scheme]="barColorScheme"
+            [xAxis]="true"
+            [yAxis]="true"
+            [showDataLabel]="true"
+            [yAxisTickFormatting]="yAxisTickFormat"
+            [dataLabelFormatting]="yAxisTickFormat"
+            [roundEdges]="true"
+          />
+        </div>
+      </section>
+    }
+
+    @if (categoryChart().length > 0) {
+      <section class="panel" aria-label="Streams by category chart">
+        <div class="panel__heading">
+          <h3>Streams by Category</h3>
+          <p>Distribution of total streams across track types</p>
+        </div>
+        <div class="chart-wrap chart-wrap--pie" role="img" aria-label="Pie chart showing stream distribution by category">
+          <ngx-charts-pie-chart
+            [results]="categoryChart()"
+            [scheme]="pieColorScheme"
+            [legend]="true"
+            [labels]="true"
+            [doughnut]="true"
+            [arcWidth]="0.35"
+          />
+        </div>
+      </section>
+    }
+  </div>
+
+  @if (topTracksChart().length > 0) {
+    <section class="panel" aria-label="Top tracks by daily streams chart">
+      <div class="panel__heading">
+        <h3>Top 15 Tracks by Daily Streams</h3>
+        <p>Tracks with the most streams today</p>
+      </div>
+      <div class="chart-wrap chart-wrap--bar-horizontal" role="img" aria-label="Horizontal bar chart of top tracks by daily streams">
+        <ngx-charts-bar-horizontal
+          [results]="topTracksChart()"
+          [scheme]="barColorScheme"
+          [xAxis]="true"
+          [yAxis]="true"
+          [showDataLabel]="true"
+          [xAxisTickFormatting]="yAxisTickFormat"
+          [dataLabelFormatting]="yAxisTickFormat"
+          [roundEdges]="true"
+        />
+      </div>
+    </section>
+  }
+
+</section>
