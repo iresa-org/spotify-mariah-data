@@ -155,6 +155,18 @@ thead th {
   white-space: nowrap;
 }
 
+.track-link {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: theme.$theme-accent;
+    text-decoration: underline;
+    outline: none;
+  }
+}
+
 .track-artists {
   color: theme.$theme-muted;
   font-size: 0.8rem;

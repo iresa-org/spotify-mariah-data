@@ -77,7 +77,11 @@
                   />
                 }
                 <div class="track-info">
-                  <span class="track-name">{{ track.name }}</span>
+                  <a
+                    class="track-name track-link"
+                    [routerLink]="['/ui/tracks', track.uid]"
+                    [attr.aria-label]="'View detail for ' + track.name"
+                  >{{ track.name }}</a>
                   <span class="track-artists">
                     @for (artist of track.artists; track artist.uri; let last = $last) {
                       {{ artist.profile?.name }}{{ last ? '' : ', ' }}

@@ -114,6 +114,10 @@ export class TrackHandler {
     return this.trackListResp?.['lastUpdate']
   }
 
+  getTrackByUid(uid: string): any {
+    return this.currMap.get(uid) ?? null;
+  }
+
   includeStr(value: string, search: string): boolean {
     return typeof value == "string" && value.indexOf(search) > -1
   }

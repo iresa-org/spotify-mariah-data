@@ -1,0 +1,103 @@
+<section class="track-detail" aria-label="Track detail">
+
+  <header class="page-header">
+    <a class="back-link" [routerLink]="['/ui/tracks']" aria-label="Back to Tracks">
+      &#8592; Tracks
+    </a>
+  </header>
+
+  @if (loading()) {
+  <p class="loading-msg" aria-live="polite">Loading track data…</p>
+  } @else if (track(); as t) {
+  <div class="track-hero">
+    @if (getAlbumArt(t)) {
+    <img class="track-hero__art" [src]="getAlbumArt(t)" [alt]="t.album?.name + ' album art'" width="120" height="120" />
+    }
+    <div class="track-hero__info">
+      <p class="track-hero__eyebrow">
+        @for (artist of t.artists; track artist.uri; let last = $last) {
+        {{ artist.profile?.name }}{{ last ? '' : ', ' }}
+        }
+      </p>
+      <h2 class="track-hero__title">{{ t.name }}</h2>
+      @if (t.album?.name) {
+      <p class="track-hero__album">{{ t.album.name }}</p>
+      }
+      <div class="track-hero__badges">
+        @for (cat of t.categories; track cat) {
+        <span class="badge">{{ cat }}</span>
+        }
+      </div>
+    </div>
+  </div>
+
+  <section class="kpis" aria-label="Stream statistics">
+    <article class="kpi-card">
+      <p class="kpi-card__label">Total Streams</p>
+      <p class="kpi-card__value">{{ formatCompact(t.playcount) }}</p>
+      <p class="kpi-card__sub">{{ formatNumber(t.playcount) }}</p>
+    </article>
+
+    <article class="kpi-card">
+      <p class="kpi-card__label">Today's Streams</p>
+      <p class="kpi-card__value">{{ formatCompact(t.change) }}</p>
+      <p class="kpi-card__delta" [class.delta-positive]="+t.percent >= 0" [class.delta-negative]="+t.percent < 0">
+        {{ (+t.percent * 100).toFixed(2) }}%
+      </p>
+    </article>
+
+    @if (ytdTotal(); as ytd) {
+    <article class="kpi-card">
+      <p class="kpi-card__label">YTD Total Streams</p>
+      <p class="kpi-card__value">{{ formatCompact(ytd) }}</p>
+      <p class="kpi-card__sub">{{ formatNumber(ytd) }}</p>
+    </article>
+    }
+
+    @if (allTimeRecord(); as rec) {
+    <article class="kpi-card">
+      <p class="kpi-card__label">All-Time Daily Record</p>
+      <p class="kpi-card__value">{{ formatCompact(rec.change) }}</p>
+      <p class="kpi-card__sub">{{ rec.date }}</p>
+    </article>
+    }
+
+    @if (ytdRecord(); as rec) {
+    <article class="kpi-card">
+      <p class="kpi-card__label">YTD Daily Record</p>
+      <p class="kpi-card__value">{{ formatCompact(rec.change) }}</p>
+      <p class="kpi-card__sub">{{ rec.date }}</p>
+    </article>
+    }
+  </section>
+
+  @if (historicalChart().length > 0) {
+  <section class="panel" aria-label="Historical daily streams chart">
+    <div class="panel__heading">
+      <h3>Historical Daily Streams</h3>
+    </div>
+    <div class="panel__subheading">
+      <div class="panel__subheading-text">
+        Stream count per day for 7, 30, 60, and 90 day categories
+      </div>
+      <div class="panel__toolbar" role="group" aria-label="Historical stream range">
+        @for (days of historyWindowOptions; track days) {
+        <button type="button" class="range-chip" [class.range-chip--active]="selectedHistoryWindow() === days"
+          [attr.aria-pressed]="selectedHistoryWindow() === days" (click)="setHistoryWindow(days)">
+          {{ days }} Days
+        </button>
+        }
+      </div>
+    </div>
+    <div class="chart-wrap" role="img" aria-label="Line chart of historical daily streams">
+      <ngx-charts-line-chart [results]="historicalChart()" [scheme]="colorScheme" [xAxis]="true" [yAxis]="true"
+        [showGridLines]="true" [autoScale]="true" [yAxisTickFormatting]="yAxisTickFormat"
+        [xAxisTickFormatting]="xAxisTickFormat" [gradient]="true" />
+    </div>
+  </section>
+  }
+  } @else {
+  <p class="not-found">Track not found.</p>
+  }
+
+</section>

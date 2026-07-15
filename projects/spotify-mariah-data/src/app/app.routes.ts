@@ -33,6 +33,11 @@ export const routes: Routes = [
                 title: 'Tracks – Mariah Carey Streams',
             },
             {
+                path: 'tracks/:uid',
+                loadComponent: () => import('ui').then((c) => c.TrackDetail),
+                title: 'Track Detail – Mariah Carey Streams',
+            },
+            {
                 path: 'albums',
                 loadComponent: () => import('ui').then((c) => c.Albums),
                 title: 'Albums – Mariah Carey Streams',

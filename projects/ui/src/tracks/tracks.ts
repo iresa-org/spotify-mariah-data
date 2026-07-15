@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 import { TrackHandler } from 'classic-ui';
 
@@ -19,7 +20,7 @@ const FILTER_TABS: FilterTab[] = [
 
 @Component({
   selector: 'lib-tracks',
-  imports: [NgxChartsModule],
+  imports: [NgxChartsModule, RouterLink],
   templateUrl: './tracks.html',
   styleUrl: './tracks.scss',
 })
