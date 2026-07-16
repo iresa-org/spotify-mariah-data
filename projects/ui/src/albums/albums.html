@@ -28,15 +28,26 @@
     </section>
   }
 
-  <section aria-label="Albums grid">
-    <h3 class="section-title">All Albums</h3>
-    <div class="album-grid">
-      @for (album of albums(); track album.albumDetails.uri) {
-        <article class="album-card" [class.album-card--selected]="selectedAlbum() === album.albumDetails.uri">
+  <section
+    class="master-detail"
+    [class.master-detail--single]="!selectedAlbum()"
+    aria-label="Albums master detail layout"
+  >
+    <section class="panel albums-master" aria-label="Albums list">
+      <div class="panel__heading panel__heading--sticky">
+        <h3>All Albums</h3>
+        <p>Select an album to view tracks in original sequence</p>
+      </div>
+
+      <div class="album-grid" role="listbox" aria-label="Albums" [attr.aria-activedescendant]="selectedAlbumUri()">
+        @for (album of albums(); track album.albumDetails.uri) {
           <button
+            [id]="album.albumDetails.uri"
+            role="option"
             type="button"
-            class="album-card__art-btn"
-            [attr.aria-expanded]="selectedAlbum() === album.albumDetails.uri"
+            class="album-card"
+            [class.album-card--selected]="selectedAlbumUri() === album.albumDetails.uri"
+            [attr.aria-selected]="selectedAlbumUri() === album.albumDetails.uri"
             [attr.aria-controls]="'album-tracks-' + album.albumDetails.uri"
             (click)="toggleAlbum(album.albumDetails.uri)"
           >
@@ -46,73 +57,154 @@
                 [src]="getCoverArt(album)"
                 [alt]="album.albumDetails.name + ' album cover'"
                 loading="lazy"
-                width="160"
-                height="160"
+                width="128"
+                height="128"
               />
             } @else {
               <div class="album-card__art album-card__art--placeholder" aria-hidden="true">
                 <span>♪</span>
               </div>
             }
-            <div class="album-card__overlay" aria-hidden="true">
-              <span class="album-card__expand-icon">{{ selectedAlbum() === album.albumDetails.uri ? '▲' : '▼' }}</span>
+
+            <div class="album-card__body">
+              <p class="album-card__name" [title]="album.albumDetails.name">{{ album.albumDetails.name }}</p>
+              <dl class="album-card__stats" aria-label="Album stream stats">
+                <div>
+                  <dt>Total</dt>
+                  <dd>{{ formatCompact(album.dailyChanges.playCount) }}</dd>
+                </div>
+                <div>
+                  <dt>Daily</dt>
+                  <dd
+                    [class.delta-positive]="+album.dailyChanges.change >= 0"
+                    [class.delta-negative]="+album.dailyChanges.change < 0"
+                  >
+                    {{ formatSignedCompact(album.dailyChanges.change) }}
+                  </dd>
+                </div>
+                <div>
+                  <dt>Change</dt>
+                  <dd
+                    [class.delta-positive]="+album.dailyChanges.percentChange >= 0"
+                    [class.delta-negative]="+album.dailyChanges.percentChange < 0"
+                  >
+                    {{ formatPercentFromRatio(album.dailyChanges.percentChange) }}
+                  </dd>
+                </div>
+              </dl>
             </div>
           </button>
+        }
+      </div>
+    </section>
 
-          <div class="album-card__body">
-            <p class="album-card__name" [title]="album.albumDetails.name">{{ album.albumDetails.name }}</p>
-            <dl class="album-card__stats">
-              <div>
-                <dt>Total</dt>
-                <dd>{{ formatCompact(album.dailyChanges.playCount) }}</dd>
-              </div>
-              <div>
-                <dt>Today</dt>
-                <dd
-                  [class.delta-positive]="+album.dailyChanges.change >= 0"
-                  [class.delta-negative]="+album.dailyChanges.change < 0"
-                >
-                  +{{ formatCompact(album.dailyChanges.change) }}
-                </dd>
-              </div>
-            </dl>
-          </div>
-        </article>
-      }
-    </div>
-  </section>
-
-  @if (selectedAlbum()) {
-    @for (album of albums(); track album.albumDetails.uri) {
-      @if (album.albumDetails.uri === selectedAlbum()) {
-        <section
-          class="panel album-tracks"
-          [id]="'album-tracks-' + album.albumDetails.uri"
-          aria-live="polite"
-        >
-          <div class="album-tracks__header">
+    @if (selectedAlbum(); as album) {
+      <section class="panel album-tracks" aria-live="polite">
+        <div class="album-tracks__header" [id]="'album-tracks-' + album.albumDetails.uri">
+          <div class="album-tracks__header-main">
             @if (getLargeCoverArt(album)) {
               <img
                 class="album-tracks__cover"
                 [src]="getLargeCoverArt(album)"
                 [alt]="album.albumDetails.name + ' album cover'"
-                width="80"
-                height="80"
+                width="96"
+                height="96"
               />
             }
             <div>
-              <p class="album-tracks__eyebrow">Album Tracks</p>
+              <p class="album-tracks__eyebrow">Album Details</p>
               <h3 class="album-tracks__title">{{ album.albumDetails.name }}</h3>
               <p class="album-tracks__meta">
-                {{ album.albumDetails.tracks.length }} tracks &bull;
-                {{ formatCompact(album.dailyChanges.playCount) }} total streams
+                {{ album.albumDetails.tracks.length }} tracks
               </p>
             </div>
           </div>
+          <button type="button" class="album-tracks__close" (click)="closeAlbum()" aria-label="Close album details">
+            Close
+          </button>
+        </div>
 
-          <div class="table-wrap">
+        @for (group of albumTrackGroups(); track group.discNumber) {
+          <section class="disc-block" [attr.aria-label]="'Disc ' + group.discNumber + ' track list'">
+            @if (hasMultipleDiscs()) {
+              <h4 class="disc-title">Disc {{ group.discNumber }}</h4>
+            }
+
+            <div class="table-wrap desktop-track-table">
+              <table>
+                <caption class="sr-only">{{ album.albumDetails.name }} disc {{ group.discNumber }} tracks</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Track</th>
+                    <th scope="col">Total Streams</th>
+                    <th scope="col">Daily Streams</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (track of group.tracks; track track.uid) {
+                    <tr>
+                      <td class="rank">{{ track.track }}</td>
+                      <th scope="row" class="track-cell">
+                        <div class="track-info">
+                          <span class="track-name">{{ track.name }}</span>
+                          <span class="track-artists">
+                            @for (artist of track.artists; track artist.uri; let last = $last) {
+                              {{ artist.profile?.name }}{{ last ? '' : ', ' }}
+                            }
+                          </span>
+                        </div>
+                      </th>
+                      <td>{{ formatCompact(track.playcount) }}</td>
+                      <td
+                        [class.delta-positive]="+track.change >= 0"
+                        [class.delta-negative]="+track.change < 0"
+                      >
+                        {{ formatSignedCompact(track.change) }}
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mobile-track-list" aria-label="Mobile track list">
+              @for (track of group.tracks; track track.uid) {
+                <article class="mobile-track-card">
+                  <div class="mobile-track-card__top">
+                    <span class="mobile-track-card__number">#{{ track.track }}</span>
+                    <p class="mobile-track-card__name">{{ track.name }}</p>
+                  </div>
+                  <p class="mobile-track-card__artists">
+                    @for (artist of track.artists; track artist.uri; let last = $last) {
+                      {{ artist.profile?.name }}{{ last ? '' : ', ' }}
+                    }
+                  </p>
+                  <dl class="mobile-track-card__stats">
+                    <div>
+                      <dt>Total</dt>
+                      <dd>{{ formatCompact(track.playcount) }}</dd>
+                    </div>
+                    <div>
+                      <dt>Daily</dt>
+                      <dd
+                        [class.delta-positive]="+track.change >= 0"
+                        [class.delta-negative]="+track.change < 0"
+                      >
+                        {{ formatSignedCompact(track.change) }}
+                      </dd>
+                    </div>
+                  </dl>
+                </article>
+              }
+            </div>
+          </section>
+        }
+
+        <section class="disc-block" aria-label="Album summary">
+          <div class="table-wrap desktop-track-table">
             <table>
-              <caption class="sr-only">{{ album.albumDetails.name }} track list</caption>
+              <caption class="sr-only">{{ album.albumDetails.name }} summary</caption>
               <thead>
                 <tr>
                   <th scope="col">#</th>
@@ -122,44 +214,53 @@
                 </tr>
               </thead>
               <tbody>
-                @for (track of $any(albumTracks()); track track.uid; let i = $index) {
-                  <tr>
-                    <td class="rank">{{ i + 1 }}</td>
-                    <th scope="row" class="track-cell">
-                      @if (track.album?.coverArt?.sources?.[0]?.url) {
-                        <img
-                          class="track-art"
-                          [src]="track.album.coverArt.sources[0].url"
-                          [alt]="album.albumDetails.name + ' album art'"
-                          loading="lazy"
-                          width="36"
-                          height="36"
-                        />
-                      }
-                      <div class="track-info">
-                        <span class="track-name">{{ track.name }}</span>
-                        <span class="track-artists">
-                          @for (artist of track.artists; track artist.uri; let last = $last) {
-                            {{ artist.profile?.name }}{{ last ? '' : ', ' }}
-                          }
-                        </span>
-                      </div>
-                    </th>
-                    <td>{{ formatCompact(track.playcount) }}</td>
-                    <td
-                      [class.delta-positive]="track.change >= 0"
-                      [class.delta-negative]="track.change < 0"
-                    >
-                      +{{ formatCompact(track.change) }}
-                    </td>
-                  </tr>
-                }
+                <tr class="album-summary-row">
+                  <td class="rank">-</td>
+                  <th scope="row" class="track-cell">
+                    <div class="track-info">
+                      <span class="track-name">Album Summary</span>
+                      <span class="track-artists">Combined totals for this album</span>
+                    </div>
+                  </th>
+                  <td>{{ formatCompact(album.dailyChanges.playCount) }}</td>
+                  <td
+                    [class.delta-positive]="+album.dailyChanges.change >= 0"
+                    [class.delta-negative]="+album.dailyChanges.change < 0"
+                  >
+                    {{ formatSignedCompact(album.dailyChanges.change) }}
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
+
+          <div class="mobile-track-list" aria-label="Album summary">
+            <article class="mobile-track-card mobile-track-card--summary">
+              <div class="mobile-track-card__top">
+                <span class="mobile-track-card__number">-</span>
+                <p class="mobile-track-card__name">Album Summary</p>
+              </div>
+              <p class="mobile-track-card__artists">Combined totals for this album</p>
+              <dl class="mobile-track-card__stats">
+                <div>
+                  <dt>Total</dt>
+                  <dd>{{ formatCompact(album.dailyChanges.playCount) }}</dd>
+                </div>
+                <div>
+                  <dt>Daily</dt>
+                  <dd
+                    [class.delta-positive]="+album.dailyChanges.change >= 0"
+                    [class.delta-negative]="+album.dailyChanges.change < 0"
+                  >
+                    {{ formatSignedCompact(album.dailyChanges.change) }}
+                  </dd>
+                </div>
+              </dl>
+            </article>
+          </div>
         </section>
-      }
+      </section>
     }
-  }
+  </section>
 
 </section>
