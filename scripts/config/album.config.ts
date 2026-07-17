@@ -4,7 +4,7 @@ export const SELECTED_ALBUMS = [
   'spotify:album:0cS9prZ8u3fdbc7lmtCaMV',     // Merry Christmas (Deluxe Anniversary Edition)
   'spotify:album:0v1DRRYBXYg1uVN1CIsyy0',     // The Rarities
   'spotify:album:1GzBLltCCKsiIJM3T3AWj3',     // Music Box: 30th Anniversary Edition
-  'spotify:album:1ibYM4abQtSVQFQWvDSo4J',     // Daydream
+  'spotify:album:3KGlZ9YeHexP80A3scG86n',     // Daydream (30th Anniversary Edition)
   'spotify:album:2VtWkFLhMJAFsWkHAXwosS',     // Caution (Japan Version)
   'spotify:album:2hHFZLYnwsYOOxTCrlNvg0',     // Glitter
   'spotify:album:2tVxdAJ16NY9bpjb1h5fQc',     // Me. I Am Mariah…The Elusive Chanteuse (Deluxe)
