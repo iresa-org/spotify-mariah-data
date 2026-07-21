@@ -1,0 +1,17 @@
+<section class="master-detail" [class.master-detail--single]="!selectedItem()" aria-label="Master detail layout">
+
+    <section class="panel master" aria-label="Master">
+        <ng-content select="lib-master-content"></ng-content>
+    </section>
+
+    @if (selectedItem()) {
+    <section class="panel detail" aria-live="polite">
+        <div class="detail__close">
+            <button type="button" (click)="closeDetail()" aria-label="Close details">
+                Close
+            </button>
+        </div>
+        <ng-content select="lib-detail-content"></ng-content>
+    </section>
+    }
+</section>

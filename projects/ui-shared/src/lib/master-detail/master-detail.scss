@@ -1,0 +1,69 @@
+@use 'theme.scss' as theme;
+
+.master-detail {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+}
+
+.master-detail--single {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.panel {
+    background: theme.$theme-surface;
+    border: 1px solid theme.$theme-border;
+    border-radius: 14px;
+    padding: 16px;
+}
+
+.master {
+    // max-height: calc(100vh - 180px);
+    overflow: auto;
+}
+
+.detail {
+    min-height: 420px;
+    scroll-margin-top: 16px;
+}
+
+.detail__close {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.detail__close button {
+    background: transparent;
+    border: 1px solid theme.$theme-border;
+    border-radius: 999px;
+    color: theme.$theme-muted;
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1;
+    padding: 0.55rem 0.8rem;
+    transition: border-color 150ms, color 150ms, background-color 150ms;
+}
+
+.detail__close button:hover {
+    background: theme.$theme-accent-soft;
+    border-color: theme.$theme-accent;
+    color: theme.$theme-accent;
+}
+
+.detail__close button:focus-visible {
+    outline: 2px solid theme.$theme-accent;
+    outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+    .master-detail {
+        grid-template-columns: 1fr;
+    }
+
+    .master {
+        max-height: none;
+        overflow: visible;
+    }
+}

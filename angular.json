@@ -33,7 +33,12 @@
             ],
             "styles": [
               "projects/spotify-mariah-data/src/styles.scss"
-            ]
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "projects/ui-shared/src/lib/styles"
+              ]
+            }
           },
           "configurations": {
             "production": {

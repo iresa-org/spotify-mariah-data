@@ -1,0 +1,146 @@
+@use "theme.scss" as theme;
+
+
+.panel__heading--sticky {
+  background: theme.$theme-surface;
+  padding-bottom: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.panel__heading h3 {
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.panel__heading p {
+  color: theme.$theme-muted;
+  font-size: 0.85rem;
+  margin: 4px 0 0;
+}
+
+.album-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.album-card {
+  align-items: center;
+  background: theme.$theme-surface;
+  border: 1px solid theme.$theme-border;
+  border-radius: 12px;
+  cursor: pointer;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 56px minmax(0, 1fr);
+  overflow: hidden;
+  padding: 7px;
+  text-align: left;
+  transition: box-shadow 150ms, border-color 150ms;
+  width: 100%;
+}
+
+.album-card:hover {
+  box-shadow: 0 4px 12px rgba(215, 38, 82, 0.15);
+}
+
+.album-card:focus-visible {
+  outline: 2px solid theme.$theme-accent;
+  outline-offset: 2px;
+}
+
+.album-card--selected {
+  border-color: theme.$theme-accent;
+  box-shadow: 0 0 0 2px rgba(215, 38, 82, 0.2);
+}
+
+.album-card__art {
+  display: block;
+  height: 56px;
+  object-fit: cover;
+  width: 56px;
+}
+
+.album-card__art--placeholder {
+  align-items: center;
+  background: theme.$theme-accent-soft;
+  border-radius: 8px;
+  display: flex;
+  font-size: 1.4rem;
+  height: 56px;
+  justify-content: center;
+  width: 56px;
+}
+
+.album-card__body {
+  min-width: 0;
+}
+
+.album-card__name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0 0 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.album-card__stats {
+  display: grid;
+  gap: 4px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+}
+
+.album-card__stats div {
+  min-width: 0;
+}
+
+.album-card__stats dt {
+  color: theme.$theme-muted;
+  font-size: 0.62rem;
+  line-height: 1.2;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.album-card__stats dd {
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin: 2px 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.delta-positive {
+  color: theme.$theme-positive;
+}
+
+.delta-negative {
+  color: theme.$theme-negative;
+}
+
+@media (max-width: 600px) {
+  .album-grid {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+  }
+
+  .album-card {
+    align-items: flex-start;
+    grid-template-columns: 1fr;
+  }
+
+  .album-card__art,
+  .album-card__art--placeholder {
+    height: auto;
+    width: 100%;
+  }
+
+  .album-card__art {
+    aspect-ratio: 1;
+  }
+}

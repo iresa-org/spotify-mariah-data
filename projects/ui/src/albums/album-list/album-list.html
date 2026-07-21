@@ -1,0 +1,46 @@
+<div class="panel__heading panel__heading--sticky">
+    <h3>All Albums</h3>
+    <p>Select an album to view tracks in original sequence</p>
+</div>
+
+<div class="album-grid" role="listbox" aria-label="Albums" [attr.aria-activedescendant]="selectedAlbumUri()">
+    @for (album of albums(); track album.albumDetails.uri) {
+    <button [id]="album.albumDetails.uri" role="option" type="button" class="album-card"
+        [class.album-card--selected]="selectedAlbumUri() === album.albumDetails.uri"
+        [attr.aria-selected]="selectedAlbumUri() === album.albumDetails.uri"
+        [attr.aria-controls]="'album-tracks-' + album.albumDetails.uri" (click)="toggleAlbum(album.albumDetails.uri)">
+        @if (getCoverArt(album)) {
+        <img class="album-card__art" [src]="getCoverArt(album)" [alt]="album.albumDetails.name + ' album cover'"
+            loading="lazy" width="128" height="128" />
+        } @else {
+        <div class="album-card__art album-card__art--placeholder" aria-hidden="true">
+            <span>♪</span>
+        </div>
+        }
+
+        <div class="album-card__body">
+            <p class="album-card__name" [title]="album.albumDetails.name">{{ album.albumDetails.name }}</p>
+            <dl class="album-card__stats" aria-label="Album stream stats">
+                <div>
+                    <dt>Total</dt>
+                    <dd>{{ album.dailyChanges.playCount | albumFormatCompact}}</dd>
+                </div>
+                <div>
+                    <dt>Daily</dt>
+                    <dd [class.delta-positive]="+album.dailyChanges.change >= 0"
+                        [class.delta-negative]="+album.dailyChanges.change < 0">
+                        {{ album.dailyChanges.change | albumFormatSignedCompact}}
+                    </dd>
+                </div>
+                <div>
+                    <dt>Change</dt>
+                    <dd [class.delta-positive]="+album.dailyChanges.percentChange >= 0"
+                        [class.delta-negative]="+album.dailyChanges.percentChange < 0">
+                        {{ album.dailyChanges.percentChange | percentWithSign }}
+                    </dd>
+                </div>
+            </dl>
+        </div>
+    </button>
+    }
+</div>
