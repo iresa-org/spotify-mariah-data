@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
-import { TrackHandler } from 'classic-ui';
+import { DailyDataApi } from 'ui-shared';
 
 type FilterType = 'T' | 'L' | 'S' | 'F' | 'V';
 
@@ -25,7 +25,7 @@ const FILTER_TABS: FilterTab[] = [
   styleUrl: './tracks.scss',
 })
 export class Tracks {
-  private trackHandler = inject(TrackHandler);
+  private dailyDataApi = inject(DailyDataApi);
 
   readonly filterTabs = FILTER_TABS;
   readonly activeFilter = signal<FilterType>('T');
@@ -33,11 +33,11 @@ export class Tracks {
   readonly list = computed(() => {
     const filter = this.activeFilter();
     const getterMap: Record<FilterType, () => unknown[]> = {
-      T: this.trackHandler.getAll,
-      L: this.trackHandler.getLead,
-      S: this.trackHandler.getSolo,
-      F: this.trackHandler.getFeatured,
-      V: this.trackHandler.getVideos,
+      T: this.dailyDataApi.getAll,
+      L: this.dailyDataApi.getLead,
+      S: this.dailyDataApi.getSolo,
+      F: this.dailyDataApi.getFeatured,
+      V: this.dailyDataApi.getVideos,
     };
     return (getterMap[filter]() as { playcount: number }[]).sort((a, b) => b.playcount - a.playcount);
   });

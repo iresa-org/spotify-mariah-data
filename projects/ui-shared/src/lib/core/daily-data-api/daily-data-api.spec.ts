@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PlayCountHandler } from './play-count-handler';
+import { StreamingDataApi } from './daily-data-api';
 
-describe('PlayCountHandler', () => {
-  let service: PlayCountHandler;
+describe('StreamingDataApi', () => {
+  let service: StreamingDataApi;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(PlayCountHandler);
+    service = TestBed.inject(StreamingDataApi);
   });
 
   it('should be created', () => {

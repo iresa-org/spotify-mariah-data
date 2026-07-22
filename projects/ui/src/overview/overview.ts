@@ -1,7 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
-import { TrackHandler } from 'classic-ui';
-import { UiDataService } from '../data.service';
+import { DailyDataApi, HistoricDataApi } from 'ui-shared';
 
 interface ChartItem {
   name: string;
@@ -21,8 +20,8 @@ const MONTH_NAMES: Record<string, string> = {
   styleUrl: './overview.scss',
 })
 export class Overview implements OnInit {
-  private trackHandler = inject(TrackHandler);
-  private dataService = inject(UiDataService);
+  private dailyDataApi = inject(DailyDataApi);
+  private historicDataApi = inject(HistoricDataApi);
 
   readonly playCounts = signal<Record<string, { playCount: string; change: string; percentChange: string }> | null>(null);
   readonly monthlyChart = signal<ChartItem[]>([]);
@@ -33,7 +32,7 @@ export class Overview implements OnInit {
   readonly pieColorScheme: Color = { name: 'mariah-pie', selectable: true, group: ScaleType.Ordinal, domain: ['#d72652', '#4a90d9', '#f5a623', '#7ed321', '#9b59b6'] };
 
   ngOnInit(): void {
-    const counts = this.trackHandler.getPlayCountsByAllType();
+    const counts = this.dailyDataApi.getPlayCountsByAllType();
     this.playCounts.set(counts);
 
     if (counts) {
@@ -44,7 +43,7 @@ export class Overview implements OnInit {
       ]);
     }
 
-    const topTracks = this.trackHandler.getAll()
+    const topTracks = this.dailyDataApi.getAll()
       .sort((a: { change: number }, b: { change: number }) => b.change - a.change)
       .slice(0, 15)
       .map((t: { name: string; change: number }) => ({
@@ -53,7 +52,7 @@ export class Overview implements OnInit {
       }));
     this.topTracksChart.set(topTracks);
 
-    this.dataService.loadMonthly().subscribe(data => {
+    this.historicDataApi.loadMonthly().subscribe(data => {
       this.monthlyChart.set(
         data.months.map(m => ({ name: MONTH_NAMES[m.month] ?? m.month, value: +m.total }))
       );

@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { TrackHandler } from '../track-handler';
 import { DecimalPipe } from '@angular/common';
-import { PercentWithSignPipe } from 'ui-shared';
+import { DailyDataApi, PercentWithSignPipe } from 'ui-shared';
 
 @Component({
   selector: 'app-albums',
@@ -10,9 +9,9 @@ import { PercentWithSignPipe } from 'ui-shared';
   styleUrl: './albums.scss',
 })
 export class Albums {
-  trackHandler = inject(TrackHandler);
+  dailyDataApi = inject(DailyDataApi);
 
-  albums = this.formatAlbumList(this.trackHandler.getAlbums());
+  albums = this.formatAlbumList(this.dailyDataApi.getAlbums());
 
   formatAlbumList(list: any[]): any[] {
     return list.map(album => ({

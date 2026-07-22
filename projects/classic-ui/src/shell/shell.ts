@@ -1,6 +1,5 @@
 import { Component, ElementRef, HostListener, inject, OnInit, Renderer2, signal, viewChild } from '@angular/core';
-import { TrackHandler } from '../track-handler';
-import { WINDOW } from 'ui-shared';
+import { DailyDataApi, WINDOW } from 'ui-shared';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
@@ -13,7 +12,7 @@ export class Shell implements OnInit {
 
   scrollTopBtn = viewChild<ElementRef<HTMLButtonElement>>('scrollTop');
 
-  trackHandler = inject(TrackHandler);
+  dailyDataApi = inject(DailyDataApi);
 
   loaded = signal<boolean>(false);
 
@@ -33,9 +32,9 @@ export class Shell implements OnInit {
   }
 
   loadTracks() {
-    this.trackHandler.loadTracks().subscribe({
+    this.dailyDataApi.loadTracks().subscribe({
       complete: () => {
-        this.lastUpdated.set(this.trackHandler.getLastUpdated())
+        this.lastUpdated.set(this.dailyDataApi.getLastUpdated())
         this.loaded.set(true)
       }
     });

@@ -2,8 +2,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
-import { TrackHandler } from 'classic-ui';
-import { HistoricalData, TrackRecord, UiDataService, YtdData } from '../data.service';
+import { DailyDataApi, HistoricDataApi, HistoricalData, TrackRecord, YtdData } from 'ui-shared';
 
 interface SeriesPoint {
   name: string;
@@ -25,11 +24,11 @@ type HistoryWindow = 7 | 30 | 60 | 90;
 })
 export class TrackDetail implements OnInit {
   private route = inject(ActivatedRoute);
-  private trackHandler = inject(TrackHandler);
-  private dataService = inject(UiDataService);
+  private dailyDataApi = inject(DailyDataApi);
+  private historicDataApi = inject(HistoricDataApi);
 
   readonly uid = signal('');
-  readonly track = computed(() => this.trackHandler.getTrackByUid(this.uid()));
+  readonly track = computed(() => this.dailyDataApi.getTrackByUid(this.uid()));
   readonly loading = signal(true);
 
   readonly allTimeRecord = signal<TrackRecord | null>(null);
@@ -59,10 +58,10 @@ export class TrackDetail implements OnInit {
     this.uid.set(uid);
 
     forkJoin({
-      allTime: this.dataService.loadAllTimeRecords(),
-      ytdRec: this.dataService.loadYtdRecords(),
-      ytd: this.dataService.loadYtd(),
-      historical: this.dataService.loadHistorical(),
+      allTime: this.historicDataApi.loadAllTimeRecords(),
+      ytdRec: this.historicDataApi.loadYtdRecords(),
+      ytd: this.historicDataApi.loadYtd(),
+      historical: this.historicDataApi.loadHistorical(),
     }).subscribe({
       next: ({ allTime, ytdRec, ytd, historical }) => {
         this.allTimeRecord.set(allTime.find(r => r.uid === uid) ?? null);

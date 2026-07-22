@@ -1,9 +1,9 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
-import { TrackHandler } from 'classic-ui';
 import { AlbumRanking } from './album-ranking/album-ranking';
-import { AlbumRecord, NumericLike } from './album.config';
+import { AlbumRecord } from './album.config';
 import { formatCompact, toNumber } from './album.utils';
+import { DailyDataApi } from 'ui-shared';
 
 @Component({
   selector: 'lib-albums',
@@ -12,10 +12,10 @@ import { formatCompact, toNumber } from './album.utils';
   styleUrl: './albums.scss',
 })
 export class Albums {
-  private trackHandler = inject(TrackHandler);
+  private dailyDataApi = inject(DailyDataApi);
 
   readonly albums = signal(
-    (this.trackHandler.getAlbums() as AlbumRecord[]).sort(
+    (this.dailyDataApi.getAlbums() as AlbumRecord[]).sort(
       (a, b) => toNumber(b.dailyChanges.change) - toNumber(a.dailyChanges.change)
     )
   );

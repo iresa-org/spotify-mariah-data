@@ -7,7 +7,7 @@ const GET_DATA_URL = 'https://raw.githubusercontent.com/iresa-org/spotify-mariah
 @Injectable({
   providedIn: 'root',
 })
-export class TrackHandler {
+export class DailyDataApi {
 
   private trackListResp: Record<string, any> | null = null
 

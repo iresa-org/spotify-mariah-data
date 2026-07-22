@@ -1,38 +1,15 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Observable, of, tap } from 'rxjs';
+import { MonthlyData, TrackRecord, YtdData } from './historic-data.config';
 
 const BASE = 'https://raw.githubusercontent.com/iresa-org/spotify-mariah-data/refs/heads/data';
-
-export interface MonthData {
-  month: string;
-  total: string;
-}
-
-export interface MonthlyData {
-  months: MonthData[];
-}
-
-export interface TrackRecord {
-  uid: string;
-  change: string;
-  date: string;
-}
-
-export interface YtdEntry {
-  uid: string;
-  ytd: string;
-}
-
-export interface YtdData {
-  tracks: YtdEntry[];
-}
 
 /** uid → { date → streamCount } */
 export type HistoricalData = Record<string, Record<string, string>>;
 
 @Service()
-export class UiDataService {
+export class HistoricDataApi {
   private http = inject(HttpClient);
   private _monthly: MonthlyData | null = null;
   private _allTimeRecords: TrackRecord[] | null = null;

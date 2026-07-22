@@ -1,9 +1,8 @@
 import { Component, computed, effect, inject, output, signal } from '@angular/core';
 import { AlbumFormatCompactPipe, AlbumFormatSignedCompactPipe } from '../album-pipe';
-import { TrackHandler } from '../../../../classic-ui/src/track-handler';
 import { AlbumRecord } from '../album.config';
 import { toNumber } from '../album.utils';
-import { PercentWithSignPipe } from 'ui-shared';
+import { DailyDataApi, PercentWithSignPipe } from 'ui-shared';
 
 @Component({
   selector: 'lib-album-list',
@@ -12,12 +11,12 @@ import { PercentWithSignPipe } from 'ui-shared';
   styleUrl: './album-list.scss',
 })
 export class AlbumList {
-  private trackHandler = inject(TrackHandler);
+  private dailyDataApi = inject(DailyDataApi);
 
   protected readonly albumSelected = output<AlbumRecord | null>();
 
   readonly albums = signal(
-    (this.trackHandler.getAlbums() as AlbumRecord[]).sort(
+    (this.dailyDataApi.getAlbums() as AlbumRecord[]).sort(
       (a, b) => toNumber(b.dailyChanges.change) - toNumber(a.dailyChanges.change)
     )
   );

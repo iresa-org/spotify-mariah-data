@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { TrackHandler } from 'classic-ui';
+import { DailyDataApi } from 'ui-shared';
 
 @Component({
   selector: 'lib-shell',
@@ -9,15 +9,15 @@ import { TrackHandler } from 'classic-ui';
   styleUrl: './shell.scss',
 })
 export class Shell implements OnInit {
-  private trackHandler = inject(TrackHandler);
+  private dailyDataApi = inject(DailyDataApi);
 
   readonly loaded = signal(false);
   readonly lastUpdated = signal('');
 
   ngOnInit(): void {
-    this.trackHandler.loadTracks().subscribe({
+    this.dailyDataApi.loadTracks().subscribe({
       complete: () => {
-        this.lastUpdated.set(this.trackHandler.getLastUpdated() ?? '');
+        this.lastUpdated.set(this.dailyDataApi.getLastUpdated() ?? '');
         this.loaded.set(true);
       },
     });

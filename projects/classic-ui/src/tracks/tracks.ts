@@ -1,7 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
-import { TrackHandler } from '../track-handler';
 import { DecimalPipe, PercentPipe } from '@angular/common';
-import { NumberWithSignPipe, PercentWithSignPipe } from 'ui-shared';
+import { DailyDataApi, NumberWithSignPipe, PercentWithSignPipe } from 'ui-shared';
 
 @Component({
   selector: 'app-tracks',
@@ -11,19 +10,19 @@ import { NumberWithSignPipe, PercentWithSignPipe } from 'ui-shared';
 })
 export class Tracks {
 
-  trackHandler = inject(TrackHandler);
+  dailyDataApi = inject(DailyDataApi);
 
-  list = signal<any[]>(this.transformList(this.trackHandler.getAll()));
+  list = signal<any[]>(this.transformList(this.dailyDataApi.getAll()));
 
-  counts = this.trackHandler.getPlayCountsByAllType();
+  counts = this.dailyDataApi.getPlayCountsByAllType();
 
   changeList(type: 'T' | 'L' | 'S' | 'F' | 'V'): void {
     const map = {
-      'T': this.trackHandler.getAll,
-      'L': this.trackHandler.getLead,
-      'S': this.trackHandler.getSolo,
-      'F': this.trackHandler.getFeatured,
-      'V': this.trackHandler.getVideos
+      'T': this.dailyDataApi.getAll,
+      'L': this.dailyDataApi.getLead,
+      'S': this.dailyDataApi.getSolo,
+      'F': this.dailyDataApi.getFeatured,
+      'V': this.dailyDataApi.getVideos
     }
     this.list.set(this.transformList(map[type]()))
   }
