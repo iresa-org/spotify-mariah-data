@@ -1,4 +1,4 @@
-<lib-master-detail [selectedItem]="selectedAlbum()" (closeClicked)="closeClicked()">
+<lib-master-detail [selectedItem]="isMobile() ? null : selectedAlbum()" (closeClicked)="closeClicked()">
     <lib-master-content>
         <lib-album-list (albumSelected)="onAlbumSelected($event)"></lib-album-list>
     </lib-master-content>

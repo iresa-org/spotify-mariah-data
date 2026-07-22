@@ -68,40 +68,6 @@
                 </tbody>
             </table>
         </div>
-
-        <div class="mobile-track-list" aria-label="Mobile track list">
-            @for (track of group.tracks; track track.uid ) {
-            <article class="mobile-track-card">
-                <div class="mobile-track-card__top">
-                    <span class="mobile-track-card__number">#{{ track.track }}</span>
-                    <p class="mobile-track-card__name">{{ track.name }}</p>
-                </div>
-                <p class="mobile-track-card__artists">
-                    @for (artist of track.artists; track artist.uri; let last = $last) {
-                    {{ artist.profile?.name }}{{ last ? '' : ', ' }}
-                    }
-                </p>
-                <dl class="mobile-track-card__stats">
-                    <div>
-                        <dt>Total</dt>
-                        <dd>{{ track.playcount | number}}</dd>
-                    </div>
-                    <div>
-                        <dt>Daily</dt>
-                        <dd [class.delta-positive]="+track.change >= 0" [class.delta-negative]="+track.change < 0">
-                            {{ track.change | number}}
-                        </dd>
-                    </div>
-                    <div>
-                        <dt>Change</dt>
-                        <dd [class.delta-positive]="+track.percent >= 0" [class.delta-negative]="+track.percent < 0">
-                            {{ track.percent | percentWithSign}}
-                        </dd>
-                    </div>
-                </dl>
-            </article>
-            }
-        </div>
     </section>
     }
     <div class="table-wrap desktop-track-table">
@@ -135,35 +101,6 @@
                 </tr>
             </tbody>
         </table>
-    </div>
-
-    <div class="mobile-track-list" aria-label="Album summary">
-        <article class="mobile-track-card mobile-track-card--summary">
-            <div class="mobile-track-card__top">
-                <span class="mobile-track-card__number">-</span>
-                <p class="mobile-track-card__name">Album Summary</p>
-            </div>
-            <dl class="mobile-track-card__stats">
-                <div>
-                    <dt>Total</dt>
-                    <dd>{{ album.dailyChanges.playCount | number}}</dd>
-                </div>
-                <div>
-                    <dt>Daily</dt>
-                    <dd [class.delta-positive]="+album.dailyChanges.change >= 0"
-                        [class.delta-negative]="+album.dailyChanges.change < 0">
-                        {{ album.dailyChanges.change | number}}
-                    </dd>
-                </div>
-                <div>
-                    <dt>Change</dt>
-                    <dd [class.delta-positive]="+album.dailyChanges.percentChange >= 0"
-                        [class.delta-negative]="+album.dailyChanges.percentChange < 0">
-                        {{ album.dailyChanges.percentChange | percentWithSign }}
-                    </dd>
-                </div>
-            </dl>
-        </article>
     </div>
     }
 </div>

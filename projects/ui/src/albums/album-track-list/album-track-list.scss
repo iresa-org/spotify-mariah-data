@@ -174,71 +174,6 @@ thead th {
   white-space: nowrap;
 }
 
-.mobile-track-list {
-  display: none;
-}
-
-.mobile-track-card {
-  background: color-mix(in srgb, theme.$theme-surface 88%, theme.$theme-accent-soft 12%);
-  border: 1px solid theme.$theme-border;
-  border-radius: 10px;
-  display: grid;
-  gap: 8px;
-  padding: 10px;
-}
-
-.mobile-track-card + .mobile-track-card {
-  margin-top: 8px;
-}
-
-.mobile-track-card--summary {
-  background: color-mix(in srgb, theme.$theme-surface 82%, theme.$theme-accent-soft 18%);
-  border-style: dashed;
-}
-
-.mobile-track-card__top {
-  align-items: baseline;
-  display: flex;
-  gap: 8px;
-}
-
-.mobile-track-card__number {
-  color: theme.$theme-muted;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.mobile-track-card__name {
-  font-size: 0.95rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.mobile-track-card__artists {
-  color: theme.$theme-muted;
-  font-size: 0.78rem;
-  margin: 0;
-}
-
-.mobile-track-card__stats {
-  display: grid;
-  gap: 8px;
-  grid-template-columns: 1fr 1fr;
-  margin: 0;
-}
-
-.mobile-track-card__stats dt {
-  color: theme.$theme-muted;
-  font-size: 0.66rem;
-  text-transform: uppercase;
-}
-
-.mobile-track-card__stats dd {
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin: 0;
-}
-
 .empty-detail {
   align-content: center;
   color: theme.$theme-muted;
@@ -270,15 +205,4 @@ thead th {
   position: absolute;
   white-space: nowrap;
   width: 1px;
-}
-
-@media (max-width: 600px) {
-
-  .desktop-track-table {
-    display: none;
-  }
-
-  .mobile-track-list {
-    display: block;
-  }
 }
