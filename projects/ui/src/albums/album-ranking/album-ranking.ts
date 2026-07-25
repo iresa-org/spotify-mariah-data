@@ -1,66 +1,13 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, ElementRef, effect, inject, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Dialog, DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { map } from 'rxjs';
 import { DetailContent, MasterContent, MasterDetail } from 'ui-shared';
 import { AlbumRecord } from '../album.config';
 import { AlbumList } from '../album-list/album-list';
 import { AlbumTrackList } from '../album-track-list/album-track-list';
-
-type AlbumTrackDialogData = {
-  album: AlbumRecord;
-};
-
-@Component({
-  selector: 'lib-album-track-dialog',
-  imports: [AlbumTrackList],
-  template: `
-    <div class="album-track-dialog">
-      <div class="album-track-dialog__close">
-        <button type="button" (click)="close()" aria-label="Close album tracks dialog">Close</button>
-      </div>
-      <lib-album-track-list [selectedAlbum]="data.album"></lib-album-track-list>
-    </div>
-  `,
-  styles: [
-    `
-      .album-track-dialog {
-        background: #ffffff;
-        max-height: min(90dvh, 720px);
-        overflow: auto;
-        padding: 12px;
-      }
-
-      .album-track-dialog__close {
-        display: flex;
-        justify-content: flex-end;
-      }
-
-      .album-track-dialog__close button {
-        background: transparent;
-        border: 1px solid #d8d6d4;
-        border-radius: 999px;
-        color: #605e5c;
-        cursor: pointer;
-        font-size: 0.78rem;
-        font-weight: 600;
-        line-height: 1;
-        margin-bottom: 10px;
-        padding: 0.55rem 0.8rem;
-      }
-    `,
-  ],
-})
-class AlbumTrackDialog {
-  readonly data = inject<AlbumTrackDialogData>(DIALOG_DATA);
-
-  private dialogRef = inject(DialogRef<unknown, AlbumTrackDialog>);
-
-  close(): void {
-    this.dialogRef.close();
-  }
-}
+import { AlbumTrackDialog } from './album-track-dialog';
 
 @Component({
   selector: 'lib-album-ranking',
@@ -73,6 +20,10 @@ export class AlbumRanking {
 
   private readonly breakpointObserver = inject(BreakpointObserver);
 
+  private readonly masterDetail = viewChild.required('masterDetail', {
+    read: ElementRef<HTMLElement>,
+  });
+
   private dialogRef: DialogRef<unknown, AlbumTrackDialog> | null = null;
 
   readonly isMobile = toSignal(
@@ -81,6 +32,14 @@ export class AlbumRanking {
   );
 
   readonly selectedAlbum = signal<AlbumRecord | null>(null);
+
+  constructor() {
+    effect(() => {
+      if (!this.isMobile()) {
+        this.closeDialog();
+      }
+    });
+  }
 
   onAlbumSelected($event: AlbumRecord | null) {
     if (this.isMobile()) {
@@ -91,11 +50,15 @@ export class AlbumRanking {
       }
 
       this.openDialog($event);
+      this.scrollMasterDetailToTop();
       return;
     }
 
     this.closeDialog();
     this.selectedAlbum.set($event);
+    if ($event) {
+      this.scrollMasterDetailToTop();
+    }
   }
 
   closeAlbum(): void {
@@ -129,6 +92,42 @@ export class AlbumRanking {
     if (!this.dialogRef) return;
     this.dialogRef.close();
     this.dialogRef = null;
+  }
+
+  private scrollMasterDetailToTop(): void {
+    requestAnimationFrame(() => {
+      const masterDetailEl = this.masterDetail().nativeElement;
+      const scrollContainer = this.findScrollContainer(masterDetailEl);
+
+      masterDetailEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scrollContainer?.scrollTo({ top: 0, behavior: 'smooth' });
+
+      masterDetailEl.scrollTop = 0;
+      for (const panel of masterDetailEl.querySelectorAll('.master, .detail')) {
+        if (panel instanceof HTMLElement) {
+          panel.scrollTop = 0;
+        }
+      }
+    });
+  }
+
+  private findScrollContainer(start: HTMLElement): HTMLElement | null {
+    let current = start.parentElement;
+
+    while (current) {
+      const style = getComputedStyle(current);
+      const canScrollY =
+        (style.overflowY === 'auto' || style.overflowY === 'scroll') &&
+        current.scrollHeight > current.clientHeight;
+
+      if (canScrollY) {
+        return current;
+      }
+
+      current = current.parentElement;
+    }
+
+    return document.scrollingElement instanceof HTMLElement ? document.scrollingElement : null;
   }
 
 }

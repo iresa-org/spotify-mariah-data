@@ -1,0 +1,102 @@
+@use "theme.scss" as theme;
+
+.grouped-table-wrap {
+  overflow: auto;
+}
+
+.grouped-table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.grouped-table th,
+.grouped-table td {
+  border-bottom: 1px solid theme.$theme-border;
+  font-size: 0.9rem;
+  padding: 4px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.grouped-table th {
+  color: theme.$theme-muted;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.grouped-table__group-row td {
+  background: color-mix(in srgb, theme.$theme-surface 90%, theme.$theme-accent-soft 10%);
+  color: theme.$theme-muted;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.grouped-table__group-cell {
+  padding-top: 8px;
+}
+
+.grouped-table__cell--align-end {
+  text-align: right !important;
+}
+
+.grouped-table__empty {
+  color: theme.$theme-muted;
+  font-size: 0.9rem;
+  margin: 0;
+  padding: 10px 0;
+}
+
+:host-context(.grouped-table--compact) .grouped-table th,
+:host-context(.grouped-table--compact) .grouped-table td {
+  padding-left: 1px;
+  padding-right: 1px;
+}
+
+:host-context(.grouped-table--compact) .grouped-table col:nth-child(n + 3) {
+  width: 84px !important;
+}
+
+:host-context(.grouped-table--sticky-columns) .grouped-table-wrap {
+  overflow-x: auto;
+}
+
+:host-context(.grouped-table--sticky-columns) .grouped-table {
+  min-width: 700px;
+}
+
+:host-context(.grouped-table--sticky-columns) .grouped-table tr:not(.grouped-table__group-row) > th:nth-child(1),
+:host-context(.grouped-table--sticky-columns) .grouped-table tr:not(.grouped-table__group-row) > td:nth-child(1) {
+  background: theme.$theme-surface;
+  left: 0;
+  position: sticky;
+  z-index: 2;
+}
+
+:host-context(.grouped-table--sticky-columns) .grouped-table tr:not(.grouped-table__group-row) > th:nth-child(2),
+:host-context(.grouped-table--sticky-columns) .grouped-table tr:not(.grouped-table__group-row) > td:nth-child(2) {
+  background: theme.$theme-surface;
+  left: 44px;
+  position: sticky;
+  z-index: 2;
+}
+
+:host-context(.grouped-table--sticky-columns) .grouped-table tr:not(.grouped-table__group-row) > th:nth-child(2),
+:host-context(.grouped-table--sticky-columns) .grouped-table tr:not(.grouped-table__group-row) > td:nth-child(2) {
+  box-shadow: 1px 0 0 theme.$theme-border;
+}
+
+:host-context(.grouped-table--compact-second-column) .grouped-table col:nth-child(2) {
+  width: 100px !important;
+}
+
+:host-context(.grouped-table--compact-second-column) .grouped-table tr:not(.grouped-table__group-row) > th:nth-child(2),
+:host-context(.grouped-table--compact-second-column) .grouped-table tr:not(.grouped-table__group-row) > td:nth-child(2) {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

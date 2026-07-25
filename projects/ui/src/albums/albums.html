@@ -14,16 +14,30 @@
         <p>Albums with the most streams today</p>
       </div>
       <div class="chart-wrap" role="img" aria-label="Bar chart of top albums by daily streams">
+        @if (isMobile()) {
+          <ngx-charts-bar-horizontal
+            [results]="chartData()"
+            [scheme]="colorScheme"
+            [xAxis]="true"
+            [yAxis]="true"
+            [showDataLabel]="true"
+            [xAxisTickFormatting]="axisTickFormat"
+            [dataLabelFormatting]="axisTickFormat"
+            [roundEdges]="true"
+          />
+        } @else {
         <ngx-charts-bar-vertical
           [results]="chartData()"
           [scheme]="colorScheme"
           [xAxis]="true"
           [yAxis]="true"
+          [barPadding]="verticalBarPadding()"
           [showDataLabel]="true"
-          [yAxisTickFormatting]="yAxisTickFormat"
-          [dataLabelFormatting]="yAxisTickFormat"
+          [yAxisTickFormatting]="axisTickFormat"
+          [dataLabelFormatting]="axisTickFormat"
           [roundEdges]="true"
         />
+        }
       </div>
     </section>
   }

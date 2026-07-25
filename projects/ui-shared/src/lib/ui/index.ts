@@ -6,3 +6,4 @@ export * from './file-upload';
 export * from './pipes';
 export * from './injection-token';
 export * from './master-detail';
+export * from './grouped-table';

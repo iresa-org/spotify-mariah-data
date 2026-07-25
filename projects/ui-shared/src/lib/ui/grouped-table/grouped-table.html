@@ -1,0 +1,68 @@
+@if (flattenedRows().length) {
+<div class="grouped-table-wrap">
+  <table
+    cdk-table
+    [dataSource]="flattenedRows()"
+    class="grouped-table"
+    [attr.aria-label]="ariaLabel()"
+  >
+    <colgroup>
+      @for (column of columns(); track column.id) {
+      <col [style.width]="column.width ?? null" />
+      }
+    </colgroup>
+
+    <ng-container [cdkColumnDef]="groupColumnId">
+      <td
+        *cdkCellDef="let row"
+        cdk-cell
+        class="grouped-table__group-cell"
+        [attr.colspan]="dataRowColumns().length"
+      >
+        {{ row.group.label }}
+      </td>
+    </ng-container>
+
+    @for (column of columns(); track column.id) {
+    <ng-container [cdkColumnDef]="column.id">
+      <th
+        *cdkHeaderCellDef
+        cdk-header-cell
+        [class.grouped-table__cell--align-end]="column.align === 'end'"
+      >
+        {{ column.header }}
+      </th>
+      <td
+        *cdkCellDef="let row"
+        cdk-cell
+        [class.grouped-table__cell--align-end]="column.align === 'end'"
+      >
+        @if (getCellTemplate(column.id); as cellTemplate) {
+        <ng-container
+          [ngTemplateOutlet]="cellTemplate"
+          [ngTemplateOutletContext]="{
+            $implicit: row.row,
+            row: row.row,
+            group: row.group,
+            column: column,
+          }"
+        />
+        } @else {
+        {{ getCellValue(column, row.row) }}
+        }
+      </td>
+    </ng-container>
+    }
+
+    <tr cdk-header-row *cdkHeaderRowDef="dataRowColumns()"></tr>
+    <tr
+      cdk-row
+      class="grouped-table__group-row"
+      *cdkRowDef="let row; columns: groupRowColumns(); when: isGroupRow"
+    ></tr>
+    <tr cdk-row *cdkRowDef="let row; columns: dataRowColumns(); when: isDataRow"></tr>
+  </table>
+</div>
+} @else {
+<p class="grouped-table__empty">{{ emptyMessage() }}</p>
+}

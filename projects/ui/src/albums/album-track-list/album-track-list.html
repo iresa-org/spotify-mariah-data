@@ -1,106 +1,54 @@
-<div class="disc-block" aria-label="Album summary">
-    @if (selectedAlbum(); as album) {
+@if (selectedAlbum(); as album) {
+<div aria-label="Album summary">
     <div class="album-tracks__header" [id]="'album-tracks-' + album.albumDetails.uri">
         <div class="album-tracks__header-main">
             @if (album | albumLargeCoverArt; as coverArt) {
-            <img class="album-tracks__cover" [src]="coverArt" [alt]="album.albumDetails.name + ' album cover'"
-                width="96" height="96" />
+            <img
+                class="album-tracks__cover"
+                [src]="coverArt"
+                [alt]="album.albumDetails.name + ' album cover'"
+                width="96"
+                height="96"
+            />
             }
             <div>
                 <p class="album-tracks__eyebrow">Album Details</p>
                 <h3 class="album-tracks__title">{{ album.albumDetails.name }}</h3>
-                <p class="album-tracks__meta">
-                    {{ album.albumDetails.tracks.length }} tracks
-                </p>
+                <p class="album-tracks__meta">{{ album.albumDetails.tracks.length }} tracks</p>
             </div>
         </div>
     </div>
 
-    @for (group of albumTrackGroups(); track group.discNumber; let isFirstDisc = $first; let isLastDisc = $last)
-    {
-    <section class="disc-block" [attr.aria-label]="'Disc ' + group.discNumber + ' track list'">
-        @if (hasMultipleDiscs()) {
-        <h4 class="disc-title">Disc {{ group.discNumber }}</h4>
-        }
+    <lib-grouped-table
+        class="grouped-table--sticky-columns grouped-table--compact-second-column"
+        [class.grouped-table--compact]="isMobile()"
+        [ariaLabel]="album.albumDetails.name + ' track list'"
+        [columns]="tableColumns"
+        [groups]="tableGroups()"
+    >
+        <ng-template libGroupedTableCell="rank" let-row>
+            <span class="rank">{{ row.rank }}</span>
+        </ng-template>
 
-        <div class="table-wrap desktop-track-table">
-            <table class="track-table">
-                <caption class="sr-only">{{ album.albumDetails.name }} disc {{ group.discNumber }} tracks
-                </caption>
-                <colgroup>
-                    <col class="track-table__col track-table__col--rank" />
-                    <col class="track-table__col track-table__col--track" />
-                    <col class="track-table__col track-table__col--total" />
-                    <col class="track-table__col track-table__col--daily" />
-                    <col class="track-table__col track-table__col--change" />
-                </colgroup>
-                @if (isFirstDisc) {
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Track</th>
-                        <th scope="col" class="--align-right">Total</th>
-                        <th scope="col" class="--align-right">Daily</th>
-                        <th scope="col" class="--align-right">Change</th>
-                    </tr>
-                </thead>
-                }
-                <tbody>
-                    @for (track of group.tracks; track track.uid) {
-                    <tr>
-                        <td class="rank track-table__value track-table__value--rank">{{ track.track }}</td>
-                        <th scope="row" class="track-cell">
-                            <div class="track-info">
-                                <span class="track-name">{{ track.name }}</span>
-                            </div>
-                        </th>
-                        <td class="track-table__value">{{ track.playcount | number}}</td>
-                        <td class="track-table__value" [class.delta-positive]="+track.change >= 0"
-                            [class.delta-negative]="+track.change < 0">
-                            {{ track.change | number}}
-                        </td>
-                        <td class="track-table__value" [class.delta-positive]="+track.percent >= 0"
-                            [class.delta-negative]="+track.percent < 0">
-                            {{ track.percent | percentWithSign }}
-                        </td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </section>
-    }
-    <div class="table-wrap desktop-track-table">
-        <table class="track-table track-table--summary">
-            <caption class="sr-only">{{ album.albumDetails.name }} summary</caption>
-            <colgroup>
-                <col class="track-table__col track-table__col--rank" />
-                <col class="track-table__col track-table__col--track" />
-                <col class="track-table__col track-table__col--total" />
-                <col class="track-table__col track-table__col--daily" />
-                <col class="track-table__col track-table__col--change" />
-            </colgroup>
-            <tbody>
-                <tr class="album-summary-row">
-                    <td class="rank track-table__value track-table__value--rank --no-border">-</td>
-                    <th scope="row" class="track-cell --no-border">
-                        <div class="track-info">
-                            <span class="track-name">Total</span>
-                        </div>
-                    </th>
-                    <td class="track-table__value --no-border">{{ album.dailyChanges.playCount | number}}</td>
-                    <td class="track-table__value --no-border" [class.delta-positive]="+album.dailyChanges.change >= 0"
-                        [class.delta-negative]="+album.dailyChanges.change < 0">
-                        {{ album.dailyChanges.change | number}}
-                    </td>
-                    <td class="track-table__value --no-border"
-                        [class.delta-positive]="+album.dailyChanges.percentChange >= 0"
-                        [class.delta-negative]="+album.dailyChanges.percentChange < 0">
-                        {{ album.dailyChanges.percentChange | percentWithSign }}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    }
+        <ng-template libGroupedTableCell="trackName" let-row>
+            <span class="track-name">{{ row.trackName }}</span>
+        </ng-template>
+
+        <ng-template libGroupedTableCell="total" let-row>
+            {{ row.total | number }}
+        </ng-template>
+
+        <ng-template libGroupedTableCell="daily" let-row>
+            <span [class.delta-positive]="row.daily >= 0" [class.delta-negative]="row.daily < 0">
+                {{ row.daily | number }}
+            </span>
+        </ng-template>
+
+        <ng-template libGroupedTableCell="change" let-row>
+            <span [class.delta-positive]="row.change >= 0" [class.delta-negative]="row.change < 0">
+                {{ row.change | percentWithSign }}
+            </span>
+        </ng-template>
+    </lib-grouped-table>
 </div>
+}

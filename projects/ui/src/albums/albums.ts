@@ -1,5 +1,8 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
+import { map } from 'rxjs';
 import { AlbumRanking } from './album-ranking/album-ranking';
 import { AlbumRecord } from './album.config';
 import { formatCompact, toNumber } from './album.utils';
@@ -13,6 +16,8 @@ import { DailyDataApi } from 'ui-shared';
 })
 export class Albums {
   private dailyDataApi = inject(DailyDataApi);
+
+  private readonly breakpointObserver = inject(BreakpointObserver);
 
   readonly albums = signal(
     (this.dailyDataApi.getAlbums() as AlbumRecord[]).sort(
@@ -29,7 +34,20 @@ export class Albums {
       }))
   );
 
+  readonly isMobile = toSignal(
+    this.breakpointObserver.observe('(max-width: 600px)').pipe(map(result => result.matches)),
+    { initialValue: false }
+  );
+
   readonly colorScheme: Color = { name: 'mariah-albums', selectable: true, group: ScaleType.Ordinal, domain: ['#d72652', '#ea4b74', '#f47da0', '#f9b0c6', '#fce0ea', '#be1842', '#a01236', '#fce0ea', '#ea4b74', '#d72652', '#be1842', '#a01236', '#fce0ea', '#ea4b74', '#d72652'] };
 
-  yAxisTickFormat = (val: number) => formatCompact(val);
+  readonly verticalBarPadding = computed(() => {
+    const barCount = this.chartData().length;
+    if (barCount >= 14) return 24;
+    if (barCount >= 10) return 18;
+    if (barCount >= 7) return 12;
+    return 8;
+  });
+
+  axisTickFormat = (val: number) => formatCompact(val);
 }
