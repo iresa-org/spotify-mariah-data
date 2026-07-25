@@ -103,7 +103,7 @@ export class AlbumTrackList {
     const groups = this.albumTrackGroups();
     const groupedRows = groups.map((group) => ({
       id: group.discNumber,
-      label: this.hasMultipleDiscs() ? `Disc ${group.discNumber}` : 'Tracks',
+      label: this.hasMultipleDiscs() ? `Disc ${group.discNumber}` : '',
       rows: group.tracks.map((track) => this.toTableRow(track)),
     }));
 
@@ -120,7 +120,7 @@ export class AlbumTrackList {
       ...groupedRows,
       {
         id: 'summary',
-        label: 'Album totals',
+        label: '',
         rows: [summaryRow],
       },
     ];

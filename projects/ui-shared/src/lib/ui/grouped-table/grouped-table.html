@@ -19,7 +19,9 @@
         class="grouped-table__group-cell"
         [attr.colspan]="dataRowColumns().length"
       >
-        {{ row.group.label }}
+        @if (row.group.label) {
+        <span class="grouped-table__group-chip">{{ row.group.label }}</span>
+        }
       </td>
     </ng-container>
 
@@ -37,6 +39,7 @@
         cdk-cell
         [class.grouped-table__cell--align-end]="column.align === 'end'"
       >
+        <span class="grouped-table__mobile-label">{{ column.header }}</span>
         @if (getCellTemplate(column.id); as cellTemplate) {
         <ng-container
           [ngTemplateOutlet]="cellTemplate"
@@ -60,7 +63,11 @@
       class="grouped-table__group-row"
       *cdkRowDef="let row; columns: groupRowColumns(); when: isGroupRow"
     ></tr>
-    <tr cdk-row *cdkRowDef="let row; columns: dataRowColumns(); when: isDataRow"></tr>
+    <tr
+      cdk-row
+      *cdkRowDef="let row; columns: dataRowColumns(); when: isDataRow"
+      [class.grouped-table__summary-row]="row.group.id === 'summary'"
+    ></tr>
   </table>
 </div>
 } @else {

@@ -20,8 +20,7 @@
     </div>
 
     <lib-grouped-table
-        class="grouped-table--sticky-columns grouped-table--compact-second-column"
-        [class.grouped-table--compact]="isMobile()"
+        [class.mobile]="isMobile()"
         [ariaLabel]="album.albumDetails.name + ' track list'"
         [columns]="tableColumns"
         [groups]="tableGroups()"
