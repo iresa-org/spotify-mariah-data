@@ -1,22 +1,43 @@
 @if (loaded()) {
-<div class="dashboard">
+<div class="dashboard" [class.dashboard--sidebar-minimized]="sidenavMinimized()">
   <aside class="dashboard__sidebar" aria-label="Dashboard navigation">
-    <div class="brand">
-      <div class="brand__badge" aria-hidden="true">MC</div>
-      <div>
-        <p class="brand__eyebrow">Artist Overview</p>
-        <h1 class="brand__title">Mariah Carey</h1>
+    <button
+      type="button"
+      class="sidenav-toggle"
+      (click)="toggleSidenav()"
+      [attr.aria-expanded]="!sidenavMinimized()"
+      [attr.aria-label]="sidenavMinimized() ? 'Expand sidebar navigation' : 'Minimize sidebar navigation'"
+    >
+      <fa-icon [icon]="sidenavMinimized() ? expandIcon : minimizeIcon" aria-hidden="true" />
+    </button>
+
+    <div class="sidebar-header">
+      <div class="brand">
+        <div class="brand__badge" aria-hidden="true">MC</div>
+        <div class="brand__meta">
+          <p class="brand__eyebrow">Artist Overview</p>
+          <h1 class="brand__title">Mariah Carey</h1>
+        </div>
       </div>
     </div>
 
     <nav class="nav" aria-label="Main navigation">
-      <a class="nav__link" routerLink="overview" routerLinkActive="nav__link--active">Overview</a>
-      <a class="nav__link" routerLink="tracks" routerLinkActive="nav__link--active">Tracks</a>
-      <a class="nav__link" routerLink="albums" routerLinkActive="nav__link--active">Albums</a>
+      <a class="nav__link" routerLink="overview" routerLinkActive="nav__link--active" aria-label="Overview" title="Overview">
+        <fa-icon class="nav__icon" [icon]="overviewIcon" aria-hidden="true" />
+        <span class="nav__label">Overview</span>
+      </a>
+      <a class="nav__link" routerLink="tracks" routerLinkActive="nav__link--active" aria-label="Tracks" title="Tracks">
+        <fa-icon class="nav__icon" [icon]="tracksIcon" aria-hidden="true" />
+        <span class="nav__label">Tracks</span>
+      </a>
+      <a class="nav__link" routerLink="albums" routerLinkActive="nav__link--active" aria-label="Albums" title="Albums">
+        <fa-icon class="nav__icon" [icon]="albumsIcon" aria-hidden="true" />
+        <span class="nav__label">Albums</span>
+      </a>
     </nav>
 
     @if (lastUpdated()) {
-      <dl class="sidebar-stats">
+      <dl class="sidebar-stats" [attr.aria-hidden]="sidenavMinimized()">
         <div>
           <dt>Last Updated</dt>
           <dd>{{ lastUpdated() }}</dd>

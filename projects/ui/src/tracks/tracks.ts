@@ -1,9 +1,10 @@
+import { DOCUMENT } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { Component, computed, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { map } from 'rxjs';
+import { fromEvent, map, startWith } from 'rxjs';
 import { DailyDataApi } from 'ui-shared';
 import { TRACK_CATEGORIES, FilterType, TrackItem } from './tracks.config';
 
@@ -13,14 +14,17 @@ import { TRACK_CATEGORIES, FilterType, TrackItem } from './tracks.config';
   templateUrl: './tracks.html',
   styleUrl: './tracks.scss',
 })
-export class Tracks {
+export class Tracks implements OnInit {
+  private readonly document = inject(DOCUMENT);
   private dailyDataApi = inject(DailyDataApi);
   private breakpointObserver = inject(BreakpointObserver);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly filterTabs = TRACK_CATEGORIES;
   readonly activeFilter = signal<FilterType>('T');
   readonly searchQuery = signal('');
   readonly desktopRowHeight = 64;
+  readonly showScrollToTop = signal(false);
 
   readonly isMobile = toSignal(
     this.breakpointObserver
@@ -47,6 +51,21 @@ export class Tracks {
     );
   });
 
+  ngOnInit(): void {
+    const scrollTarget = this.document.defaultView;
+    if (!scrollTarget) return;
+
+    fromEvent(scrollTarget, 'scroll')
+      .pipe(
+        startWith(null),
+        map(() => scrollTarget.scrollY > 280),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((shouldShow) => {
+        this.showScrollToTop.set(shouldShow);
+      });
+  }
+
   trackByUid(_index: number, track: TrackItem): string {
     return track.uid;
   }
@@ -57,5 +76,9 @@ export class Tracks {
 
   formatCompact(value: number): string {
     return new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 }).format(value);
+  }
+
+  scrollToTop(): void {
+    this.document.defaultView?.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
