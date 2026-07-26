@@ -2,7 +2,7 @@ export interface TrackArtists {
   items: { profile: { name: string } }[]
 }
 
-export interface ContentItem {
+export interface TrackContentItem {
   uid: string;
   itemV2: {
     data: {
@@ -19,12 +19,30 @@ export interface ContentItem {
   }
 }
 
+export interface ArtistContentItem {
+  discography: {
+    topTracks: { items: TrackContentItem[] }
+  },
+  stats: {
+    followers: number,
+    monthlyListeners: number
+  }
+}
+
 export interface SpotifyTrackData {
   data: {
     playlistV2: {
       content: {
-        items: ContentItem[]
+        items: TrackContentItem[]
       }
     }
   }
 }
+
+export interface SpotifyArtistData {
+  data: {
+    artistUnion: ArtistContentItem
+  }
+}
+
+export type SpotifyContentData = SpotifyTrackData | SpotifyArtistData;

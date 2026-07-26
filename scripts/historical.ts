@@ -54,10 +54,10 @@ async function getLatestFiles(directoryPath: string, numberOfDays: number): Prom
 function convertNestedMapToObject(nestedMap: Map<string, Map<string, string>>): Record<string, Record<string, string>> {
   // 1. Convert the outer Map entries into an array
   const outerEntries = Array.from(nestedMap.entries()).map(([outerKey, innerMap]) => {
-    
+
     // 2. Convert the inner Map into a plain object using Object.fromEntries
     const innerObject = Object.fromEntries(innerMap);
-    
+
     // 3. Return the outer key paired with the newly created inner object
     return [outerKey, innerObject] as [string, Record<string, string>];
   });
@@ -72,7 +72,7 @@ function convertNestedMapToObject(nestedMap: Map<string, Map<string, string>>): 
  * track id --- date --- change
  *          --- date --- change
  */
-function parseHistoricalResults(latestFiles: FileContentMap[]) {
+function parseHistoricalTrackResults(latestFiles: FileContentMap[]) {
   const map = new Map<string, Map<string, string>>();
 
   for (const file of latestFiles) {
@@ -86,8 +86,25 @@ function parseHistoricalResults(latestFiles: FileContentMap[]) {
       }
     }
   }
-  
+
   return convertNestedMapToObject(map)
+
+}
+
+/**
+ * Result structure
+ * 
+ * date --- monthlyListeners
+ */
+function parseHistoricalMonthlyListeners(latestFiles: FileContentMap[]) {
+  const map = new Map<string, string>();
+
+  for (const file of latestFiles) {
+    const listeners = JSON.parse(file.content).monthlyListeners;
+    listeners && map.set(file.date, `${listeners}`);
+  }
+
+  return Object.fromEntries(map)
 
 }
 
@@ -97,10 +114,10 @@ async function main() {
   try {
 
     const latestFiles = await getLatestFiles('./daily', 90);
-    const result = parseHistoricalResults(latestFiles);
 
     // Write to result
-    writeToFile(`./historical`, 'tracks.json', JSON.stringify(result))
+    writeToFile(`./historical`, 'tracks.json', JSON.stringify(parseHistoricalTrackResults(latestFiles)))
+    writeToFile(`./historical`, 'monthlyListeners.json', JSON.stringify(parseHistoricalMonthlyListeners(latestFiles)))
 
   } catch (error) {
     console.error('Error writing file:', error);

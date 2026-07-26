@@ -1,24 +1,35 @@
 import { readFile } from "fs/promises";
 import { clearFilesFromFolder, getLatestFile, writeToFile } from "./utils/file.utils.ts";
-import type { DailyCountOutput, GetTrackDetailResp, TrackDailyChange, TrackData } from "./config/track.config.ts";
+import type { DailyCountOutput, GetDailyResult } from "./config/daily.config.ts";
 import { extractDateFromPath, formatDate, getTomorrowDate, getYesterdayDate, parseLocalDate } from "./utils/date.utils.ts";
 import { calcDailyChanges, convertToAlbumList, filterAlbums, getAlbumsFromTracks, getDuplicateIds, getTotalStreams, getTrackCategories } from "./utils/count.utils.ts";
-import type { SpotifyTrackData } from "./config/source.config.ts";
+import type { SpotifyArtistData, SpotifyContentData, SpotifyTrackData } from "./config/source.config.ts";
+import type { TrackDailyChange, TrackData } from "./config/track.config.ts";
 
-function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, TrackDailyChange>, prevDate: Date): GetTrackDetailResp {
-  const map = new Map<Date, TrackData>();
+function processTrackContent(el: SpotifyTrackData, prevMap: Map<string, TrackDailyChange>, map: Map<string, TrackData>) {
+  const content = el.data.playlistV2?.content;
+  if (content?.items) {
+    content.items.forEach((item) => {
+      map.set(item.uid, {
+        trackDetails: item,
+        dailyChanges: calcDailyChanges(item, prevMap),
+        categories: getTrackCategories(item)
+      });
+    })
+  }
+}
+
+function processUploadContent(list: SpotifyContentData[], prevMap: Map<string, TrackDailyChange>, prevDate: Date): GetDailyResult {
+  const map = new Map<string, TrackData>();
+  let artistData: SpotifyArtistData = {} as SpotifyArtistData;
 
   list.forEach((el) => {
-    const content = el.data.playlistV2?.content;
-    if (content?.items) {
-      content.items.forEach((item) => {
-        map.set(item.uid, {
-          trackDetails: item,
-          dailyChanges: calcDailyChanges(item, prevMap),
-          categories: getTrackCategories(item)
-        });
-      })
+    if (el.data.hasOwnProperty('playlistV2')) {
+      processTrackContent(el as SpotifyTrackData, prevMap, map)
+    } else {
+      artistData = el as SpotifyArtistData;
     }
+
   })
 
   const duplicates = getDuplicateIds(Array.from(map.values()));
@@ -40,7 +51,8 @@ function processUploadContent(list: SpotifyTrackData[], prevMap: Map<string, Tra
       videos: getTotalStreams(videos),
     },
     albums: convertToAlbumList(albumMap),
-    lastUpdate: formatDate(prevDate)
+    lastUpdate: formatDate(prevDate),
+    artist: artistData ? artistData.data.artistUnion : null
   }
 }
 
@@ -94,10 +106,12 @@ async function main() {
     writeToFile(`./result`, 'current.json', result)
 
     // Write to daily
-    let tracks = resp.tracks.map(track => ({ uid: track.trackDetails.uid, playCount: track.dailyChanges.playCount, change: track.dailyChanges.change }));
+    const tracks = resp.tracks.map(track => ({ uid: track.trackDetails.uid, playCount: track.dailyChanges.playCount, change: track.dailyChanges.change }));
+    const monthlyListeners = resp.artist?.stats.monthlyListeners;
     writeToFile(`./daily`, `${formatDate(prevDate)}.json`, JSON.stringify({
       tracks,
-      playCounts: resp.playCounts
+      playCounts: resp.playCounts,
+      monthlyListeners
     }))
 
     // Clean upload folder

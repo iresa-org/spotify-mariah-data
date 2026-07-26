@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import { writeToFile } from "./utils/file.utils.ts";
-import type { DailyCountOutput, PlayCountOutput } from './config/track.config.ts';
+import type { DailyCountOutput, PlayCountOutput } from './config/daily.config.ts';
 import * as path from 'path';
 import { calculateSum } from './utils/count.utils.ts';
 

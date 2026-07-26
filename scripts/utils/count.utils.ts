@@ -1,6 +1,7 @@
-import { SELECTED_ALBUMS } from "../config/album.config.ts";
-import type { ContentItem, TrackArtists } from "../config/source.config.ts";
-import type { AlbumData, BaseDailyChange, TrackCategory, TrackDailyChange, TrackData } from "../config/track.config.ts";
+import { SELECTED_ALBUMS } from "../config/album-list.ts";
+import type { AlbumData } from "../config/album.config.ts";
+import type { TrackContentItem, TrackArtists } from "../config/source.config.ts";
+import type { BaseDailyChange, TrackCategory, TrackDailyChange, TrackData } from "../config/track.config.ts";
 
 export function isBiggerNumber(number1: number | string, number2: number | string): boolean {
   return Number(number1) > Number(number2);
@@ -53,7 +54,7 @@ export function getTotalStreams(list: TrackData[]): BaseDailyChange {
   }
 }
 
-export function calcDailyChanges(item: ContentItem, prevMap: Map<string, TrackDailyChange>): TrackDailyChange {
+export function calcDailyChanges(item: TrackContentItem, prevMap: Map<string, TrackDailyChange>): TrackDailyChange {
   const { uid, itemV2 } = item;
   let prevTotal = BigInt(item.itemV2.data.playcount), prevChange = BigInt(0);
   if (prevMap.has(uid)) {
@@ -78,7 +79,7 @@ function containsMainArtist(artists: TrackArtists): boolean {
   return !!artists.items && !!artistName?.includes('Mariah Carey')
 }
 
-export function getTrackCategories(item: ContentItem): TrackCategory[] {
+export function getTrackCategories(item: TrackContentItem): TrackCategory[] {
   const categories: TrackCategory[] = []
   const artists = item.itemV2.data.artists;
 

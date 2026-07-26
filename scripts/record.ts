@@ -1,9 +1,10 @@
 import { readFile } from "fs/promises";
 import { getLatestFile, writeToFile } from "./utils/file.utils.ts";
-import type { BaseDailyChange, DailyCountOutput } from "./config/track.config.ts";
+import type { DailyCountOutput } from "./config/daily.config.ts";
 import type { RecordModel } from "./config/record.config.ts";
 import { isBiggerNumber } from "./utils/count.utils.ts";
 import { extractDateFromPath } from "./utils/date.utils.ts";
+import type { BaseDailyChange } from "./config/track.config.ts";
 
 function processDailyChangeContent(input: string): Map<string, BaseDailyChange> {
 
