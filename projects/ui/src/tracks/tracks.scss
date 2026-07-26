@@ -329,27 +329,28 @@ thead th {
     padding: 4px 0;
   }
 
-  .metric::before {
+  .metric {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .metric__value {
+    font-size: 0.78rem;
+    line-height: 1.1;
+  }
+
+  .metric__label {
     color: theme.$theme-muted;
-    flex-shrink: 0;
     font-size: 0.62rem;
     font-weight: 600;
     letter-spacing: 0.04em;
     line-height: 1.2;
     text-transform: uppercase;
-  }
-
-  .metric::before {
-    content: attr(data-label);
-  }
-
-  .metric {
-    align-items: center;
-    flex-direction: row;
-    font-size: 0.74rem;
-    font-weight: 600;
-    text-align: left;
-    white-space: nowrap;
   }
 
   .rank {

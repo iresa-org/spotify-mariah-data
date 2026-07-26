@@ -5,34 +5,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 import { DailyDataApi } from 'ui-shared';
-
-type FilterType = 'T' | 'L' | 'S' | 'F' | 'V';
-
-interface FilterTab {
-  label: string;
-  value: FilterType;
-}
-
-interface TrackItem {
-  uid: string;
-  name?: string;
-  playcount: number;
-  change: number;
-  percent: number | string;
-  artists: { uri: string; profile?: { name?: string } }[];
-  album?: {
-    name?: string;
-    coverArt?: { sources?: { url: string }[] };
-  };
-}
-
-const FILTER_TABS: FilterTab[] = [
-  { label: 'All', value: 'T' },
-  { label: 'Lead', value: 'L' },
-  { label: 'Solo', value: 'S' },
-  { label: 'Featured', value: 'F' },
-  { label: 'Videos', value: 'V' },
-];
+import { TRACK_CATEGORIES, FilterType, TrackItem } from './tracks.config';
 
 @Component({
   selector: 'lib-tracks',
@@ -44,7 +17,7 @@ export class Tracks {
   private dailyDataApi = inject(DailyDataApi);
   private breakpointObserver = inject(BreakpointObserver);
 
-  readonly filterTabs = FILTER_TABS;
+  readonly filterTabs = TRACK_CATEGORIES;
   readonly activeFilter = signal<FilterType>('T');
   readonly searchQuery = signal('');
   readonly desktopRowHeight = 64;

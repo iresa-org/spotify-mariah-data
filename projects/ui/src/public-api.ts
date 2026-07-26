@@ -10,4 +10,4 @@ export { Tracks } from './tracks/tracks';
 
 export { Albums } from './albums/albums';
 
-export { TrackDetail } from './track-detail/track-detail';
+export { TrackDetail } from './tracks/track-detail/track-detail';

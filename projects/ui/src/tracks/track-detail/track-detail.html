@@ -25,11 +25,37 @@
       }
       <div class="track-hero__badges">
         @for (cat of t.categories; track cat) {
-        <span class="badge">{{ cat }}</span>
+        <span class="badge">{{ cat | getTrackCategory}}</span>
         }
       </div>
     </div>
   </div>
+
+  @if (historicalChart().length > 0) {
+  <section class="panel" aria-label="Historical daily streams chart">
+    <div class="panel__heading">
+      <h3>Historical Daily Streams</h3>
+    </div>
+    <div class="panel__subheading">
+      <div class="panel__subheading-text">
+        Stream count per day for 7, 30, 60, and 90 day categories
+      </div>
+      <div class="panel__toolbar" role="group" aria-label="Historical stream range">
+        @for (days of historyWindowOptions; track days) {
+        <button type="button" class="range-chip" [class.range-chip--active]="selectedHistoryWindow() === days"
+          [attr.aria-pressed]="selectedHistoryWindow() === days" (click)="setHistoryWindow(days)">
+          {{ days }} Days
+        </button>
+        }
+      </div>
+    </div>
+    <div class="chart-wrap" role="img" aria-label="Line chart of historical daily streams">
+      <ngx-charts-line-chart [results]="historicalChart()" [scheme]="colorScheme" [xAxis]="true" [yAxis]="true"
+        [showGridLines]="true" [autoScale]="true" [yAxisTickFormatting]="yAxisTickFormat"
+        [xAxisTickFormatting]="xAxisTickFormat" [gradient]="true" />
+    </div>
+  </section>
+  }
 
   <section class="kpis" aria-label="Stream statistics">
     <article class="kpi-card">
@@ -70,32 +96,6 @@
     </article>
     }
   </section>
-
-  @if (historicalChart().length > 0) {
-  <section class="panel" aria-label="Historical daily streams chart">
-    <div class="panel__heading">
-      <h3>Historical Daily Streams</h3>
-    </div>
-    <div class="panel__subheading">
-      <div class="panel__subheading-text">
-        Stream count per day for 7, 30, 60, and 90 day categories
-      </div>
-      <div class="panel__toolbar" role="group" aria-label="Historical stream range">
-        @for (days of historyWindowOptions; track days) {
-        <button type="button" class="range-chip" [class.range-chip--active]="selectedHistoryWindow() === days"
-          [attr.aria-pressed]="selectedHistoryWindow() === days" (click)="setHistoryWindow(days)">
-          {{ days }} Days
-        </button>
-        }
-      </div>
-    </div>
-    <div class="chart-wrap" role="img" aria-label="Line chart of historical daily streams">
-      <ngx-charts-line-chart [results]="historicalChart()" [scheme]="colorScheme" [xAxis]="true" [yAxis]="true"
-        [showGridLines]="true" [autoScale]="true" [yAxisTickFormatting]="yAxisTickFormat"
-        [xAxisTickFormatting]="xAxisTickFormat" [gradient]="true" />
-    </div>
-  </section>
-  }
   } @else {
   <p class="not-found">Track not found.</p>
   }

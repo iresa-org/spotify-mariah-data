@@ -3,6 +3,8 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 import { DailyDataApi, HistoricDataApi, HistoricalData, TrackRecord, YtdData } from 'ui-shared';
+import { TRACK_CATEGORIES } from '../tracks.config';
+import { GetTrackCategoryPipe } from '../get-track-category-pipe';
 
 interface SeriesPoint {
   name: string;
@@ -18,7 +20,7 @@ type HistoryWindow = 7 | 30 | 60 | 90;
 
 @Component({
   selector: 'lib-track-detail',
-  imports: [NgxChartsModule, RouterLink],
+  imports: [NgxChartsModule, RouterLink, GetTrackCategoryPipe],
   templateUrl: './track-detail.html',
   styleUrl: './track-detail.scss',
 })
@@ -30,6 +32,8 @@ export class TrackDetail implements OnInit {
   readonly uid = signal('');
   readonly track = computed(() => this.dailyDataApi.getTrackByUid(this.uid()));
   readonly loading = signal(true);
+
+  readonly categories = TRACK_CATEGORIES;
 
   readonly allTimeRecord = signal<TrackRecord | null>(null);
   readonly ytdRecord = signal<TrackRecord | null>(null);
