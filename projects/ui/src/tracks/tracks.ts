@@ -1,6 +1,9 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
+import { map } from 'rxjs';
 import { DailyDataApi } from 'ui-shared';
 
 type FilterType = 'T' | 'L' | 'S' | 'F' | 'V';
@@ -8,6 +11,19 @@ type FilterType = 'T' | 'L' | 'S' | 'F' | 'V';
 interface FilterTab {
   label: string;
   value: FilterType;
+}
+
+interface TrackItem {
+  uid: string;
+  name?: string;
+  playcount: number;
+  change: number;
+  percent: number | string;
+  artists: { uri: string; profile?: { name?: string } }[];
+  album?: {
+    name?: string;
+    coverArt?: { sources?: { url: string }[] };
+  };
 }
 
 const FILTER_TABS: FilterTab[] = [
@@ -20,47 +36,53 @@ const FILTER_TABS: FilterTab[] = [
 
 @Component({
   selector: 'lib-tracks',
-  imports: [NgxChartsModule, RouterLink],
+  imports: [RouterLink, ScrollingModule],
   templateUrl: './tracks.html',
   styleUrl: './tracks.scss',
 })
 export class Tracks {
   private dailyDataApi = inject(DailyDataApi);
+  private breakpointObserver = inject(BreakpointObserver);
 
   readonly filterTabs = FILTER_TABS;
   readonly activeFilter = signal<FilterType>('T');
+  readonly searchQuery = signal('');
+  readonly desktopRowHeight = 64;
 
-  readonly list = computed(() => {
+  readonly isMobile = toSignal(
+    this.breakpointObserver
+      .observe('(max-width: 720px)')
+      .pipe(map(({ matches }) => matches)),
+    { initialValue: false }
+  );
+
+  readonly list = computed<TrackItem[]>(() => {
     const filter = this.activeFilter();
-    const getterMap: Record<FilterType, () => unknown[]> = {
+    const query = this.searchQuery().trim().toLowerCase();
+    const getterMap: Record<FilterType, () => TrackItem[]> = {
       T: this.dailyDataApi.getAll,
       L: this.dailyDataApi.getLead,
       S: this.dailyDataApi.getSolo,
       F: this.dailyDataApi.getFeatured,
       V: this.dailyDataApi.getVideos,
     };
-    return (getterMap[filter]() as { playcount: number }[]).sort((a, b) => b.playcount - a.playcount);
+    const sorted = [...getterMap[filter]()].sort((a, b) => b.playcount - a.playcount);
+    if (!query) return sorted;
+    return sorted.filter(track =>
+      track.name?.toLowerCase().includes(query) ||
+      track.album?.name?.toLowerCase().includes(query)
+    );
   });
 
-  readonly chartData = computed(() =>
-    (this.list() as unknown as { name: string; change: number }[])
-      .sort((a, b) => b.change - a.change)
-      .slice(0, 15)
-      .map(t => ({
-        name: t.name.length > 24 ? t.name.slice(0, 24) + '…' : t.name,
-        value: t.change,
-      }))
-  );
+  trackByUid(_index: number, track: TrackItem): string {
+    return track.uid;
+  }
 
-  readonly colorScheme: Color = { name: 'mariah', selectable: true, group: ScaleType.Ordinal, domain: ['#d72652'] };
-
-  getAlbumArt(track: { album?: { coverArt?: { sources?: { url: string }[] } } }): string {
+  getAlbumArt(track: TrackItem): string {
     return track.album?.coverArt?.sources?.[0]?.url ?? '';
   }
 
   formatCompact(value: number): string {
     return new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 }).format(value);
   }
-
-  xAxisTickFormat = (val: number) => this.formatCompact(val);
 }

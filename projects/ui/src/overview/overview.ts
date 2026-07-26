@@ -29,7 +29,6 @@ export class Overview implements OnInit {
   readonly topTracksChart = signal<ChartItem[]>([]);
 
   readonly barColorScheme: Color = { name: 'mariah-bar', selectable: true, group: ScaleType.Ordinal, domain: ['#d72652', '#ea4b74', '#f47da0', '#f9b0c6', '#fce0ea', '#be1842', '#a01236', '#fce0ea', '#ea4b74', '#d72652', '#be1842', '#a01236', '#fce0ea', '#ea4b74', '#d72652'] };
-  readonly pieColorScheme: Color = { name: 'mariah-pie', selectable: true, group: ScaleType.Ordinal, domain: ['#d72652', '#4a90d9', '#f5a623', '#7ed321', '#9b59b6'] };
 
   ngOnInit(): void {
     const counts = this.dailyDataApi.getPlayCountsByAllType();

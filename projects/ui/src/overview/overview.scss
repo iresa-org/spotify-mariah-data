@@ -80,14 +80,17 @@
 .charts-grid {
   display: grid;
   gap: 20px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-width: 0;
+  width: 100%;
 }
 
 .panel {
   background: theme.$theme-surface;
   border: 1px solid theme.$theme-border;
   border-radius: 14px;
+  min-width: 0;
   padding: 16px;
+  width: 100%;
 }
 
 .panel__heading h3 {
@@ -102,8 +105,9 @@
 }
 
 .chart-wrap {
-  height: 280px;
+  height: clamp(220px, 40vw, 300px);
   margin-top: 12px;
+  min-width: 0;
 
   ngx-charts-bar-vertical,
   ngx-charts-bar-horizontal,
@@ -115,11 +119,11 @@
 }
 
 .chart-wrap--pie {
-  height: 320px;
+  height: clamp(240px, 45vw, 340px);
 }
 
 .chart-wrap--bar-horizontal {
-  height: 420px;
+  height: clamp(300px, 70vw, 440px);
 }
 
 @media (max-width: 900px) {
@@ -133,7 +137,37 @@
 }
 
 @media (max-width: 560px) {
+  .overview {
+    gap: 16px;
+  }
+
   .kpis {
     grid-template-columns: 1fr;
+  }
+
+  .panel {
+    border-radius: 12px;
+    padding: 12px;
+  }
+
+  .panel__heading h3 {
+    font-size: 1rem;
+  }
+
+  .panel__heading p {
+    font-size: 0.8rem;
+  }
+
+  .chart-wrap {
+    height: clamp(200px, 58vw, 260px);
+    margin-top: 10px;
+  }
+
+  .chart-wrap--pie {
+    height: clamp(220px, 62vw, 280px);
+  }
+
+  .chart-wrap--bar-horizontal {
+    height: clamp(260px, 95vw, 360px);
   }
 }

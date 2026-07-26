@@ -56,8 +56,38 @@
 .filter-btn--active {
   background: theme.$theme-accent;
   border-color: theme.$theme-accent;
-  color: #fff;
+  color: theme.$theme-accent-soft;
   font-weight: 600;
+}
+
+.filter-btn--active:hover,
+.filter-btn--active:focus-visible {
+  color: theme.$theme-accent-soft;
+}
+
+.search-bar {
+  display: flex;
+  width: 100%;
+}
+
+.search-input {
+  background: theme.$theme-surface;
+  border: 1px solid theme.$theme-border;
+  border-radius: 999px;
+  color: theme.$theme-text;
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  width: 100%;
+
+  &::placeholder {
+    color: theme.$theme-muted;
+  }
+
+  &:focus {
+    border-color: theme.$theme-accent;
+    outline: none;
+  }
 }
 
 .panel {
@@ -90,36 +120,80 @@
 }
 
 .table-wrap {
-  margin-top: 12px;
-  overflow: auto;
+  margin-top: 10px;
 }
 
-table {
+.tracks-table {
   border-collapse: collapse;
+  table-layout: fixed;
   width: 100%;
+}
+
+.tracks-viewport {
+  height: auto;
+  overflow: visible;
+  width: 100%;
+}
+
+.col-rank {
+  width: 2.5rem;
+}
+
+.col-track {
+  width: auto;
+}
+
+.col-metric {
+  width: 6.5rem;
+}
+
+tbody tr {
+  transition: background-color 150ms ease, box-shadow 150ms ease;
+}
+
+tbody tr:hover {
+  background: theme.$theme-bg;
+}
+
+tbody tr:focus-within {
+  background: theme.$theme-bg;
+  box-shadow: inset 0 0 0 1px rgba(215, 38, 82, 0.3);
 }
 
 th,
 td {
   border-bottom: 1px solid theme.$theme-border;
-  font-size: 0.9rem;
-  padding: 10px 8px;
+  font-size: 0.86rem;
+  overflow-wrap: anywhere;
+  padding: 9px 8px;
   text-align: left;
   vertical-align: middle;
 }
 
+.metric {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
 thead th {
   color: theme.$theme-muted;
-  font-size: 0.75rem;
+  font-size: 0.62rem;
+  font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
+.metric-header {
+  text-align: right;
+}
+
 .rank {
   color: theme.$theme-muted;
-  font-size: 0.85rem;
-  min-width: 32px;
+  font-size: 0.64rem;
+  min-width: 0;
 }
 
 .track-cell {
@@ -129,16 +203,16 @@ thead th {
 .track-cell {
   align-items: center;
   display: flex;
-  gap: 10px;
+  gap: 8px;
   min-width: 200px;
 }
 
 .track-art {
   border-radius: 6px;
   flex-shrink: 0;
-  height: 40px;
+  height: 36px;
   object-fit: cover;
-  width: 40px;
+  width: 36px;
 }
 
 .track-info {
@@ -149,9 +223,11 @@ thead th {
 }
 
 .track-name {
+  font-size: 0.86rem;
   font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
+  word-break: break-word;
   white-space: nowrap;
 }
 
@@ -169,7 +245,7 @@ thead th {
 
 .track-artists {
   color: theme.$theme-muted;
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -195,4 +271,131 @@ thead th {
   position: absolute;
   white-space: nowrap;
   width: 1px;
+}
+
+@media (max-width: 720px) {
+  .tracks-page {
+    gap: 16px;
+  }
+
+  .panel {
+    padding: 12px;
+  }
+
+  .table-wrap {
+    overflow: visible;
+  }
+
+  .panel__heading p {
+    line-height: 1.4;
+  }
+
+  thead {
+    display: none;
+  }
+
+  table,
+  tbody,
+  tr,
+  th,
+  td {
+    display: block;
+  }
+
+  tbody {
+    display: grid;
+    gap: 10px;
+  }
+
+  tr {
+    background: theme.$theme-bg;
+    border: 1px solid theme.$theme-border;
+    border-radius: 12px;
+    display: grid;
+    gap: 6px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: 10px;
+  }
+
+  th,
+  td {
+    align-items: flex-start;
+    border: 0;
+    display: flex;
+    font-size: 0.86rem;
+    gap: 4px;
+    justify-content: flex-start;
+    min-width: 0;
+    padding: 4px 0;
+  }
+
+  .metric::before {
+    color: theme.$theme-muted;
+    flex-shrink: 0;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .metric::before {
+    content: attr(data-label);
+  }
+
+  .metric {
+    align-items: center;
+    flex-direction: row;
+    font-size: 0.74rem;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .rank {
+    color: theme.$theme-muted;
+    font-size: 0.72rem;
+    grid-column: 1 / -1;
+    padding: 0;
+  }
+
+  .track-cell {
+    align-items: flex-start;
+    gap: 8px;
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    margin-bottom: 2px;
+    min-width: 0;
+    padding-top: 0;
+  }
+
+  .track-art {
+    height: 34px;
+    width: 34px;
+  }
+
+  .track-name,
+  .track-artists {
+    overflow: visible;
+    text-overflow: unset;
+    white-space: normal;
+  }
+
+  .rank {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header__title {
+    font-size: 1.4rem;
+  }
+
+  .filters {
+    gap: 6px;
+  }
+
+  .filter-btn {
+    padding: 6px 12px;
+  }
 }

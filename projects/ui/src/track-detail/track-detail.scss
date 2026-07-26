@@ -68,7 +68,7 @@
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .track-hero__album {
@@ -214,5 +214,65 @@
     display: block;
     height: 100%;
     width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .track-detail {
+    gap: 16px;
+  }
+
+  .track-hero {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .track-hero__art {
+    height: 96px;
+    width: 96px;
+  }
+
+  .track-hero__title {
+    font-size: 1.4rem;
+    line-height: 1.2;
+  }
+
+  .kpis {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+
+  .kpi-card {
+    padding: 14px;
+  }
+
+  .panel {
+    padding: 12px;
+  }
+
+  .panel__subheading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .panel__toolbar {
+    justify-content: flex-start;
+    margin-top: 0;
+  }
+
+  .chart-wrap {
+    height: 260px;
+  }
+}
+
+@media (max-width: 520px) {
+  .kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .range-chip {
+    font-size: 0.72rem;
+    padding: 4px 9px;
   }
 }

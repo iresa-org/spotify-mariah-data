@@ -74,25 +74,6 @@
         </div>
       </section>
     }
-
-    @if (categoryChart().length > 0) {
-      <section class="panel" aria-label="Streams by category chart">
-        <div class="panel__heading">
-          <h3>Streams by Category</h3>
-          <p>Distribution of total streams across track types</p>
-        </div>
-        <div class="chart-wrap chart-wrap--pie" role="img" aria-label="Pie chart showing stream distribution by category">
-          <ngx-charts-pie-chart
-            [results]="categoryChart()"
-            [scheme]="pieColorScheme"
-            [legend]="true"
-            [labels]="true"
-            [doughnut]="true"
-            [arcWidth]="0.35"
-          />
-        </div>
-      </section>
-    }
   </div>
 
   @if (topTracksChart().length > 0) {

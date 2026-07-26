@@ -22,26 +22,18 @@
     }
   </div>
 
-  @if (chartData().length > 0) {
-    <section class="panel" aria-label="Top tracks by daily streams">
-      <div class="panel__heading">
-        <h3>Top 15 by Daily Streams</h3>
-        <p>Tracks with the highest stream count today</p>
-      </div>
-      <div class="chart-wrap" role="img" aria-label="Horizontal bar chart of top tracks by daily streams">
-        <ngx-charts-bar-horizontal
-          [results]="chartData()"
-          [scheme]="colorScheme"
-          [xAxis]="true"
-          [yAxis]="true"
-          [showDataLabel]="true"
-          [xAxisTickFormatting]="xAxisTickFormat"
-          [dataLabelFormatting]="xAxisTickFormat"
-          [roundEdges]="true"
-        />
-      </div>
-    </section>
-  }
+  <div class="search-bar">
+    <label for="track-search" class="sr-only">Search by track or album name</label>
+    <input
+      id="track-search"
+      type="search"
+      class="search-input"
+      placeholder="Search by track or album name&hellip;"
+      [value]="searchQuery()"
+      (input)="searchQuery.set($any($event.target).value)"
+      autocomplete="off"
+    />
+  </div>
 
   <section class="panel" aria-label="Tracks list">
     <div class="panel__heading">
@@ -50,57 +42,155 @@
     </div>
 
     <div class="table-wrap">
-      <table>
-        <caption class="sr-only">Tracks sorted by total streams</caption>
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Track</th>
-            <th scope="col">Total Streams</th>
-            <th scope="col">Daily Streams</th>
-            <th scope="col">Daily Change</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (track of $any(list()); track track.uid; let i = $index) {
+      @if (isMobile()) {
+        <table class="tracks-table tracks-table--mobile">
+          <caption class="sr-only">Tracks sorted by total streams</caption>
+          <colgroup>
+            <col class="col-rank" />
+            <col class="col-track" />
+            <col class="col-metric" />
+            <col class="col-metric" />
+            <col class="col-metric" />
+          </colgroup>
+          <thead>
             <tr>
-              <td class="rank">{{ i + 1 }}</td>
-              <th scope="row" class="track-cell">
-                @if (getAlbumArt(track)) {
-                  <img
-                    class="track-art"
-                    [src]="getAlbumArt(track)"
-                    [alt]="track.album?.name + ' album art'"
-                    loading="lazy"
-                    width="40"
-                    height="40"
-                  />
-                }
-                <div class="track-info">
-                  <a
-                    class="track-name track-link"
-                    [routerLink]="['/ui/tracks', track.uid]"
-                    [attr.aria-label]="'View detail for ' + track.name"
-                  >{{ track.name }}</a>
-                  <span class="track-artists">
-                    @for (artist of track.artists; track artist.uri; let last = $last) {
-                      {{ artist.profile?.name }}{{ last ? '' : ', ' }}
-                    }
-                  </span>
-                </div>
-              </th>
-              <td>{{ formatCompact(track.playcount) }}</td>
-              <td>{{ formatCompact(track.change) }}</td>
-              <td
-                [class.delta-positive]="+track.percent >= 0"
-                [class.delta-negative]="+track.percent < 0"
-              >
-                {{ (+track.percent * 100).toFixed(2) }}%
-              </td>
+              <th scope="col">#</th>
+              <th scope="col">Track</th>
+              <th scope="col" class="metric-header">Total</th>
+              <th scope="col" class="metric-header">Daily</th>
+              <th scope="col" class="metric-header">Change</th>
             </tr>
-          }
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            @for (track of list(); track track.uid; let i = $index) {
+              <tr>
+                <td class="rank" data-label="Rank">{{ i + 1 }}</td>
+                <th scope="row" class="track-cell">
+                  @if (getAlbumArt(track)) {
+                    <img
+                      class="track-art"
+                      [src]="getAlbumArt(track)"
+                      [alt]="track.album?.name + ' album art'"
+                      loading="lazy"
+                      width="40"
+                      height="40"
+                    />
+                  }
+                  <div class="track-info">
+                    <a
+                      class="track-name track-link"
+                      [routerLink]="['/ui/tracks', track.uid]"
+                      [attr.aria-label]="'View detail for ' + track.name"
+                    >{{ track.name }}</a>
+                    <span class="track-artists">
+                      @for (artist of track.artists; track artist.uri; let last = $last) {
+                        {{ artist.profile?.name }}{{ last ? '' : ', ' }}
+                      }
+                    </span>
+                  </div>
+                </th>
+                <td class="metric" data-label="Total">{{ formatCompact(track.playcount) }}</td>
+                <td class="metric" data-label="Daily">{{ formatCompact(track.change) }}</td>
+                <td
+                  class="metric"
+                  data-label="Change"
+                  [class.delta-positive]="+track.percent >= 0"
+                  [class.delta-negative]="+track.percent < 0"
+                >
+                  {{ (+track.percent * 100).toFixed(2) }}%
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else {
+        <table class="tracks-table tracks-table--head" aria-hidden="true">
+          <colgroup>
+            <col class="col-rank" />
+            <col class="col-track" />
+            <col class="col-metric" />
+            <col class="col-metric" />
+            <col class="col-metric" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Track</th>
+              <th scope="col" class="metric-header">Total</th>
+              <th scope="col" class="metric-header">Daily</th>
+              <th scope="col" class="metric-header">Change</th>
+            </tr>
+          </thead>
+        </table>
+
+        <cdk-virtual-scroll-viewport
+          class="tracks-viewport"
+          scrollWindow
+          [itemSize]="desktopRowHeight"
+          [minBufferPx]="desktopRowHeight * 6"
+          [maxBufferPx]="desktopRowHeight * 12"
+          aria-label="Virtualized tracks list"
+        >
+          <table class="tracks-table tracks-table--body">
+            <caption class="sr-only">Tracks sorted by total streams</caption>
+            <colgroup>
+              <col class="col-rank" />
+              <col class="col-track" />
+              <col class="col-metric" />
+              <col class="col-metric" />
+              <col class="col-metric" />
+            </colgroup>
+            <thead class="sr-only">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Track</th>
+                <th scope="col">Total</th>
+                <th scope="col">Daily</th>
+                <th scope="col">Change</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *cdkVirtualFor="let track of list(); let i = index; trackBy: trackByUid">
+                <td class="rank" data-label="Rank">{{ i + 1 }}</td>
+                <th scope="row" class="track-cell">
+                  @if (getAlbumArt(track)) {
+                    <img
+                      class="track-art"
+                      [src]="getAlbumArt(track)"
+                      [alt]="track.album?.name + ' album art'"
+                      loading="lazy"
+                      width="40"
+                      height="40"
+                    />
+                  }
+                  <div class="track-info">
+                    <a
+                      class="track-name track-link"
+                      [routerLink]="['/ui/tracks', track.uid]"
+                      [attr.aria-label]="'View detail for ' + track.name"
+                    >{{ track.name }}</a>
+                    <span class="track-artists">
+                      @for (artist of track.artists; track artist.uri; let last = $last) {
+                        {{ artist.profile?.name }}{{ last ? '' : ', ' }}
+                      }
+                    </span>
+                  </div>
+                </th>
+                <td class="metric" data-label="Total">{{ formatCompact(track.playcount) }}</td>
+                <td class="metric" data-label="Daily">{{ formatCompact(track.change) }}</td>
+                <td
+                  class="metric"
+                  data-label="Change"
+                  [class.delta-positive]="+track.percent >= 0"
+                  [class.delta-negative]="+track.percent < 0"
+                >
+                  {{ (+track.percent * 100).toFixed(2) }}%
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </cdk-virtual-scroll-viewport>
+      }
     </div>
   </section>
 
