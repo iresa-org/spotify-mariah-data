@@ -3,7 +3,7 @@ import { getLatestFile, getOldestFile, writeToFile } from "./utils/file.utils.ts
 import type { DailyCountOutput } from "./config/daily.config.ts";
 import type { YTDSumModel } from "./config/ytd.config.ts";
 import { subtractNumbers } from "./utils/count.utils.ts";
-import { BaseDailyChange } from "./config/track.config.ts";
+import type { BaseDailyChange } from "./config/track.config.ts";
 
 function processDailyChangeContent(input: string): Map<string, BaseDailyChange> {
 
