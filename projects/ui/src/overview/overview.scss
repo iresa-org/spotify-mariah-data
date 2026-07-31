@@ -9,6 +9,37 @@
   gap: 20px;
 }
 
+.hero {
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero__img {
+  display: block;
+  height: auto;
+  max-height: 220px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.hero .page-header {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, transparent 100%);
+  bottom: 0;
+  left: 0;
+  padding: 24px 20px 16px;
+  position: absolute;
+  right: 0;
+}
+
+.hero .page-header__eyebrow {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.hero .page-header__title {
+  color: #fff;
+}
+
 .page-header {
   align-items: center;
   display: flex;
@@ -26,6 +57,7 @@
 .page-header__title {
   font-size: 1.6rem;
   margin: 6px 0 0;
+  text-wrap: balance;
 }
 
 .kpis {
@@ -56,6 +88,7 @@
   font-size: 1.35rem;
   font-weight: 700;
   margin: 6px 0 4px;
+  overflow-wrap: anywhere;
 }
 
 .kpi-card__delta {
@@ -88,6 +121,7 @@
   background: theme.$theme-surface;
   border: 1px solid theme.$theme-border;
   border-radius: 14px;
+  box-sizing: border-box;
   min-width: 0;
   padding: 16px;
   width: 100%;
@@ -105,9 +139,9 @@
 }
 
 .chart-wrap {
-  height: clamp(220px, 40vw, 300px);
   margin-top: 12px;
   min-width: 0;
+  overflow: hidden;
 
   ngx-charts-bar-vertical,
   ngx-charts-bar-horizontal,
@@ -126,12 +160,166 @@
   height: clamp(300px, 70vw, 440px);
 }
 
+.chart-wrap--line {
+  overflow: hidden;
+
+  ngx-charts-line-chart {
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
+}
+
+.audience-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.panel__eyebrow {
+  color: theme.$theme-muted;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+}
+
+.audience-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.audience-stats {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: auto 0;
+}
+
+.audience-stat {
+  min-width: 0;
+}
+
+.audience-stat__label {
+  color: theme.$theme-muted;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.audience-stat__value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 6px 0 0;
+}
+
+.city-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.city-row {
+  align-items: center;
+  border-bottom: 1px solid theme.$theme-border;
+  display: flex;
+  gap: 12px;
+  padding: 10px 4px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.city-row__rank {
+  color: theme.$theme-muted;
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-width: 20px;
+  text-align: right;
+}
+
+.city-row__name {
+  flex: 1;
+  font-size: 0.95rem;
+  font-weight: 500;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.city-row__country {
+  color: theme.$theme-muted;
+  font-size: 0.85rem;
+}
+
+.city-row__count {
+  color: theme.$theme-muted;
+  font-size: 0.85rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.top-tracks-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+.track-card {
+  align-items: center;
+  border-bottom: 1px solid theme.$theme-border;
+  display: flex;
+  gap: 12px;
+  padding: 10px 4px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.track-card__rank {
+  color: theme.$theme-muted;
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-width: 20px;
+  text-align: right;
+}
+
+.track-card__name {
+  flex: 1;
+  font-size: 0.95rem;
+  font-weight: 500;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.track-card__count {
+  color: theme.$theme-muted;
+  font-size: 0.85rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
 @media (max-width: 900px) {
+  .overview {
+    gap: 18px;
+  }
+
+  .page-header__title {
+    font-size: 1.4rem;
+  }
+
   .kpis {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .audience-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -141,13 +329,55 @@
     gap: 16px;
   }
 
+  .page-header {
+    align-items: flex-start;
+  }
+
+  .page-header__title {
+    font-size: 1.25rem;
+  }
+
   .kpis {
     grid-template-columns: 1fr;
+  }
+
+  .kpi-card {
+    padding: 12px 14px;
+  }
+
+  .kpi-card__value {
+    font-size: 1.2rem;
   }
 
   .panel {
     border-radius: 12px;
     padding: 12px;
+  }
+
+  .audience-stats {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .city-row,
+  .track-card {
+    gap: 10px;
+    padding: 10px 2px;
+  }
+
+  .city-row__name,
+  .track-card__name {
+    font-size: 0.9rem;
+  }
+
+  .city-row__country {
+    display: block;
+    margin-top: 2px;
+  }
+
+  .city-row__count,
+  .track-card__count {
+    font-size: 0.8rem;
   }
 
   .panel__heading h3 {

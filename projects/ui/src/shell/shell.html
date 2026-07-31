@@ -13,7 +13,11 @@
 
     <div class="sidebar-header">
       <div class="brand">
-        <div class="brand__badge" aria-hidden="true">MC</div>
+        @if (artistImage()) {
+          <img class="brand__avatar" [src]="artistImage()" alt="Mariah Carey" width="44" height="44" />
+        } @else {
+          <div class="brand__badge" aria-hidden="true">MC</div>
+        }
         <div class="brand__meta">
           <p class="brand__eyebrow">Artist Overview</p>
           <h1 class="brand__title">Mariah Carey</h1>
@@ -35,6 +39,16 @@
         <span class="nav__label">Albums</span>
       </a>
     </nav>
+
+    @if (externalLinks().length > 0) {
+      <nav class="external-links" aria-label="Artist social links">
+        @for (link of externalLinks(); track link.name) {
+          <a class="external-link" [href]="link.url" target="_blank" rel="noopener noreferrer" [attr.aria-label]="link.name" [title]="link.name">
+            <fa-icon [icon]="link.icon" aria-hidden="true" />
+          </a>
+        }
+      </nav>
+    }
 
     @if (lastUpdated()) {
       <dl class="sidebar-stats" [attr.aria-hidden]="sidenavMinimized()">

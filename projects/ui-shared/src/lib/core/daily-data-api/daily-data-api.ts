@@ -118,6 +118,44 @@ export class DailyDataApi {
     return this.currMap.get(uid) ?? null;
   }
 
+  getTopTracks(): { name: string; playcount: number }[] {
+    const items: any[] = this.trackListResp?.['artist']?.discography?.topTracks?.items ?? [];
+    return items.map(item => ({ name: item.track.name, playcount: +item.track.playcount }));
+  }
+
+  getArtistStats(): { followers: number; monthlyListeners: number } | null {
+    const stats = this.trackListResp?.['artist']?.stats;
+    if (!stats) return null;
+    return { followers: +stats.followers, monthlyListeners: +stats.monthlyListeners };
+  }
+
+  getTopCities(): { city: string; country: string; region: string; numberOfListeners: number }[] {
+    return (this.trackListResp?.['artist']?.stats?.topCities?.items ?? []).map((item: any) => ({
+      city: item.city,
+      country: item.country,
+      region: item.region,
+      numberOfListeners: Number(item.numberOfListeners),
+    }));
+  }
+
+  getExternalLinks(): { name: string; url: string }[] {
+    return this.trackListResp?.['artist']?.profile?.externalLinks?.items ?? [];
+  }
+
+  getAvatarImage(): string | null {
+    const sources: { url: string; width: number }[] =
+      this.trackListResp?.['artist']?.visuals?.avatarImage?.sources ?? [];
+    const source = sources.find(s => s.width === 320) ?? sources[0];
+    return source?.url ?? null;
+  }
+
+  getHeaderImage(): string | null {
+    const sources: { url: string; maxWidth: number }[] =
+      this.trackListResp?.['artist']?.headerImage?.data?.sources ?? [];
+    const source = sources.find(s => s.maxWidth === 1920) ?? sources[0];
+    return source?.url ?? null;
+  }
+
   includeStr(value: string, search: string): boolean {
     return typeof value == "string" && value.indexOf(search) > -1
   }

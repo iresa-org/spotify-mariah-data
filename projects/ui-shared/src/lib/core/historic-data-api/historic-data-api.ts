@@ -8,6 +8,9 @@ const BASE = 'https://raw.githubusercontent.com/iresa-org/spotify-mariah-data/re
 /** uid → { date → streamCount } */
 export type HistoricalData = Record<string, Record<string, string>>;
 
+/** date (YYYY-MM-DD) → listener count */
+export type MonthlyListenersData = Record<string, string>;
+
 @Service()
 export class HistoricDataApi {
   private http = inject(HttpClient);
@@ -16,6 +19,7 @@ export class HistoricDataApi {
   private _ytdRecords: TrackRecord[] | null = null;
   private _ytd: YtdData | null = null;
   private _historical: HistoricalData | null = null;
+  private _monthlyListeners: MonthlyListenersData | null = null;
 
   private params() {
     return new HttpParams().append('salt', Date.now());
@@ -57,6 +61,13 @@ export class HistoricDataApi {
     if (this._historical) return of(this._historical);
     return this.http.get<HistoricalData>(`${BASE}/historical/tracks.json`, { params: this.params() }).pipe(
       tap(data => (this._historical = data))
+    );
+  }
+
+  loadMonthlyListeners(): Observable<MonthlyListenersData> {
+    if (this._monthlyListeners) return of(this._monthlyListeners);
+    return this.http.get<MonthlyListenersData>(`${BASE}/historical/monthlyListeners.json`, { params: this.params() }).pipe(
+      tap(data => (this._monthlyListeners = data))
     );
   }
 }
