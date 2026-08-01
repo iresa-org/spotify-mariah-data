@@ -5,6 +5,9 @@ import type { RecordModel } from "./config/record.config.ts";
 import { isBiggerNumber } from "./utils/count.utils.ts";
 import { extractDateFromPath } from "./utils/date.utils.ts";
 import type { BaseDailyChange } from "./config/track.config.ts";
+import { convertMapToObject } from "./utils/map.utils.ts";
+
+type RecordMap = Map<string, Pick<RecordModel, 'change' | 'date'>>;
 
 function processDailyChangeContent(input: string): Map<string, BaseDailyChange> {
 
@@ -18,20 +21,24 @@ function processDailyChangeContent(input: string): Map<string, BaseDailyChange> 
   return map;
 }
 
-function processRecordContent(input: string, dailyChangeMap: Map<string, BaseDailyChange>, lastUpdate: string): RecordModel[] {
+function processRecordContent(input: string, dailyChangeMap: Map<string, BaseDailyChange>, lastUpdate: string) {
 
-  const result: RecordModel[] = [];
+  const result: RecordMap = new Map();
 
-  JSON.parse(input).forEach((element: any) => {
-    const { uid, change, date } = element;
-    const currChange = dailyChangeMap.get(uid);
-    if (currChange && isBiggerNumber(currChange.change, change)) {
-      result.push({ uid, change: currChange.change, date: lastUpdate })
+  const recordMap: RecordMap = new Map(Object.entries(JSON.parse(input)));
+
+  Array.from(dailyChangeMap.entries()).forEach(([uid, value]: [string, BaseDailyChange]) => {
+    const { change: currChange } = value;
+    const record = recordMap.get(uid);
+    if (!record) {
+      result.set(uid, { change: currChange, date: lastUpdate });
+    } else if (record && isBiggerNumber(currChange, record.change)) {
+      result.set(uid, { change: currChange, date: lastUpdate });
     } else {
-      result.push({ uid, change, date })
+      result.set(uid, { change: record.change, date: record.date });
     }
   });
-  return result;
+  return convertMapToObject(result);
 }
 
 async function updateRecords(fileName: string, latestDailyChanges: Map<string, BaseDailyChange>, lastestUpdateDayStr: string) {
