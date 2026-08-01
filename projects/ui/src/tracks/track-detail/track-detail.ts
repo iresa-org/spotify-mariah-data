@@ -2,7 +2,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
-import { DailyDataApi, HistoricDataApi, HistoricalData, TrackRecord, YtdData } from 'ui-shared';
+import { DailyDataApi, HistoricDataApi, HistoricalData, RecordData, YtdData } from 'ui-shared';
 import { TRACK_CATEGORIES } from '../tracks.config';
 import { GetTrackCategoryPipe } from '../get-track-category-pipe';
 
@@ -17,6 +17,11 @@ interface ChartSeries {
 }
 
 type HistoryWindow = 7 | 30 | 60 | 90;
+
+type TrackRecord = {
+  change: string; 
+  date: string
+}
 
 @Component({
   selector: 'lib-track-detail',
@@ -68,14 +73,14 @@ export class TrackDetail implements OnInit {
       historical: this.historicDataApi.loadHistorical(),
     }).subscribe({
       next: ({ allTime, ytdRec, ytd, historical }) => {
-        const allTimeMap = new Map(Object.entries(allTime));
-        this.allTimeRecord.set(allTimeMap.get(uid) ?? null);
+        const allTimeMap = allTime.tracks;
+        this.allTimeRecord.set(allTimeMap[uid] ? { ...allTimeMap[uid] } : null);
 
-        const ytdRecMap = new Map(Object.entries(ytdRec));
-        this.ytdRecord.set(ytdRecMap.get(uid) ?? null);
+        const ytdRecMap = ytdRec.tracks;
+        this.ytdRecord.set(ytdRecMap[uid] ? { ...ytdRecMap[uid] } : null);
 
-        const ytdEntry = (ytd as YtdData).tracks.find(t => t.uid === uid);
-        this.ytdTotal.set(ytdEntry?.ytd ?? null);
+        const ytdEntry = ytd.tracks[uid];
+        this.ytdTotal.set(ytdEntry);
 
         this.historicalSeries.set(this.buildSeries(uid, historical));
         this.loading.set(false);

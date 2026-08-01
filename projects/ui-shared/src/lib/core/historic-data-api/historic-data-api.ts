@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Observable, of, tap } from 'rxjs';
-import { MonthlyData, TrackRecord, YtdData } from './historic-data.config';
+import { MonthlyData, RecordData, YtdData } from './historic-data.config';
 
 const BASE = 'https://raw.githubusercontent.com/iresa-org/spotify-mariah-data/refs/heads/data';
 
@@ -15,8 +15,8 @@ export type MonthlyListenersData = Record<string, string>;
 export class HistoricDataApi {
   private http = inject(HttpClient);
   private _monthly: MonthlyData | null = null;
-  private _allTimeRecords: Record<string, TrackRecord> | null = null;
-  private _ytdRecords: Record<string, TrackRecord> | null = null;
+  private _allTimeRecords: RecordData | null = null;
+  private _ytdRecords: RecordData | null = null;
   private _ytd: YtdData | null = null;
   private _historical: HistoricalData | null = null;
   private _monthlyListeners: MonthlyListenersData | null = null;
@@ -36,16 +36,16 @@ export class HistoricDataApi {
     return this._monthly;
   }
 
-  loadAllTimeRecords(): Observable<Record<string, TrackRecord>> {
+  loadAllTimeRecords(): Observable<RecordData> {
     if (this._allTimeRecords) return of(this._allTimeRecords);
-    return this.http.get<Record<string, TrackRecord>>(`${BASE}/records/allTime.json`, { params: this.params() }).pipe(
+    return this.http.get<RecordData>(`${BASE}/records/allTime.json`, { params: this.params() }).pipe(
       tap(data => (this._allTimeRecords = data))
     );
   }
 
-  loadYtdRecords(): Observable<Record<string, TrackRecord>> {
+  loadYtdRecords(): Observable<RecordData> {
     if (this._ytdRecords) return of(this._ytdRecords);
-    return this.http.get<Record<string, TrackRecord>>(`${BASE}/records/year.json`, { params: this.params() }).pipe(
+    return this.http.get<RecordData>(`${BASE}/records/year.json`, { params: this.params() }).pipe(
       tap(data => (this._ytdRecords = data))
     );
   }

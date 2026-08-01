@@ -7,19 +7,18 @@ export interface MonthlyData {
   months: MonthData[];
 }
 
-export interface TrackRecord {
-  uid: string;
-  change: string;
-  date: string;
+export interface RecordData {
+  tracks: RecordEntry;
+  albums: RecordEntry;
 }
 
-export interface YtdEntry {
-  uid: string;
-  ytd: string;
-}
+export type RecordEntry = Record<string, { change: string; date: string }>;
+
+export type YtdEntry = Record<string, string>;
 
 export interface YtdData {
-  tracks: YtdEntry[];
+  tracks: YtdEntry;
+  albums: YtdEntry;
 }
 
 /** uid → { date → streamCount } */
