@@ -29,7 +29,7 @@ function processYtdSumContent(oldestDailyChangeMap: Map<string, BaseDailyChange>
       const diff = start === end ? end : subtractNumbers(start, end);
       tracks.set(uid, String(diff));
     } else {
-      tracks.set(uid, String(value.playCount));
+      tracks.set(uid, String(value.change));
     }
   }
   return tracks;
