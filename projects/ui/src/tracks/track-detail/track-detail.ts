@@ -68,8 +68,11 @@ export class TrackDetail implements OnInit {
       historical: this.historicDataApi.loadHistorical(),
     }).subscribe({
       next: ({ allTime, ytdRec, ytd, historical }) => {
-        this.allTimeRecord.set(allTime.find(r => r.uid === uid) ?? null);
-        this.ytdRecord.set(ytdRec.find(r => r.uid === uid) ?? null);
+        const allTimeMap = new Map(Object.entries(allTime));
+        this.allTimeRecord.set(allTimeMap.get(uid) ?? null);
+
+        const ytdRecMap = new Map(Object.entries(ytdRec));
+        this.ytdRecord.set(ytdRecMap.get(uid) ?? null);
 
         const ytdEntry = (ytd as YtdData).tracks.find(t => t.uid === uid);
         this.ytdTotal.set(ytdEntry?.ytd ?? null);

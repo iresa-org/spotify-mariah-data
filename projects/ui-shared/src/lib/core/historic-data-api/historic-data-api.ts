@@ -15,8 +15,8 @@ export type MonthlyListenersData = Record<string, string>;
 export class HistoricDataApi {
   private http = inject(HttpClient);
   private _monthly: MonthlyData | null = null;
-  private _allTimeRecords: TrackRecord[] | null = null;
-  private _ytdRecords: TrackRecord[] | null = null;
+  private _allTimeRecords: Record<string, TrackRecord> | null = null;
+  private _ytdRecords: Record<string, TrackRecord> | null = null;
   private _ytd: YtdData | null = null;
   private _historical: HistoricalData | null = null;
   private _monthlyListeners: MonthlyListenersData | null = null;
@@ -36,16 +36,16 @@ export class HistoricDataApi {
     return this._monthly;
   }
 
-  loadAllTimeRecords(): Observable<TrackRecord[]> {
+  loadAllTimeRecords(): Observable<Record<string, TrackRecord>> {
     if (this._allTimeRecords) return of(this._allTimeRecords);
-    return this.http.get<TrackRecord[]>(`${BASE}/records/allTime.json`, { params: this.params() }).pipe(
+    return this.http.get<Record<string, TrackRecord>>(`${BASE}/records/allTime.json`, { params: this.params() }).pipe(
       tap(data => (this._allTimeRecords = data))
     );
   }
 
-  loadYtdRecords(): Observable<TrackRecord[]> {
+  loadYtdRecords(): Observable<Record<string, TrackRecord>> {
     if (this._ytdRecords) return of(this._ytdRecords);
-    return this.http.get<TrackRecord[]>(`${BASE}/records/year.json`, { params: this.params() }).pipe(
+    return this.http.get<Record<string, TrackRecord>>(`${BASE}/records/year.json`, { params: this.params() }).pipe(
       tap(data => (this._ytdRecords = data))
     );
   }
