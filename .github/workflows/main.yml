@@ -39,6 +39,9 @@ jobs:
 
     - name: Run daily
       run: node scripts/daily.ts
+
+    - name: Find diff
+      run: node scripts/diff.ts
     
     - name: Check records
       run: node scripts/record.ts
