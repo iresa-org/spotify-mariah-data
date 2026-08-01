@@ -25,5 +25,6 @@ export interface DailyCountOutput {
     change: string;
   }[];
   playCounts: PlayCountOutput,
-  monthlyListeners: number
+  monthlyListeners: number,
+  albums: AlbumData[];
 }

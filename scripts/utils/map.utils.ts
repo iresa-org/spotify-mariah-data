@@ -22,3 +22,10 @@ export function convertNestedMapToObject(nestedMap: Map<string, Map<string, stri
 export function convertMapToObject<T = any>(map: Map<string, T>): Record<string, T> {
   return Object.fromEntries(map);
 }
+
+/**
+ * Converts a plain object into a Map.
+ */
+export function convertObjectToMap<T = any>(obj: Record<string, T>): Map<string, T> {
+  return obj ? new Map(Object.entries(obj)): new Map<string, T>();
+}

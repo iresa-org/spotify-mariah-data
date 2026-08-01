@@ -1,5 +1,2 @@
-export interface YTDSumModel {
-  uid: string;
-  ytd: string;
-}
+export type YTDSumModel = Map<string, string>;
 

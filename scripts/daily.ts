@@ -90,7 +90,7 @@ async function main() {
       prevMap = processPrevChangeContent(prevFileContents)
       console.log('Previous change found:', prevFilePath);
     } else {
-      prevMap = new Map<string, TrackDailyChange>
+      prevMap = new Map<string, TrackDailyChange>();
     }
 
     // get previous date
@@ -111,7 +111,8 @@ async function main() {
     writeToFile(`./daily`, `${formatDate(prevDate)}.json`, JSON.stringify({
       tracks,
       playCounts: resp.playCounts,
-      monthlyListeners
+      monthlyListeners,
+      albums: resp.albums
     }))
 
     // Clean upload folder

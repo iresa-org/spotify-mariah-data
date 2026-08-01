@@ -121,7 +121,8 @@ export function convertToAlbumList(map: Map<string, TrackData[]>): AlbumData[] {
         playCount: String(playcount),
         change: String(change),
         percentChange: String(percentChange)
-      }
+      },
+      uri: firstTrack?.trackDetails.itemV2.data.albumOfTrack.uri ?? ''
     })
   }
   return arr;

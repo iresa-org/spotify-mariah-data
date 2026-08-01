@@ -5,4 +5,5 @@ export interface AlbumData {
     tracks: string[]
   },
   dailyChanges: TrackDailyChange,
+  uri: string;
 }
