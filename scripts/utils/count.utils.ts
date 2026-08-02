@@ -2,6 +2,8 @@ import { SELECTED_ALBUMS } from "../config/album-list.ts";
 import type { AlbumData } from "../config/album.config.ts";
 import type { TrackContentItem, TrackArtists } from "../config/source.config.ts";
 import type { BaseDailyChange, TrackCategory, TrackDailyChange, TrackData } from "../config/track.config.ts";
+import { writeToFile } from "./file.utils.ts";
+import { convertMapToObject } from "./map.utils.ts";
 
 export function isBiggerNumber(number1: number | string, number2: number | string): boolean {
   return Number(number1) > Number(number2);
@@ -32,12 +34,16 @@ export function getDuplicateIds(list: TrackData[]) {
 
   list.forEach(item => {
     const playCount = item.dailyChanges.playCount;
-    if (!countIdMap.has(playCount)) {
-      countIdMap.set(item.dailyChanges.playCount, [item.trackDetails.uid])
+    const change = item.dailyChanges.change;
+    const key = `${playCount}-${change}`;
+    
+    if (!countIdMap.has(key)) {
+      countIdMap.set(key, [item.trackDetails.uid])
     } else {
-      countIdMap.set(item.dailyChanges.playCount, [...countIdMap.get(playCount)!, item.trackDetails.uid])
+      countIdMap.set(key, [...countIdMap.get(key)!, item.trackDetails.uid])
     }
   })
+  writeToFile('./', 'diff.json', JSON.stringify(convertMapToObject(countIdMap)));
 
   return getDuplicates(countIdMap);
 }
