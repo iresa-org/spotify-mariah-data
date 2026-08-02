@@ -1,16 +1,16 @@
-import { DOCUMENT } from '@angular/common';
+import { DecimalPipe, DOCUMENT } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { fromEvent, map, startWith } from 'rxjs';
-import { DailyDataApi } from 'ui-shared';
+import { DailyDataApi, FormatCompactPipe, PercentWithSignPipe } from 'ui-shared';
 import { TRACK_CATEGORIES, FilterType, TrackItem } from './tracks.config';
 
 @Component({
   selector: 'lib-tracks',
-  imports: [RouterLink, ScrollingModule],
+  imports: [RouterLink, ScrollingModule, PercentWithSignPipe, FormatCompactPipe, DecimalPipe],
   templateUrl: './tracks.html',
   styleUrl: './tracks.scss',
 })
@@ -72,10 +72,6 @@ export class Tracks implements OnInit {
 
   getAlbumArt(track: TrackItem): string {
     return track.album?.coverArt?.sources?.[0]?.url ?? '';
-  }
-
-  formatCompact(value: number): string {
-    return new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 }).format(value);
   }
 
   scrollToTop(): void {

@@ -1,4 +1,5 @@
-export type NumericLike = number | string;
+import { NumericLike } from "ui-shared";
+
 
 export interface CoverSource {
   url: string;

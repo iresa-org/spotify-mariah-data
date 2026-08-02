@@ -60,13 +60,13 @@
   <section class="kpis" aria-label="Stream statistics">
     <article class="kpi-card">
       <p class="kpi-card__label">Total Streams</p>
-      <p class="kpi-card__value">{{ formatCompact(t.playcount) }}</p>
-      <p class="kpi-card__sub">{{ formatNumber(t.playcount) }}</p>
+      <p class="kpi-card__value">{{ t.playcount | formatCompact}}</p>
+      <p class="kpi-card__sub">{{ t.playcount | formatCompact }}</p>
     </article>
 
     <article class="kpi-card">
       <p class="kpi-card__label">Today's Streams</p>
-      <p class="kpi-card__value">{{ formatCompact(t.change) }}</p>
+      <p class="kpi-card__value">{{ t.change | formatCompact}}</p>
       <p class="kpi-card__delta" [class.delta-positive]="+t.percent >= 0" [class.delta-negative]="+t.percent < 0">
         {{ (+t.percent * 100).toFixed(2) }}%
       </p>
@@ -75,15 +75,15 @@
     @if (ytdTotal(); as ytd) {
     <article class="kpi-card">
       <p class="kpi-card__label">YTD Total Streams</p>
-      <p class="kpi-card__value">{{ formatCompact(ytd) }}</p>
-      <p class="kpi-card__sub">{{ formatNumber(ytd) }}</p>
+      <p class="kpi-card__value">{{ ytd | formatCompact}}</p>
+      <p class="kpi-card__sub">{{ ytd | formatCompact}}</p>
     </article>
     }
 
     @if (allTimeRecord(); as rec) {
     <article class="kpi-card">
       <p class="kpi-card__label">All-Time Daily Record</p>
-      <p class="kpi-card__value">{{ formatCompact(rec.change) }}</p>
+      <p class="kpi-card__value">{{ rec.change | formatCompact}}</p>
       <p class="kpi-card__sub">{{ rec.date }}</p>
     </article>
     }
@@ -91,7 +91,7 @@
     @if (ytdRecord(); as rec) {
     <article class="kpi-card">
       <p class="kpi-card__label">YTD Daily Record</p>
-      <p class="kpi-card__value">{{ formatCompact(rec.change) }}</p>
+      <p class="kpi-card__value">{{ rec.change | formatCompact}}</p>
       <p class="kpi-card__sub">{{ rec.date }}</p>
     </article>
     }

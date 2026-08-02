@@ -2,5 +2,6 @@
  * Public API Surface of ui-shared
  */
 
-export { NumberWithSignPipe } from './number-with-sign-pipe';
-export { PercentWithSignPipe } from './percent-with-sign-pipe';
+export * from './number-with-sign';
+export * from './percent-with-sign';
+export * from './number';

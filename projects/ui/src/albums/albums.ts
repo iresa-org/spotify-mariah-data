@@ -5,8 +5,7 @@ import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 import { map } from 'rxjs';
 import { AlbumRanking } from './album-ranking/album-ranking';
 import { AlbumRecord } from './album.config';
-import { formatCompact, toNumber } from './album.utils';
-import { DailyDataApi } from 'ui-shared';
+import { DailyDataApi, formatCompact, toNumber } from 'ui-shared';
 
 @Component({
   selector: 'lib-albums',

@@ -5,13 +5,13 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { AlbumRecord, DiscTrackGroup, OrderedAlbumTrack } from '../album.config';
 import { AlbumLargeCoverArtPipe } from '../album-pipe';
-import { toNumber } from '../album.utils';
 import {
   GroupedTableComponent,
   GroupedTableCellDirective,
   GroupedTableColumn,
   GroupedTableGroup,
   PercentWithSignPipe,
+  toNumber,
 } from 'ui-shared';
 
 interface AlbumTrackTableRow {

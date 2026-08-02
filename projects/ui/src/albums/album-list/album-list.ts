@@ -1,12 +1,10 @@
 import { Component, computed, effect, inject, output, signal } from '@angular/core';
-import { AlbumFormatCompactPipe, AlbumFormatSignedCompactPipe } from '../album-pipe';
 import { AlbumRecord } from '../album.config';
-import { toNumber } from '../album.utils';
-import { DailyDataApi, PercentWithSignPipe } from 'ui-shared';
+import { DailyDataApi, FormatCompactPipe, FormatSignedCompactPipe, PercentWithSignPipe, toNumber } from 'ui-shared';
 
 @Component({
   selector: 'lib-album-list',
-  imports: [AlbumFormatCompactPipe, AlbumFormatSignedCompactPipe, PercentWithSignPipe],
+  imports: [FormatCompactPipe, FormatSignedCompactPipe, PercentWithSignPipe],
   templateUrl: './album-list.html',
   styleUrl: './album-list.scss',
 })

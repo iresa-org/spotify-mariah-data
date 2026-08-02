@@ -38,13 +38,13 @@
   <section class="panel" aria-label="Tracks list">
     <div class="panel__heading">
       <h3>All Tracks</h3>
-      <p>{{ list().length }} tracks &mdash; sorted by total streams</p>
+      <p>{{ list().length }} tracks &mdash; sorted by daily streams</p>
     </div>
 
     <div class="table-wrap">
       @if (isMobile()) {
         <table class="tracks-table tracks-table--mobile">
-          <caption class="sr-only">Tracks sorted by total streams</caption>
+          <caption class="sr-only">Tracks sorted by daily streams</caption>
           <colgroup>
             <col class="col-rank" />
             <col class="col-track" />
@@ -90,11 +90,11 @@
                   </div>
                 </th>
                 <td class="metric" data-label="Total">
-                  <span class="metric__value">{{ formatCompact(track.playcount) }}</span>
+                  <span class="metric__value">{{ track.playcount | formatCompact}}</span>
                   <span class="metric__label">Total</span>
                 </td>
                 <td class="metric" data-label="Daily">
-                  <span class="metric__value">{{ formatCompact(track.change) }}</span>
+                  <span class="metric__value">{{ track.change | formatCompact }}</span>
                   <span class="metric__label">Daily</span>
                 </td>
                 <td
@@ -103,7 +103,7 @@
                   [class.delta-positive]="+track.percent >= 0"
                   [class.delta-negative]="+track.percent < 0"
                 >
-                  <span class="metric__value">{{ (+track.percent * 100).toFixed(2) }}%</span>
+                  <span class="metric__value">{{ track.percent | percentWithSign}}</span>
                   <span class="metric__label">Change</span>
                 </td>
               </tr>
@@ -183,15 +183,15 @@
                     </span>
                   </div>
                 </th>
-                <td class="metric" data-label="Total">{{ formatCompact(track.playcount) }}</td>
-                <td class="metric" data-label="Daily">{{ formatCompact(track.change) }}</td>
+                <td class="metric" data-label="Total">{{ track.playcount | number}}</td>
+                <td class="metric" data-label="Daily">{{ track.change | number}}</td>
                 <td
                   class="metric"
                   data-label="Change"
                   [class.delta-positive]="+track.percent >= 0"
                   [class.delta-negative]="+track.percent < 0"
                 >
-                  {{ (+track.percent * 100).toFixed(2) }}%
+                  {{ track.percent | percentWithSign }}
                 </td>
               </tr>
             </tbody>

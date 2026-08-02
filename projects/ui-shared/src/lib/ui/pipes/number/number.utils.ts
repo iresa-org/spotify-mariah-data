@@ -1,4 +1,4 @@
-import { NumericLike } from './album.config';
+export type NumericLike = number | string;
 
 export function toNumber(value: NumericLike): number {
   const numericValue = Number(value);

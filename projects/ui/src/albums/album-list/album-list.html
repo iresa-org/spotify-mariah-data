@@ -23,13 +23,13 @@
             <dl class="album-card__stats" aria-label="Album stream stats">
                 <div>
                     <dt>Total</dt>
-                    <dd>{{ album.dailyChanges.playCount | albumFormatCompact}}</dd>
+                    <dd>{{ album.dailyChanges.playCount | formatCompact}}</dd>
                 </div>
                 <div>
                     <dt>Daily</dt>
                     <dd [class.delta-positive]="+album.dailyChanges.change >= 0"
                         [class.delta-negative]="+album.dailyChanges.change < 0">
-                        {{ album.dailyChanges.change | albumFormatSignedCompact}}
+                        {{ album.dailyChanges.change | formatSignedCompact}}
                     </dd>
                 </div>
                 <div>

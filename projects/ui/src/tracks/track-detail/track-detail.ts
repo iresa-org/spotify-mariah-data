@@ -2,7 +2,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
-import { DailyDataApi, HistoricDataApi, HistoricalData, RecordData, YtdData } from 'ui-shared';
+import { DailyDataApi, FormatCompactPipe, HistoricDataApi, HistoricalData, RecordData, YtdData, formatCompact } from 'ui-shared';
 import { TRACK_CATEGORIES } from '../tracks.config';
 import { GetTrackCategoryPipe } from '../get-track-category-pipe';
 
@@ -25,7 +25,7 @@ type TrackRecord = {
 
 @Component({
   selector: 'lib-track-detail',
-  imports: [NgxChartsModule, RouterLink, GetTrackCategoryPipe],
+  imports: [NgxChartsModule, RouterLink, GetTrackCategoryPipe, FormatCompactPipe],
   templateUrl: './track-detail.html',
   styleUrl: './track-detail.scss',
 })
@@ -106,18 +106,7 @@ export class TrackDetail implements OnInit {
     return track.album?.coverArt?.sources?.[0]?.url ?? '';
   }
 
-  formatCompact(value: number | string): string {
-    return new Intl.NumberFormat('en-US', {
-      notation: 'compact',
-      maximumFractionDigits: 2,
-    }).format(+value);
-  }
-
-  formatNumber(value: number | string): string {
-    return new Intl.NumberFormat('en-US').format(+value);
-  }
-
-  yAxisTickFormat = (val: number) => this.formatCompact(val);
+  yAxisTickFormat = (val: number) => formatCompact(val);
 
   /** Show only month-day portion for x-axis labels to avoid crowding */
   xAxisTickFormat = (val: string) => {
