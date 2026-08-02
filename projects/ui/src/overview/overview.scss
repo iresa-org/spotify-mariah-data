@@ -191,10 +191,11 @@
 }
 
 .audience-stats {
-  display: grid;
+  display: flex;
   gap: 16px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin: auto 0;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
 }
 
 .audience-stat {
@@ -250,6 +251,7 @@
 .city-row__country {
   color: theme.$theme-muted;
   font-size: 0.85rem;
+  margin-left: 4px;
 }
 
 .city-row__count {
@@ -354,11 +356,6 @@
     padding: 12px;
   }
 
-  .audience-stats {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
   .city-row,
   .track-card {
     gap: 10px;
@@ -373,6 +370,7 @@
   .city-row__country {
     display: block;
     margin-top: 2px;
+    margin-left: 0;
   }
 
   .city-row__count,

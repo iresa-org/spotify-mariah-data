@@ -43,7 +43,7 @@ export class Tracks implements OnInit {
       F: this.dailyDataApi.getFeatured,
       V: this.dailyDataApi.getVideos,
     };
-    const sorted = [...getterMap[filter]()].sort((a, b) => b.playcount - a.playcount);
+    const sorted = [...getterMap[filter]()].sort((a, b) => b.change - a.change);
     if (!query) return sorted;
     return sorted.filter(track =>
       track.name?.toLowerCase().includes(query) ||
