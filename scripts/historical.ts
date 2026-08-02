@@ -91,6 +91,23 @@ function parseHistoricalMonthlyListeners(latestFiles: FileContentMap[]) {
 
 }
 
+/**
+ * Result structure
+ * 
+ * date --- subribers
+ */
+function parseHistoricalFollowers(latestFiles: FileContentMap[]) {
+  const map = new Map<string, string>();
+
+  for (const file of latestFiles) {
+    const followers = JSON.parse(file.content).followers;
+    followers && map.set(file.date, `${followers}`);
+  }
+
+  return Object.fromEntries(map)
+
+}
+
 async function main() {
   console.log('Update historical data...');
 
@@ -101,7 +118,7 @@ async function main() {
     // Write to result
     writeToFile(`./historical`, 'tracks.json', JSON.stringify(parseHistoricalTrackResults(latestFiles)))
     writeToFile(`./historical`, 'monthlyListeners.json', JSON.stringify(parseHistoricalMonthlyListeners(latestFiles)))
-
+    writeToFile(`./historical`, 'followers.json', JSON.stringify(parseHistoricalFollowers(latestFiles)))
   } catch (error) {
     console.error('Error writing file:', error);
   }

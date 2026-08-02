@@ -108,10 +108,12 @@ async function main() {
     // Write to daily
     const tracks = resp.tracks.map(track => ({ uid: track.trackDetails.uid, playCount: track.dailyChanges.playCount, change: track.dailyChanges.change }));
     const monthlyListeners = resp.artist?.stats.monthlyListeners;
+    const followers = resp.artist?.stats.followers;
     writeToFile(`./daily`, `${formatDate(prevDate)}.json`, JSON.stringify({
       tracks,
       playCounts: resp.playCounts,
       monthlyListeners,
+      followers,
       albums: resp.albums
     }))
 

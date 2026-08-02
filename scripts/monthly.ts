@@ -112,7 +112,9 @@ async function main() {
       total
     }));
 
-    writeToFile(`./ytd`, 'monthly.json', JSON.stringify({ months }))
+    const total = calculateSum(months.map(m => m.total));
+
+    writeToFile(`./ytd`, 'monthly.json', JSON.stringify({ months, total }))
   } catch (error) {
     console.error('Error writing file:', error);
   }
