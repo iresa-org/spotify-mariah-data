@@ -43,7 +43,6 @@ export function getDuplicateIds(list: TrackData[]) {
       countIdMap.set(key, [...countIdMap.get(key)!, item.trackDetails.uid])
     }
   })
-  writeToFile('./', 'diff.json', JSON.stringify(convertMapToObject(countIdMap)));
 
   return getDuplicates(countIdMap);
 }
