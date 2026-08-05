@@ -1,163 +1,139 @@
 <section class="overview" aria-label="Mariah Carey Spotify overview">
 
   @if (headerImage()) {
-    <div class="hero">
-      <img class="hero__img" [src]="headerImage()" alt="Mariah Carey" />
-      <header class="page-header">
-        <div>
-          <p class="page-header__eyebrow">Spotify Performance</p>
-          <h2 class="page-header__title">Streaming Intelligence</h2>
-        </div>
-      </header>
-    </div>
-  } @else {
-    <header class="page-header page-header--standalone">
+  <div class="hero">
+    <img class="hero__img" [src]="headerImage()" alt="Mariah Carey" />
+    <header class="page-header">
       <div>
         <p class="page-header__eyebrow">Spotify Performance</p>
         <h2 class="page-header__title">Streaming Intelligence</h2>
       </div>
     </header>
+  </div>
+  } @else {
+  <header class="page-header page-header--standalone">
+    <div>
+      <p class="page-header__eyebrow">Spotify Performance</p>
+      <h2 class="page-header__title">Streaming Intelligence</h2>
+    </div>
+  </header>
   }
 
   @if (playCounts(); as counts) {
-    <section class="kpis" aria-label="Key performance indicators">
-      <article class="kpi-card">
-        <p class="kpi-card__label">Total Streams</p>
-        <p class="kpi-card__value">{{ formatCompact(counts['total'].playCount) }}</p>
-        <p
-          class="kpi-card__delta"
-          [class.kpi-card__delta--positive]="+counts['total'].percentChange >= 0"
-          [class.kpi-card__delta--negative]="+counts['total'].percentChange < 0"
-        >
-          {{ formatPercent(counts['total'].percentChange) }}
-        </p>
-      </article>
+  <section class="kpis" aria-label="Key performance indicators">
+    <article class="kpi-card">
+      <p class="kpi-card__label">Total Streams</p>
+      <p class="kpi-card__value">{{ formatCompact(counts['total'].playCount) }}</p>
+      <p class="kpi-card__delta" [class.kpi-card__delta--positive]="+counts['total'].percentChange >= 0"
+        [class.kpi-card__delta--negative]="+counts['total'].percentChange < 0">
+        {{ formatPercent(counts['total'].percentChange) }}
+      </p>
+    </article>
 
-      <article class="kpi-card">
-        <p class="kpi-card__label">Daily Streams</p>
-        <p class="kpi-card__value">{{ formatCompact(counts['total'].change) }}</p>
-        <p class="kpi-card__label kpi-card__label--sub">streams</p>
-      </article>
+    <article class="kpi-card">
+      <p class="kpi-card__label">Daily Streams</p>
+      <p class="kpi-card__value">{{ formatCompact(counts['total'].change) }}</p>
+      <p class="kpi-card__label kpi-card__label--sub">streams</p>
+    </article>
 
-      <article class="kpi-card">
-        <p class="kpi-card__label">Lead Streams</p>
-        <p class="kpi-card__value">{{ formatCompact(counts['lead'].playCount) }}</p>
-        <p
-          class="kpi-card__delta"
-          [class.kpi-card__delta--positive]="+counts['lead'].percentChange >= 0"
-          [class.kpi-card__delta--negative]="+counts['lead'].percentChange < 0"
-        >
-          {{ formatPercent(counts['lead'].percentChange) }}
-        </p>
-      </article>
+    <article class="kpi-card">
+      <p class="kpi-card__label">Lead Streams</p>
+      <p class="kpi-card__value">{{ formatCompact(counts['lead'].playCount) }}</p>
+      <p class="kpi-card__delta" [class.kpi-card__delta--positive]="+counts['lead'].percentChange >= 0"
+        [class.kpi-card__delta--negative]="+counts['lead'].percentChange < 0">
+        {{ formatPercent(counts['lead'].percentChange) }}
+      </p>
+    </article>
 
-      <article class="kpi-card">
-        <p class="kpi-card__label">Featured Streams</p>
-        <p class="kpi-card__value">{{ formatCompact(counts['featured'].playCount) }}</p>
-        <p
-          class="kpi-card__delta"
-          [class.kpi-card__delta--positive]="+counts['featured'].percentChange >= 0"
-          [class.kpi-card__delta--negative]="+counts['featured'].percentChange < 0"
-        >
-          {{ formatPercent(counts['featured'].percentChange) }}
-        </p>
-      </article>
-    </section>
+    <article class="kpi-card">
+      <p class="kpi-card__label">Featured Streams</p>
+      <p class="kpi-card__value">{{ formatCompact(counts['featured'].playCount) }}</p>
+      <p class="kpi-card__delta" [class.kpi-card__delta--positive]="+counts['featured'].percentChange >= 0"
+        [class.kpi-card__delta--negative]="+counts['featured'].percentChange < 0">
+        {{ formatPercent(counts['featured'].percentChange) }}
+      </p>
+    </article>
+  </section>
   }
 
   <div class="audience-grid">
     @if (artistStats(); as stats) {
-      <article class="panel audience-card">
-        <p class="panel__eyebrow">Artist Audience</p>
-        <div class="audience-stats">
-          <div class="audience-stat">
-            <p class="audience-stat__label">Followers</p>
-            <p class="audience-stat__value">{{ formatCompact(stats.followers) }}</p>
-          </div>
-          <div class="audience-stat">
-            <p class="audience-stat__label">Monthly Listeners</p>
-            <p class="audience-stat__value">{{ formatCompact(stats.monthlyListeners) }}</p>
-          </div>
+    <article class="panel audience-card">
+      <p class="panel__eyebrow">Artist Audience</p>
+      <div class="audience-stats">
+        <div class="audience-stat">
+          <p class="audience-stat__label">Monthly Listeners</p>
+          <p class="audience-stat__value">{{ formatCompact(stats.monthlyListeners) }}</p>
         </div>
-      </article>
+        <div class="audience-stat">
+          <p class="audience-stat__label">Followers</p>
+          <p class="audience-stat__value">{{ formatCompact(stats.followers) }}</p>
+        </div>
+      </div>
+    </article>
     }
 
     @if (topCities().length > 0) {
-      <article class="panel">
-        <p class="panel__eyebrow">Top Cities</p>
-        <ol class="city-list">
-          @for (city of topCities(); track city.city; let i = $index) {
-            <li class="city-row">
-              <span class="city-row__rank">{{ i + 1 }}</span>
-              <span class="city-row__name">{{ city.city }}<span class="city-row__country">{{ city.country }}</span></span>
-              <span class="city-row__count">{{ formatCompact(city.numberOfListeners) }}</span>
-            </li>
-          }
-        </ol>
-      </article>
+    <article class="panel">
+      <p class="panel__eyebrow">Top Cities</p>
+      <ol class="city-list">
+        @for (city of topCities(); track city.city; let i = $index) {
+        <li class="city-row">
+          <span class="city-row__rank">{{ i + 1 }}</span>
+          <span class="city-row__name">{{ city.city }}<span class="city-row__country">{{ city.country }}</span></span>
+          <span class="city-row__count">{{ formatCompact(city.numberOfListeners) }}</span>
+        </li>
+        }
+      </ol>
+    </article>
     }
   </div>
 
   <div class="charts-grid">
     @if (monthlyChart().length > 0) {
-      <section class="panel" aria-label="Monthly streams chart">
-        <div class="panel__heading">
-          <h3>Monthly Streams (YTD)</h3>
-          <p>Total streams per month this year</p>
-        </div>
-        <div class="chart-wrap" role="img" aria-label="Bar chart showing monthly stream totals">
-          <ngx-charts-bar-vertical
-            [view]="barChartView()"
-            [results]="monthlyChart()"
-            [scheme]="barColorScheme"
-            [xAxis]="true"
-            [yAxis]="true"
-            [showDataLabel]="true"
-            [yAxisTickFormatting]="yAxisTickFormat"
-            [dataLabelFormatting]="yAxisTickFormat"
-            [roundEdges]="true"
-          />
-        </div>
-      </section>
+    <section class="panel" aria-label="Monthly streams chart">
+      <div class="panel__heading">
+        <h3>Monthly Streams (YTD)</h3>
+        <p>Total streams per month this year</p>
+      </div>
+      <div class="chart-wrap" role="img" aria-label="Bar chart showing monthly stream totals">
+        <ngx-charts-bar-vertical [view]="barChartView()" [results]="monthlyChart()" [scheme]="barColorScheme"
+          [xAxis]="true" [yAxis]="true" [showDataLabel]="true" [yAxisTickFormatting]="yAxisTickFormat"
+          [dataLabelFormatting]="yAxisTickFormat" [roundEdges]="true" />
+      </div>
+    </section>
     }
 
     @if (listenersChart().length > 0) {
-      <section class="panel" aria-label="Monthly listeners chart">
-        <div class="panel__heading">
-          <h3>Monthly Listeners</h3>
-          <p>Spotify monthly listener count over time</p>
-        </div>
-        <div class="chart-wrap chart-wrap--line" role="img" aria-label="Line chart showing monthly listener counts">
-          <ngx-charts-line-chart
-            [view]="lineChartView()"
-            [results]="listenersChart()"
-            [scheme]="barColorScheme"
-            [xAxis]="true"
-            [yAxis]="true"
-            [yAxisTickFormatting]="yAxisTickFormat"
-            [autoScale]="true"
-          />
-        </div>
-      </section>
+    <section class="panel" aria-label="Monthly listeners chart">
+      <div class="panel__heading">
+        <h3>Monthly Listeners</h3>
+        <p>Spotify monthly listener count over time</p>
+      </div>
+      <div class="chart-wrap chart-wrap--line" role="img" aria-label="Line chart showing monthly listener counts">
+        <ngx-charts-line-chart [view]="lineChartView()" [results]="listenersChart()" [scheme]="barColorScheme"
+          [xAxis]="true" [yAxis]="true" [yAxisTickFormatting]="yAxisTickFormat" [autoScale]="true" />
+      </div>
+    </section>
     }
   </div>
 
   @if (topTracks().length > 0) {
-    <section class="panel" aria-label="Top tracks">
-      <div class="panel__heading">
-        <h3>Top Tracks</h3>
-        <p>Most streamed tracks by total play count</p>
-      </div>
-      <ol class="top-tracks-list">
-        @for (track of topTracks(); track $index; let i = $index) {
-          <li class="track-card">
-            <span class="track-card__rank">{{ i + 1 }}</span>
-            <span class="track-card__name">{{ track.name }}</span>
-            <span class="track-card__count">{{ formatCompact(track.playcount) }}</span>
-          </li>
-        }
-      </ol>
-    </section>
+  <section class="panel" aria-label="Top tracks">
+    <div class="panel__heading">
+      <h3>Top Tracks</h3>
+      <p>Most streamed tracks by total play count</p>
+    </div>
+    <ol class="top-tracks-list">
+      @for (track of topTracks(); track $index; let i = $index) {
+      <li class="track-card">
+        <span class="track-card__rank">{{ i + 1 }}</span>
+        <span class="track-card__name">{{ track.name }}</span>
+        <span class="track-card__count">{{ formatCompact(track.playcount) }}</span>
+      </li>
+      }
+    </ol>
+  </section>
   }
 
 </section>

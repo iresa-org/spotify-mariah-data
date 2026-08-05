@@ -7,6 +7,7 @@ import {
   computed,
   contentChildren,
   input,
+  signal,
 } from '@angular/core';
 
 export interface GroupedTableColumn<T> {
@@ -66,8 +67,10 @@ export class GroupedTableComponent<T> {
     for (const group of this.groups()) {
       rows.push({ kind: 'group', group });
 
-      for (const row of group.rows) {
-        rows.push({ kind: 'data', group, row });
+      if (!this.isGroupCollapsed(group.id)) {
+        for (const row of group.rows) {
+          rows.push({ kind: 'data', group, row });
+        }
       }
     }
 
@@ -91,6 +94,22 @@ export class GroupedTableComponent<T> {
   readonly isDataRow = (_: number, row: GroupedTableRow<T>) => row.kind === 'data';
 
   readonly groupColumnId = '__group__';
+
+  readonly collapsedGroupIds = signal<ReadonlySet<string | number>>(new Set());
+
+  readonly isGroupCollapsed = (groupId: string | number) => this.collapsedGroupIds().has(groupId);
+
+  toggleGroup(groupId: string | number) {
+    const collapsedGroupIds = new Set(this.collapsedGroupIds());
+
+    if (collapsedGroupIds.has(groupId)) {
+      collapsedGroupIds.delete(groupId);
+    } else {
+      collapsedGroupIds.add(groupId);
+    }
+
+    this.collapsedGroupIds.set(collapsedGroupIds);
+  }
 
   getCellTemplate(columnId: string) {
     return this.templateMap().get(columnId) ?? null;

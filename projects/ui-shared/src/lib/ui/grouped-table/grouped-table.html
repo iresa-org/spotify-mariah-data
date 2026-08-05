@@ -20,7 +20,18 @@
         [attr.colspan]="dataRowColumns().length"
       >
         @if (row.group.label) {
-        <span class="grouped-table__group-chip">{{ row.group.label }}</span>
+        <button
+          type="button"
+          class="grouped-table__group-toggle"
+          (click)="toggleGroup(row.group.id)"
+          [attr.aria-expanded]="!isGroupCollapsed(row.group.id)"
+        >
+          <span
+            class="grouped-table__group-toggle-icon"
+            [class.grouped-table__group-toggle-icon--collapsed]="isGroupCollapsed(row.group.id)"
+          ></span>
+          <span class="grouped-table__group-chip">{{ row.group.label }}</span>
+        </button>
         }
       </td>
     </ng-container>
