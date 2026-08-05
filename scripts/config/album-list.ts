@@ -17,5 +17,7 @@ export const SELECTED_ALBUMS = [
   'spotify:album:6MljmKZLh52AUR1v5WpWst',     // Here For It All
   'spotify:album:6aouVhqJ9SkEUS2gAR0xBS',     // Merry Christmas: 30th Anniversary Edition
   'spotify:album:6yitEMT7G4qfIcV3jWXP8I',     // Rainbow: 25th Anniversary Expanded Edition
-  'spotify:album:0gTbDhU0tDmXdXn2RNWO2l'      // Charmbracelet
+  'spotify:album:0gTbDhU0tDmXdXn2RNWO2l',     // Charmbracelet
+  'spotify:album:7GTZRYNB0eAig7UTsb54XG',     // The Remixes
+  'spotify:album:0jpGebANqbNNKbWHq2XhEM'      // MTV Unplugged EP
 ]
