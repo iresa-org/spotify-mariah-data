@@ -15,9 +15,9 @@ async function compareDailyChanges(latestFile: string, oldestFile: string): Prom
   const oldestTracks = oldestData.tracks;
 
   const oldestTrackMap = convertObjectToMap(oldestTracks.reduce((acc, track) => {
-    acc[track.uid] = { playCount: track.playCount, change: track.change };
+    acc[track.uid] = { count: track.count, change: track.change };
     return acc;
-  }, {} as Record<string, { playCount: string; change: string }>));
+  }, {} as Record<string, { count: string; change: string }>));
   
   let hasChanges = false;
   const arr: string[] = []

@@ -9,7 +9,7 @@ import type { TrackContentItem } from "./source.config.ts";
 export type TrackCategory = 'S' | 'F' | 'L' | 'V';
 
 export interface BaseDailyChange {
-  playCount: string;
+  count: string;
   change: string;
   percentChange?: string;
 }

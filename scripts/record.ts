@@ -14,7 +14,7 @@ function processTrackDailyChange(dailyCountOutput: DailyCountOutput): Map<string
   const map = new Map<string, BaseDailyChange>();
 
   dailyCountOutput.tracks?.forEach((element: any) => {
-    map.set(element.uid, { playCount: element.playCount, change: element.change })
+    map.set(element.uid, { count: element.count, change: element.change })
   });
   return map;
 }
@@ -24,7 +24,7 @@ function processAlbumDailyChange(dailyCountOutput: DailyCountOutput): Map<string
   const map = new Map<string, BaseDailyChange>();
 
   dailyCountOutput.albums?.forEach(element => {
-    map.set(element.uri, { playCount: element.dailyChanges.playCount, change: element.dailyChanges.change })
+    map.set(element.uri, { count: element.dailyChanges.count, change: element.dailyChanges.change })
   });
   return map;
 }

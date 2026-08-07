@@ -21,11 +21,11 @@ export interface GetDailyResult {
 export interface DailyCountOutput {
   tracks: {
     uid: string;
-    playCount: string;
+    count: string;
     change: string;
   }[];
   playCounts: PlayCountOutput,
-  monthlyListeners: number,
-  followers: number,
+  monthlyListeners: BaseDailyChange,
+  followers: BaseDailyChange,
   albums: AlbumData[];
 }

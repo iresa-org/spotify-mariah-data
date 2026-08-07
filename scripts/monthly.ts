@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import { writeToFile } from "./utils/file.utils.ts";
-import type { DailyCountOutput, PlayCountOutput } from './config/daily.config.ts';
+import type { DailyCountOutput } from './config/daily.config.ts';
 import * as path from 'path';
 import { calculateSum } from './utils/count.utils.ts';
 
@@ -56,8 +56,8 @@ async function calculateMonthlySum(map: Map<string, string[]>): Promise<Map<stri
 
   // calc sum of each month
   for (let [key, days] of map) {
-    const playCounts = calculateSum(days.map(day => fileContents.get(day)?.playCounts.total.change ?? '0'))
-    groups.set(key, playCounts);
+    const counts = calculateSum(days.map(day => fileContents.get(day)?.playCounts.total.change ?? '0'))
+    groups.set(key, counts);
   }
   return groups;
 }

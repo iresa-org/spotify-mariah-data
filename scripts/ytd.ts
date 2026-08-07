@@ -13,7 +13,7 @@ function processTrackDailyChange(input: string): Map<string, BaseDailyChange> {
   const dailyCountOutput = JSON.parse(input) as DailyCountOutput;
 
   dailyCountOutput.tracks.forEach((element: any) => {
-    map.set(element.uid, { playCount: element.playCount, change: element.change })
+    map.set(element.uid, { count: element.count, change: element.change })
   });
   return map;
 }
@@ -24,12 +24,12 @@ function processYtdSumContent(oldestDailyChangeMap: Map<string, BaseDailyChange>
 
   for (let [uid, value] of latestDailyChangeMap) {
     if (oldestDailyChangeMap.has(uid)) {
-      const start = oldestDailyChangeMap.get(uid)?.playCount ?? '0';
-      const end = value.playCount;
+      const start = oldestDailyChangeMap.get(uid)?.count ?? '0';
+      const end = value.count;
       const diff = start === end ? end : subtractNumbers(start, end);
       tracks.set(uid, String(diff));
     } else {
-      tracks.set(uid, String(value.playCount));
+      tracks.set(uid, String(value.count));
     }
   }
   return tracks;

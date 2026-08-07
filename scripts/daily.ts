@@ -2,9 +2,9 @@ import { readFile } from "fs/promises";
 import { clearFilesFromFolder, getLatestFile, writeToFile } from "./utils/file.utils.ts";
 import type { DailyCountOutput, GetDailyResult } from "./config/daily.config.ts";
 import { extractDateFromPath, formatDate, getTomorrowDate, getYesterdayDate, parseLocalDate } from "./utils/date.utils.ts";
-import { calcDailyChanges, convertToAlbumList, filterAlbums, getAlbumsFromTracks, getDuplicateIds, getTotalStreams, getTrackCategories } from "./utils/count.utils.ts";
+import { calcDailyChanges, calcPercentChange, convertToAlbumList, filterAlbums, getAlbumsFromTracks, getDuplicateIds, getTotalStreams, getTrackCategories, subtractNumbers } from "./utils/count.utils.ts";
 import type { SpotifyArtistData, SpotifyContentData, SpotifyTrackData } from "./config/source.config.ts";
-import type { TrackDailyChange, TrackData } from "./config/track.config.ts";
+import type { BaseDailyChange, TrackDailyChange, TrackData } from "./config/track.config.ts";
 
 function processTrackContent(el: SpotifyTrackData, prevMap: Map<string, TrackDailyChange>, map: Map<string, TrackData>) {
   const content = el.data.playlistV2?.content;
@@ -56,16 +56,36 @@ function processUploadContent(list: SpotifyContentData[], prevMap: Map<string, T
   }
 }
 
-function processPrevChangeContent(input: string): Map<string, TrackDailyChange> {
+function processPrevTracksChanges(input: string): Map<string, TrackDailyChange> {
 
   const map = new Map<string, TrackDailyChange>();
 
   const dailyCountOutput = JSON.parse(input) as DailyCountOutput;
 
   dailyCountOutput.tracks.forEach((element: any) => {
-    map.set(element.uid, { playCount: element.playCount, change: element.change })
+    map.set(element.uid, { count: element.count, change: element.change })
   });
   return map;
+}
+
+function getMonthlyListeners(prevDayInput: string = '', currentListeners: string): BaseDailyChange {
+  const prevOutput = JSON.parse(prevDayInput) as DailyCountOutput;
+  const prevCount = prevOutput.monthlyListeners.count;
+  return {
+    count: currentListeners,
+    change: subtractNumbers(prevCount, currentListeners).toString(),
+    percentChange: String(calcPercentChange(BigInt(prevCount), BigInt(currentListeners)))
+  }
+}
+
+function getFollowers(prevDayInput: string = '', currentFollowers: string): BaseDailyChange {
+  const prevOutput = JSON.parse(prevDayInput) as DailyCountOutput;
+  const prevCount = prevOutput.followers.count;
+  return {
+    count: currentFollowers,
+    change: subtractNumbers(prevCount, currentFollowers).toString(),
+    percentChange: String(calcPercentChange(BigInt(prevCount), BigInt(currentFollowers)))
+  }
 }
 
 async function main() {
@@ -85,9 +105,10 @@ async function main() {
 
     // Read previous file from current directory
     const prevFilePath = await getLatestFile('./daily', ['.json']);
+    let prevFileContents = undefined;
     if (prevFilePath) {
-      const prevFileContents = await readFile(prevFilePath!, 'utf-8');
-      prevMap = processPrevChangeContent(prevFileContents)
+      prevFileContents = await readFile(prevFilePath!, 'utf-8');
+      prevMap = processPrevTracksChanges(prevFileContents)
       console.log('Previous change found:', prevFilePath);
     } else {
       prevMap = new Map<string, TrackDailyChange>();
@@ -106,16 +127,15 @@ async function main() {
     writeToFile(`./result`, 'current.json', result)
 
     // Write to daily
-    const tracks = resp.tracks.map(track => ({ uid: track.trackDetails.uid, playCount: track.dailyChanges.playCount, change: track.dailyChanges.change }));
-    const monthlyListeners = resp.artist?.stats.monthlyListeners;
-    const followers = resp.artist?.stats.followers;
-    writeToFile(`./daily`, `${formatDate(prevDate)}.json`, JSON.stringify({
+    const tracks = resp.tracks.map(track => ({ uid: track.trackDetails.uid, count: track.dailyChanges.count, change: track.dailyChanges.change }));
+    const dailyResult: DailyCountOutput = {
       tracks,
       playCounts: resp.playCounts,
-      monthlyListeners,
-      followers,
+      monthlyListeners: getMonthlyListeners(prevFileContents, String(resp.artist?.stats.monthlyListeners)),
+      followers: getFollowers(prevFileContents, String(resp.artist?.stats.followers)),
       albums: resp.albums
-    }))
+    }
+    writeToFile(`./daily`, `${formatDate(prevDate)}.json`, JSON.stringify(dailyResult))
 
     // Clean upload folder
     clearFilesFromFolder('./upload', ['.txt'])
