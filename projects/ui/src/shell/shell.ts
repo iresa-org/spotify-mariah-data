@@ -25,6 +25,8 @@ export class Shell implements OnInit {
   readonly sidenavMinimized = signal(false);
   readonly externalLinks = signal<{ name: string; url: string; icon: IconDefinition }[]>([]);
   readonly artistImage = signal<string | null>(null);
+  readonly worldRank = signal<number>(0);
+
   readonly minimizeIcon = faAnglesLeft;
   readonly expandIcon = faAnglesRight;
   readonly overviewIcon = faChartLine;
@@ -63,6 +65,7 @@ export class Shell implements OnInit {
           ...link,
           icon: this.resolveIcon(link.name),
         })));
+        this.worldRank.set(this.dailyDataApi.getWorldRank());
         this.loaded.set(true);
       },
     });

@@ -37,7 +37,6 @@ export class Overview implements OnInit, OnDestroy {
   readonly listenersChart = signal<ChartSeries[]>([]);
   readonly monthlyListeners = signal<{ count: string, change: string } | null>(null);
   readonly followers = signal<{ count: string, change: string } | null>(null);
-  readonly worldRank = signal<number>(0);
   readonly topCities = signal<{ city: string; country: string; region: string; numberOfListeners: number }[]>([]);
 
   readonly barColorScheme: Color = { name: 'mariah-bar', selectable: true, group: ScaleType.Ordinal, domain: ['#d72652', '#ea4b74', '#f47da0', '#f9b0c6', '#fce0ea', '#be1842', '#a01236', '#fce0ea', '#ea4b74', '#d72652', '#be1842', '#a01236', '#fce0ea', '#ea4b74', '#d72652'] };
@@ -81,7 +80,6 @@ export class Overview implements OnInit, OnDestroy {
     this.topTracks.set(this.dailyDataApi.getTopTracks());
     this.followers.set(this.dailyDataApi.getFollowers());
     this.monthlyListeners.set(this.dailyDataApi.getMonthlyListeners());
-    this.worldRank.set(this.dailyDataApi.getWorldRank());
     this.topCities.set(this.dailyDataApi.getTopCities());
 
     this.historicDataApi.loadMonthly().subscribe(data => {

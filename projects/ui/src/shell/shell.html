@@ -1,32 +1,30 @@
 @if (loaded()) {
 <div class="dashboard" [class.dashboard--sidebar-minimized]="sidenavMinimized()">
   <aside class="dashboard__sidebar" aria-label="Dashboard navigation">
-    <button
-      type="button"
-      class="sidenav-toggle"
-      (click)="toggleSidenav()"
-      [attr.aria-expanded]="!sidenavMinimized()"
-      [attr.aria-label]="sidenavMinimized() ? 'Expand sidebar navigation' : 'Minimize sidebar navigation'"
-    >
+    <button type="button" class="sidenav-toggle" (click)="toggleSidenav()" [attr.aria-expanded]="!sidenavMinimized()"
+      [attr.aria-label]="sidenavMinimized() ? 'Expand sidebar navigation' : 'Minimize sidebar navigation'">
       <fa-icon [icon]="sidenavMinimized() ? expandIcon : minimizeIcon" aria-hidden="true" />
     </button>
 
     <div class="sidebar-header">
       <div class="brand">
         @if (artistImage()) {
-          <img class="brand__avatar" [src]="artistImage()" alt="Mariah Carey" width="44" height="44" />
+        <img class="brand__avatar" [src]="artistImage()" alt="Mariah Carey" width="44" height="44" />
         } @else {
-          <div class="brand__badge" aria-hidden="true">MC</div>
+        <div class="brand__badge" aria-hidden="true">MC</div>
         }
         <div class="brand__meta">
-          <p class="brand__eyebrow">Artist Overview</p>
           <h1 class="brand__title">Mariah Carey</h1>
+          @if (worldRank() > 0) {
+          <p class="brand__eyebrow">World Rank <span class="brand__rank-chip">#{{ worldRank() }}</span></p>
+          }
         </div>
       </div>
     </div>
 
     <nav class="nav" aria-label="Main navigation">
-      <a class="nav__link" routerLink="overview" routerLinkActive="nav__link--active" aria-label="Overview" title="Overview">
+      <a class="nav__link" routerLink="overview" routerLinkActive="nav__link--active" aria-label="Overview"
+        title="Overview">
         <fa-icon class="nav__icon" [icon]="overviewIcon" aria-hidden="true" />
         <span class="nav__label">Overview</span>
       </a>
@@ -41,22 +39,23 @@
     </nav>
 
     @if (externalLinks().length > 0) {
-      <nav class="external-links" aria-label="Artist social links">
-        @for (link of externalLinks(); track link.name) {
-          <a class="external-link" [href]="link.url" target="_blank" rel="noopener noreferrer" [attr.aria-label]="link.name" [title]="link.name">
-            <fa-icon [icon]="link.icon" aria-hidden="true" />
-          </a>
-        }
-      </nav>
+    <nav class="external-links" aria-label="Artist social links">
+      @for (link of externalLinks(); track link.name) {
+      <a class="external-link" [href]="link.url" target="_blank" rel="noopener noreferrer" [attr.aria-label]="link.name"
+        [title]="link.name">
+        <fa-icon [icon]="link.icon" aria-hidden="true" />
+      </a>
+      }
+    </nav>
     }
 
     @if (lastUpdated()) {
-      <dl class="sidebar-stats" [attr.aria-hidden]="sidenavMinimized()">
-        <div>
-          <dt>Last Updated</dt>
-          <dd>{{ lastUpdated() }}</dd>
-        </div>
-      </dl>
+    <dl class="sidebar-stats" [attr.aria-hidden]="sidenavMinimized()">
+      <div>
+        <dt>Last Updated</dt>
+        <dd>{{ lastUpdated() }}</dd>
+      </div>
+    </dl>
     }
   </aside>
 
@@ -65,9 +64,8 @@
   </main>
 </div>
 } @else {
-  <div class="loading" aria-live="polite" aria-busy="true">
-    <span class="loading__spinner" aria-hidden="true"></span>
-    <p>Loading Mariah Carey data&hellip;</p>
-  </div>
+<div class="loading" aria-live="polite" aria-busy="true">
+  <span class="loading__spinner" aria-hidden="true"></span>
+  <p>Loading Mariah Carey data&hellip;</p>
+</div>
 }
-

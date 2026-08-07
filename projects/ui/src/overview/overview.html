@@ -60,9 +60,6 @@
     <article class="panel audience-card">
       <div class="audience-card__header">
         <p class="panel__eyebrow audience-card__eyebrow">Artist Audience</p>
-        @if (worldRank() > 0) {
-        <p class="audience-card__rank">World Rank <span class="audience-card__rank-chip">#{{ worldRank() }}</span></p>
-        }
       </div>
       <div class="audience-stats">
         @if (monthlyListeners()) {

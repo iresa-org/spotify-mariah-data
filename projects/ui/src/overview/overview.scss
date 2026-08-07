@@ -24,7 +24,7 @@
 }
 
 .hero .page-header {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, transparent 100%);
+  background: linear-gradient(to top, color-mix(in srgb, theme.$theme-text 65%, transparent) 0%, transparent 100%);
   bottom: 0;
   left: 0;
   padding: 24px 20px 16px;
@@ -33,11 +33,11 @@
 }
 
 .hero .page-header__eyebrow {
-  color: rgba(255, 255, 255, 0.75);
+  color: color-mix(in srgb, theme.$theme-surface 75%, transparent);
 }
 
 .hero .page-header__title {
-  color: #fff;
+  color: theme.$theme-surface;
 }
 
 .page-header {
@@ -101,12 +101,12 @@
 }
 
 .kpi-card__delta--positive {
-  background: rgba(27, 143, 82, 0.12);
+  background: color-mix(in srgb, theme.$theme-positive 12%, transparent);
   color: theme.$theme-positive;
 }
 
 .kpi-card__delta--negative {
-  background: rgba(184, 57, 61, 0.12);
+  background: color-mix(in srgb, theme.$theme-negative 12%, transparent);
   color: theme.$theme-negative;
 }
 
@@ -201,30 +201,6 @@
   margin-bottom: 0;
 }
 
-.audience-card__rank {
-  align-items: center;
-  color: theme.$theme-muted;
-  display: inline-flex;
-  font-size: 0.75rem;
-  font-weight: 600;
-  gap: 8px;
-  letter-spacing: 0.09em;
-  margin: 0;
-  text-transform: uppercase;
-}
-
-.audience-card__rank-chip {
-  background: color-mix(in srgb, theme.$theme-positive 12%, transparent);
-  border: 1px solid color-mix(in srgb, theme.$theme-positive 35%, transparent);
-  border-radius: 999px;
-  color: theme.$theme-positive;
-  font-size: 0.72rem;
-  letter-spacing: 0;
-  line-height: 1;
-  padding: 4px 8px;
-  text-transform: none;
-}
-
 .audience-stats {
   display: flex;
   gap: 16px;
@@ -259,12 +235,12 @@
 }
 
 .audience-stat__delta--positive {
-  background: rgba(27, 143, 82, 0.12);
+  background: color-mix(in srgb, theme.$theme-positive 12%, transparent);
   color: theme.$theme-positive;
 }
 
 .audience-stat__delta--negative {
-  background: rgba(184, 57, 61, 0.12);
+  background: color-mix(in srgb, theme.$theme-negative 12%, transparent);
   color: theme.$theme-negative;
 }
 

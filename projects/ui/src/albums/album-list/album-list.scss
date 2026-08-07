@@ -42,7 +42,7 @@
 }
 
 .album-card:hover {
-  box-shadow: 0 4px 12px rgba(215, 38, 82, 0.15);
+  box-shadow: 0 4px 12px color-mix(in srgb, theme.$theme-accent 15%, transparent);
 }
 
 .album-card:focus-visible {
@@ -52,7 +52,7 @@
 
 .album-card--selected {
   border-color: theme.$theme-accent;
-  box-shadow: 0 0 0 2px rgba(215, 38, 82, 0.2);
+  box-shadow: 0 0 0 2px color-mix(in srgb, theme.$theme-accent 20%, transparent);
 }
 
 .album-card__art {
