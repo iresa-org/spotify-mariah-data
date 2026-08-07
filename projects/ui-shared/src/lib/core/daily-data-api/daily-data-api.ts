@@ -131,6 +131,10 @@ export class DailyDataApi {
     return this.trackListResp?.['monthlyListeners'];
   }
 
+  getWorldRank(): number {
+    return this.trackListResp?.['artist']?.stats?.worldRank ?? 0;
+  }
+
   getTopCities(): { city: string; country: string; region: string; numberOfListeners: number }[] {
     return (this.trackListResp?.['artist']?.stats?.topCities?.items ?? []).map((item: any) => ({
       city: item.city,
