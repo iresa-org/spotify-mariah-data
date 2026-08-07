@@ -214,6 +214,25 @@
   margin: 6px 0 0;
 }
 
+.audience-stat__delta {
+  border-radius: 999px;
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin: 8px 0 0;
+  padding: 4px 8px;
+}
+
+.audience-stat__delta--positive {
+  background: rgba(27, 143, 82, 0.12);
+  color: theme.$theme-positive;
+}
+
+.audience-stat__delta--negative {
+  background: rgba(184, 57, 61, 0.12);
+  color: theme.$theme-negative;
+}
+
 .city-list {
   list-style: none;
   margin: 0;

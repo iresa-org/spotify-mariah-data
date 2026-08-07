@@ -1,6 +1,6 @@
 import { afterNextRender, Component, ElementRef, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
-import { DailyDataApi, HistoricDataApi } from 'ui-shared';
+import { DailyDataApi, formatCompact, FormatCompactPipe, HistoricDataApi, NumberWithSignPipe, PercentWithSignPipe } from 'ui-shared';
 
 interface ChartItem {
   name: string;
@@ -13,14 +13,14 @@ interface ChartSeries {
 }
 
 const MONTH_NAMES: Record<string, string> = {
-  '01': 'Jan', '02': 'Feb', '03': 'Mar', '04': 'Apr',
-  '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Aug',
-  '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec',
+  '1': 'Jan', '2': 'Feb', '3': 'Mar', '4': 'Apr',
+  '5': 'May', '6': 'Jun', '7': 'Jul', '8': 'Aug',
+  '9': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec',
 };
 
 @Component({
   selector: 'lib-overview',
-  imports: [NgxChartsModule],
+  imports: [NgxChartsModule, FormatCompactPipe, PercentWithSignPipe, NumberWithSignPipe],
   templateUrl: './overview.html',
   styleUrl: './overview.scss',
 })
@@ -35,7 +35,8 @@ export class Overview implements OnInit, OnDestroy {
   readonly categoryChart = signal<ChartItem[]>([]);
   readonly topTracks = signal<{ name: string; playcount: number }[]>([]);
   readonly listenersChart = signal<ChartSeries[]>([]);
-  readonly artistStats = signal<{ followers: number; monthlyListeners: number } | null>(null);
+  readonly monthlyListeners = signal<{ count: string, change: string } | null>(null);
+  readonly followers = signal<{ count: string, change: string } | null>(null);
   readonly topCities = signal<{ city: string; country: string; region: string; numberOfListeners: number }[]>([]);
 
   readonly barColorScheme: Color = { name: 'mariah-bar', selectable: true, group: ScaleType.Ordinal, domain: ['#d72652', '#ea4b74', '#f47da0', '#f9b0c6', '#fce0ea', '#be1842', '#a01236', '#fce0ea', '#ea4b74', '#d72652', '#be1842', '#a01236', '#fce0ea', '#ea4b74', '#d72652'] };
@@ -77,7 +78,8 @@ export class Overview implements OnInit, OnDestroy {
     }
 
     this.topTracks.set(this.dailyDataApi.getTopTracks());
-    this.artistStats.set(this.dailyDataApi.getArtistStats());
+    this.followers.set(this.dailyDataApi.getFollowers());
+    this.monthlyListeners.set(this.dailyDataApi.getMonthlyListeners());
     this.topCities.set(this.dailyDataApi.getTopCities());
 
     this.historicDataApi.loadMonthly().subscribe(data => {
@@ -97,13 +99,5 @@ export class Overview implements OnInit, OnDestroy {
     });
   }
 
-  formatCompact(value: number | string): string {
-    return new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 }).format(+value);
-  }
-
-  formatPercent(value: string): string {
-    return (+value * 100).toFixed(2) + '%';
-  }
-
-  yAxisTickFormat = (val: number) => this.formatCompact(val);
+  yAxisTickFormat = (val: number) => formatCompact(val);
 }

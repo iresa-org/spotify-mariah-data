@@ -23,55 +23,65 @@
   <section class="kpis" aria-label="Key performance indicators">
     <article class="kpi-card">
       <p class="kpi-card__label">Total Streams</p>
-      <p class="kpi-card__value">{{ formatCompact(counts['total'].count) }}</p>
+      <p class="kpi-card__value">{{ counts['total'].count | formatCompact}}</p>
       <p class="kpi-card__delta" [class.kpi-card__delta--positive]="+counts['total'].percentChange >= 0"
         [class.kpi-card__delta--negative]="+counts['total'].percentChange < 0">
-        {{ formatPercent(counts['total'].percentChange) }}
+        {{ counts['total'].percentChange | percentWithSign }}
       </p>
     </article>
 
     <article class="kpi-card">
       <p class="kpi-card__label">Daily Streams</p>
-      <p class="kpi-card__value">{{ formatCompact(counts['total'].change) }}</p>
+      <p class="kpi-card__value">{{ counts['total'].change | formatCompact }}</p>
       <p class="kpi-card__label kpi-card__label--sub">streams</p>
     </article>
 
     <article class="kpi-card">
       <p class="kpi-card__label">Lead Streams</p>
-      <p class="kpi-card__value">{{ formatCompact(counts['lead'].count) }}</p>
+      <p class="kpi-card__value">{{ counts['lead'].count | formatCompact }}</p>
       <p class="kpi-card__delta" [class.kpi-card__delta--positive]="+counts['lead'].percentChange >= 0"
         [class.kpi-card__delta--negative]="+counts['lead'].percentChange < 0">
-        {{ formatPercent(counts['lead'].percentChange) }}
+        {{ counts['lead'].percentChange | percentWithSign }}
       </p>
     </article>
 
     <article class="kpi-card">
       <p class="kpi-card__label">Featured Streams</p>
-      <p class="kpi-card__value">{{ formatCompact(counts['featured'].count) }}</p>
+      <p class="kpi-card__value">{{ counts['featured'].count | formatCompact }}</p>
       <p class="kpi-card__delta" [class.kpi-card__delta--positive]="+counts['featured'].percentChange >= 0"
         [class.kpi-card__delta--negative]="+counts['featured'].percentChange < 0">
-        {{ formatPercent(counts['featured'].percentChange) }}
+        {{ counts['featured'].percentChange | percentWithSign }}
       </p>
     </article>
   </section>
   }
 
   <div class="audience-grid">
-    @if (artistStats(); as stats) {
     <article class="panel audience-card">
       <p class="panel__eyebrow">Artist Audience</p>
       <div class="audience-stats">
+        @if (monthlyListeners()) {
         <div class="audience-stat">
           <p class="audience-stat__label">Monthly Listeners</p>
-          <p class="audience-stat__value">{{ formatCompact(stats.monthlyListeners) }}</p>
+          <p class="audience-stat__value">{{ monthlyListeners()!.count | formatCompact }}</p>
+          <p class="audience-stat__delta" [class.audience-stat__delta--positive]="+monthlyListeners()!.change >= 0"
+            [class.audience-stat__delta--negative]="+monthlyListeners()!.change < 0">
+            {{ monthlyListeners()!.change | numberWithSign }}
+          </p>
         </div>
+        }
+        @if( followers()) {
         <div class="audience-stat">
           <p class="audience-stat__label">Followers</p>
-          <p class="audience-stat__value">{{ formatCompact(stats.followers) }}</p>
+          <p class="audience-stat__value">{{ followers()!.count | formatCompact }}</p>
+          <p class="audience-stat__delta" [class.audience-stat__delta--positive]="+followers()!.change >= 0"
+            [class.audience-stat__delta--negative]="+followers()!.change < 0">
+            {{ followers()!.change | numberWithSign }}
+          </p>
         </div>
+        }
       </div>
     </article>
-    }
 
     @if (topCities().length > 0) {
     <article class="panel">
@@ -81,7 +91,7 @@
         <li class="city-row">
           <span class="city-row__rank">{{ i + 1 }}</span>
           <span class="city-row__name">{{ city.city }}<span class="city-row__country">{{ city.country }}</span></span>
-          <span class="city-row__count">{{ formatCompact(city.numberOfListeners) }}</span>
+          <span class="city-row__count">{{ city.numberOfListeners | formatCompact}}</span>
         </li>
         }
       </ol>
@@ -129,7 +139,7 @@
       <li class="track-card">
         <span class="track-card__rank">{{ i + 1 }}</span>
         <span class="track-card__name">{{ track.name }}</span>
-        <span class="track-card__count">{{ formatCompact(track.playcount) }}</span>
+        <span class="track-card__count">{{ track.playcount | formatCompact }}</span>
       </li>
       }
     </ol>

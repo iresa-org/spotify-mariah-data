@@ -123,10 +123,12 @@ export class DailyDataApi {
     return items.map(item => ({ name: item.track.name, playcount: +item.track.playcount }));
   }
 
-  getArtistStats(): { followers: number; monthlyListeners: number } | null {
-    const stats = this.trackListResp?.['artist']?.stats;
-    if (!stats) return null;
-    return { followers: +stats.followers, monthlyListeners: +stats.monthlyListeners };
+  getFollowers(): { count: string, change: string } {
+    return this.trackListResp?.['followers'];
+  }
+
+  getMonthlyListeners(): { count: string, change: string } {
+    return this.trackListResp?.['monthlyListeners'];
   }
 
   getTopCities(): { city: string; country: string; region: string; numberOfListeners: number }[] {
