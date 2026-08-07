@@ -7,12 +7,10 @@
 }
 
 .dashboard {
-  background: radial-gradient(
-    circle at top right,
-    color-mix(in srgb, theme.$theme-surface 82%, theme.$theme-bg 18%) 0%,
-    theme.$theme-bg 52%,
-    color-mix(in srgb, theme.$theme-bg 78%, theme.$theme-border 22%) 100%
-  );
+  background: radial-gradient(circle at top right,
+      color-mix(in srgb, theme.$theme-surface 82%, theme.$theme-bg 18%) 0%,
+      theme.$theme-bg 52%,
+      color-mix(in srgb, theme.$theme-bg 78%, theme.$theme-border 22%) 100%);
   border: 1px solid theme.$theme-border;
   border-radius: 20px;
   box-shadow: theme.$theme-shadow;
@@ -47,6 +45,9 @@
 
 .brand__meta {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .brand__badge {
@@ -82,6 +83,18 @@
 .brand__title {
   font-size: 1.1rem;
   margin: 3px 0 0;
+}
+
+.brand__rank-chip {
+  background: color-mix(in srgb, theme.$theme-accent 12%, transparent);
+  border: 1px solid color-mix(in srgb, theme.$theme-accent 35%, transparent);
+  border-radius: 999px;
+  color: theme.$theme-accent-soft;
+  font-size: 0.72rem;
+  letter-spacing: 0;
+  line-height: 1;
+  padding: 4px 8px;
+  text-transform: none;
 }
 
 .sidenav-toggle {
@@ -498,6 +511,10 @@ thead th {
   .sidebar-header {
     margin-top: 0;
   }
+
+  .external-links {
+    display: none;
+  }
 }
 
 @media (max-width: 640px) {
@@ -521,6 +538,10 @@ thead th {
 
   .sidebar-header {
     margin-top: 0;
+  }
+
+  .external-links {
+    display: none;
   }
 }
 
