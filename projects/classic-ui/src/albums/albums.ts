@@ -17,7 +17,7 @@ export class Albums {
     return list.map(album => ({
       uri: album.albumDetails.uri,
       name: album.albumDetails.name,
-      playcount: album.dailyChanges.playCount,
+      playcount: album.dailyChanges.count,
       change: album.dailyChanges.change,
       percent: album.dailyChanges.percentChange
     })).sort((a, b) => b.change - a.change);

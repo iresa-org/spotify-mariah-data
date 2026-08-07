@@ -111,7 +111,7 @@ export class AlbumTrackList {
       uid: `${album.albumDetails.uri}-summary`,
       rank: '-',
       trackName: 'Total',
-      total: toNumber(album.dailyChanges.playCount),
+      total: toNumber(album.dailyChanges.count),
       daily: toNumber(album.dailyChanges.change),
       change: toNumber(album.dailyChanges.percentChange),
     };

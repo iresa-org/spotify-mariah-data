@@ -30,7 +30,7 @@ export class Overview implements OnInit, OnDestroy {
   private elementRef = inject(ElementRef);
 
   readonly headerImage = signal<string | null>(null);
-  readonly playCounts = signal<Record<string, { playCount: string; change: string; percentChange: string }> | null>(null);
+  readonly playCounts = signal<Record<string, { count: string; change: string; percentChange: string }> | null>(null);
   readonly monthlyChart = signal<ChartItem[]>([]);
   readonly categoryChart = signal<ChartItem[]>([]);
   readonly topTracks = signal<{ name: string; playcount: number }[]>([]);
@@ -70,9 +70,9 @@ export class Overview implements OnInit, OnDestroy {
 
     if (counts) {
       this.categoryChart.set([
-        { name: 'Solo', value: +counts['solo'].playCount },
-        { name: 'Featured', value: +counts['featured'].playCount },
-        { name: 'Videos', value: +counts['videos'].playCount },
+        { name: 'Solo', value: +counts['solo'].count },
+        { name: 'Featured', value: +counts['featured'].count },
+        { name: 'Videos', value: +counts['videos'].count },
       ]);
     }
 

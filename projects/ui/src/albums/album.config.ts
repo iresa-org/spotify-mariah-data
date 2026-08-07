@@ -26,7 +26,7 @@ export interface AlbumRecord {
     tracks: AlbumTrack[];
   };
   dailyChanges: {
-    playCount: NumericLike;
+    count: NumericLike;
     change: NumericLike;
     percentChange: NumericLike;
   };

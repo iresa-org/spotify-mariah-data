@@ -46,7 +46,7 @@ export class DailyDataApi {
         this.currMap.set(uid, {
           uid,
           name: itemV2?.data?.name,
-          playcount: dailyChanges.playCount,
+          playcount: dailyChanges.count,
           change: dailyChanges.change,
           percent: dailyChanges.percentChange,
           artists: itemV2?.data?.artists.items,
