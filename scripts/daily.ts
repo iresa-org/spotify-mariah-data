@@ -19,8 +19,9 @@ function processTrackContent(el: SpotifyTrackData, prevMap: Map<string, TrackDai
   }
 }
 
-function processUploadContent(list: SpotifyContentData[], prevMap: Map<string, TrackDailyChange>, prevDate: Date): GetDailyResult {
+function processUploadContent(list: SpotifyContentData[], prevFileContents: string | null, prevDate: Date): GetDailyResult {
   const map = new Map<string, TrackData>();
+  const prevMap = prevFileContents ? processPrevTracksChanges(prevFileContents) : new Map<string, TrackDailyChange>();
   let artistData: SpotifyArtistData = {} as SpotifyArtistData;
 
   list.forEach((el) => {
@@ -41,6 +42,7 @@ function processUploadContent(list: SpotifyContentData[], prevMap: Map<string, T
   const videos = listWoDupl.filter(item => item.categories.includes('V'))
   const albumMap = filterAlbums(getAlbumsFromTracks(map))
 
+
   return {
     tracks,
     playCounts: {
@@ -52,7 +54,9 @@ function processUploadContent(list: SpotifyContentData[], prevMap: Map<string, T
     },
     albums: convertToAlbumList(albumMap),
     lastUpdate: formatDate(prevDate),
-    artist: artistData ? artistData.data.artistUnion : null
+    artist: artistData ? artistData.data.artistUnion : null,
+    monthlyListeners: getMonthlyListeners(prevFileContents ?? '', artistData?.data.artistUnion?.stats.monthlyListeners),
+    followers: getFollowers(prevFileContents ?? '', artistData?.data.artistUnion?.stats.followers)
   }
 }
 
@@ -68,30 +72,28 @@ function processPrevTracksChanges(input: string): Map<string, TrackDailyChange> 
   return map;
 }
 
-function getMonthlyListeners(prevDayInput: string = '', currentListeners: string): BaseDailyChange {
+function getMonthlyListeners(prevDayInput: string = '', currentListeners: number): BaseDailyChange {
   const prevOutput = JSON.parse(prevDayInput) as DailyCountOutput;
-  const prevCount = prevOutput.monthlyListeners.count;
+  const prevCount = prevOutput.monthlyListeners;
   return {
-    count: currentListeners,
-    change: subtractNumbers(prevCount, currentListeners).toString(),
+    count: String(currentListeners),
+    change: subtractNumbers(prevCount, String(currentListeners)).toString(),
     percentChange: String(calcPercentChange(BigInt(prevCount), BigInt(currentListeners)))
   }
 }
 
-function getFollowers(prevDayInput: string = '', currentFollowers: string): BaseDailyChange {
+function getFollowers(prevDayInput: string = '', currentFollowers: number): BaseDailyChange {
   const prevOutput = JSON.parse(prevDayInput) as DailyCountOutput;
-  const prevCount = prevOutput.followers.count;
+  const prevCount = prevOutput.followers;
   return {
-    count: currentFollowers,
-    change: subtractNumbers(prevCount, currentFollowers).toString(),
+    count: String(currentFollowers),
+    change: subtractNumbers(prevCount, String(currentFollowers)).toString(),
     percentChange: String(calcPercentChange(BigInt(prevCount), BigInt(currentFollowers)))
   }
 }
 
 async function main() {
   console.log('Build daily changes...');
-
-  let prevMap: Map<string, TrackDailyChange> | null = null;
 
   try {
 
@@ -105,14 +107,7 @@ async function main() {
 
     // Read previous file from current directory
     const prevFilePath = await getLatestFile('./daily', ['.json']);
-    let prevFileContents = undefined;
-    if (prevFilePath) {
-      prevFileContents = await readFile(prevFilePath!, 'utf-8');
-      prevMap = processPrevTracksChanges(prevFileContents)
-      console.log('Previous change found:', prevFilePath);
-    } else {
-      prevMap = new Map<string, TrackDailyChange>();
-    }
+    let prevFileContents = prevFilePath && await readFile(prevFilePath, 'utf-8');
 
     // get previous date
     const prevDateStr = extractDateFromPath(prevFilePath ?? '');
@@ -120,7 +115,7 @@ async function main() {
 
     // Parse data and calculate changes
     const uploadFileContents = await readFile(uploadFilePath!, 'utf-8');
-    const resp = processUploadContent(JSON.parse(uploadFileContents), prevMap!, prevDate)
+    const resp = processUploadContent(JSON.parse(uploadFileContents), prevFileContents, prevDate)
 
     // Write to result
     const result = JSON.stringify(resp);
@@ -131,8 +126,8 @@ async function main() {
     const dailyResult: DailyCountOutput = {
       tracks,
       playCounts: resp.playCounts,
-      monthlyListeners: getMonthlyListeners(prevFileContents, String(resp.artist?.stats.monthlyListeners)),
-      followers: getFollowers(prevFileContents, String(resp.artist?.stats.followers)),
+      monthlyListeners: resp.monthlyListeners.count,
+      followers: resp.followers.count,
       albums: resp.albums
     }
     writeToFile(`./daily`, `${formatDate(prevDate)}.json`, JSON.stringify(dailyResult))

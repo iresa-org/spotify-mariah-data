@@ -84,7 +84,7 @@ function parseHistoricalMonthlyListeners(latestFiles: FileContentMap[]) {
 
   for (const file of latestFiles) {
     const listeners = JSON.parse(file.content).monthlyListeners;
-    listeners && map.set(file.date, `${listeners.count}`);
+    listeners && map.set(file.date, listeners);
   }
 
   return Object.fromEntries(map)
@@ -101,7 +101,7 @@ function parseHistoricalFollowers(latestFiles: FileContentMap[]) {
 
   for (const file of latestFiles) {
     const followers = JSON.parse(file.content).followers;
-    followers && map.set(file.date, `${followers.count}`);
+    followers && map.set(file.date, followers);
   }
 
   return Object.fromEntries(map)

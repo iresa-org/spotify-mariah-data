@@ -15,7 +15,9 @@ export interface GetDailyResult {
   playCounts: PlayCountOutput,
   albums: AlbumData[];
   lastUpdate: string;
-  artist: ArtistContentItem | null
+  artist: ArtistContentItem | null,
+  monthlyListeners: BaseDailyChange,
+  followers: BaseDailyChange,
 }
 
 export interface DailyCountOutput {
@@ -25,7 +27,7 @@ export interface DailyCountOutput {
     change: string;
   }[];
   playCounts: PlayCountOutput,
-  monthlyListeners: BaseDailyChange,
-  followers: BaseDailyChange,
+  monthlyListeners: string,
+  followers: string,
   albums: AlbumData[];
 }
