@@ -74,10 +74,12 @@
         <div class="audience-stat">
           <p class="audience-stat__label">Followers</p>
           <p class="audience-stat__value">{{ followers()!.count | formatCompact }}</p>
+          @if (+followers()!.change !== 0) {
           <p class="audience-stat__delta" [class.audience-stat__delta--positive]="+followers()!.change >= 0"
             [class.audience-stat__delta--negative]="+followers()!.change < 0">
             {{ followers()!.change | numberWithSign }}
           </p>
+          }
         </div>
         }
       </div>
