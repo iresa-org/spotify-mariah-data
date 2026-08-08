@@ -2,7 +2,7 @@ import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faAnglesLeft, faAnglesRight, faChartLine, faCompactDisc, faMusic } from '@fortawesome/free-solid-svg-icons';
+import { faAnglesLeft, faAnglesRight, faCalendarDays, faChartLine, faCompactDisc, faMusic } from '@fortawesome/free-solid-svg-icons';
 import { faFacebook, faInstagram, faTiktok, faXTwitter } from '@fortawesome/free-brands-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
@@ -32,6 +32,7 @@ export class Shell implements OnInit {
   readonly overviewIcon = faChartLine;
   readonly tracksIcon = faMusic;
   readonly albumsIcon = faCompactDisc;
+  readonly ytdIcon = faCalendarDays;
 
   private readonly brandIconMap: Record<string, IconDefinition> = {
     FACEBOOK: faFacebook,

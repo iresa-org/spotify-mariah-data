@@ -36,6 +36,10 @@
         <fa-icon class="nav__icon" [icon]="albumsIcon" aria-hidden="true" />
         <span class="nav__label">Albums</span>
       </a>
+      <a class="nav__link" routerLink="ytd" routerLinkActive="nav__link--active" aria-label="Year to date" title="YTD">
+        <fa-icon class="nav__icon" [icon]="ytdIcon" aria-hidden="true" />
+        <span class="nav__label">YTD</span>
+      </a>
     </nav>
 
     @if (externalLinks().length > 0) {
