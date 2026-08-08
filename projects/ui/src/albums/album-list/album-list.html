@@ -19,7 +19,19 @@
         }
 
         <div class="album-card__body">
-            <p class="album-card__name" [title]="album.albumDetails.name">{{ album.albumDetails.name }}</p>
+            <p class="album-card__name" [title]="album.albumDetails.name">
+              {{ album.albumDetails.name }}
+              @if (recordMapLoaded()) {
+                <span class="album-card__record-icons">
+                  @if (hasRecord(album.albumDetails.uri, 'allTime')) {
+                    <span class="record-star record-star--gold" title="Biggest streaming day ever" aria-label="Biggest streaming day ever">★</span>
+                  }
+                  @if (hasRecord(album.albumDetails.uri, 'ytd')) {
+                    <span class="record-star record-star--silver" title="Biggest streaming day of the year" aria-label="Biggest streaming day of the year">★</span>
+                  }
+                </span>
+              }
+            </p>
             <dl class="album-card__stats" aria-label="Album stream stats">
                 <div>
                     <dt>Total</dt>

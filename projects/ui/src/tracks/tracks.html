@@ -77,11 +77,29 @@
                     />
                   }
                   <div class="track-info">
-                    <a
-                      class="track-name track-link"
-                      [routerLink]="['/ui/tracks', track.uid]"
-                      [attr.aria-label]="'View detail for ' + track.name"
-                    >{{ track.name }}</a>
+                    <div class="track-title-row">
+                      <a
+                        class="track-name track-link"
+                        [routerLink]="['/ui/tracks', track.uid]"
+                        [attr.aria-label]="'View detail for ' + track.name"
+                      >{{ track.name }}</a>
+                      @if (recordMapLoaded()) {
+                        @if (hasRecord(track.uid, 'allTime')) {
+                          <span
+                            class="record-star record-star--gold"
+                            title="Biggest streaming day ever"
+                            aria-label="Biggest streaming day ever"
+                          >★</span>
+                        }
+                        @if (hasRecord(track.uid, 'ytd')) {
+                          <span
+                            class="record-star record-star--silver"
+                            title="Biggest streaming day of the year"
+                            aria-label="Biggest streaming day of the year"
+                          >★</span>
+                        }
+                      }
+                    </div>
                     <span class="track-artists">
                       @for (artist of track.artists; track artist.uri; let last = $last) {
                         {{ artist.profile?.name }}{{ last ? '' : ', ' }}
@@ -171,11 +189,29 @@
                     />
                   }
                   <div class="track-info">
-                    <a
-                      class="track-name track-link"
-                      [routerLink]="['/ui/tracks', track.uid]"
-                      [attr.aria-label]="'View detail for ' + track.name"
-                    >{{ track.name }}</a>
+                    <div class="track-title-row">
+                      <a
+                        class="track-name track-link"
+                        [routerLink]="['/ui/tracks', track.uid]"
+                        [attr.aria-label]="'View detail for ' + track.name"
+                      >{{ track.name }}</a>
+                      @if (recordMapLoaded()) {
+                        @if (hasRecord(track.uid, 'allTime')) {
+                          <span
+                            class="record-star record-star--gold"
+                            title="Biggest streaming day EVER"
+                            aria-label="Biggest streaming day ever"
+                          >★</span>
+                        }
+                        @if (hasRecord(track.uid, 'ytd')) {
+                          <span
+                            class="record-star record-star--silver"
+                            title="Biggest streaming day of the year"
+                            aria-label="Biggest streaming day of the year"
+                          >★</span>
+                        }
+                      }
+                    </div>
                     <span class="track-artists">
                       @for (artist of track.artists; track artist.uri; let last = $last) {
                         {{ artist.profile?.name }}{{ last ? '' : ', ' }}

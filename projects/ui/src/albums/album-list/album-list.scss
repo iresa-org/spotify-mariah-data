@@ -77,13 +77,36 @@
   min-width: 0;
 }
 
+.album-card__record-icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-left: 0.6rem;
+}
+
 .album-card__name {
+  align-items: center;
+  display: inline-flex;
   font-size: 0.9rem;
   font-weight: 600;
   margin: 0 0 4px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.record-star {
+  display: inline-block;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.record-star--gold {
+  color: #FFB800;
+}
+
+.record-star--silver {
+  color: #C0C0C0;
 }
 
 .album-card__stats {

@@ -5,8 +5,13 @@ import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angula
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { fromEvent, map, startWith } from 'rxjs';
-import { DailyDataApi, FormatCompactPipe, PercentWithSignPipe } from 'ui-shared';
+import { DailyDataApi, FormatCompactPipe, HistoricDataApi, PercentWithSignPipe } from 'ui-shared';
 import { TRACK_CATEGORIES, FilterType, TrackItem } from './tracks.config';
+
+type RecordEntry = {
+  change: string;
+  date: string;
+};
 
 @Component({
   selector: 'lib-tracks',
@@ -17,6 +22,7 @@ import { TRACK_CATEGORIES, FilterType, TrackItem } from './tracks.config';
 export class Tracks implements OnInit {
   private readonly document = inject(DOCUMENT);
   private dailyDataApi = inject(DailyDataApi);
+  private historicDataApi = inject(HistoricDataApi);
   private breakpointObserver = inject(BreakpointObserver);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -25,6 +31,9 @@ export class Tracks implements OnInit {
   readonly searchQuery = signal('');
   readonly desktopRowHeight = 64;
   readonly showScrollToTop = signal(false);
+  readonly allTimeRecordMap = signal<Record<string, RecordEntry> | null>(null);
+  readonly yearRecordMap = signal<Record<string, RecordEntry> | null>(null);
+  readonly recordMapLoaded = computed(() => this.allTimeRecordMap() !== null && this.yearRecordMap() !== null);
 
   readonly isMobile = toSignal(
     this.breakpointObserver
@@ -64,6 +73,40 @@ export class Tracks implements OnInit {
       .subscribe((shouldShow) => {
         this.showScrollToTop.set(shouldShow);
       });
+
+    this.historicDataApi
+      .loadAllTimeRecords()
+      .subscribe({
+        next: ({ tracks }) => {
+          this.allTimeRecordMap.set(tracks);
+        },
+        error: () => {
+          // Ignore fetch errors silently
+        },
+      });
+
+    this.historicDataApi
+      .loadYtdRecords()
+      .subscribe({
+        next: ({ tracks }) => {
+          this.yearRecordMap.set(tracks);
+        },
+        error: () => {
+          // Ignore fetch errors silently
+        },
+      });
+  }
+
+  hasRecord(uid: string, type: 'allTime' | 'ytd' = 'allTime'): boolean {
+    const recordMap = type === 'allTime' ? this.allTimeRecordMap() : this.yearRecordMap();
+    if (!recordMap) return false;
+    const rec = recordMap[uid];
+    if (!rec || !rec.date) return false;
+
+    const lastUpdated = this.dailyDataApi.getLastUpdated();
+    const lastUpdatedDay = lastUpdated?.match(/^(\d{4}-\d{2}-\d{2})/)?.[1] ?? '';
+
+    return rec.date === lastUpdatedDay;
   }
 
   trackByUid(_index: number, track: TrackItem): string {

@@ -222,6 +222,13 @@ thead th {
   min-width: 0;
 }
 
+.track-title-row {
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+  min-width: 0;
+}
+
 .track-name {
   font-size: 0.86rem;
   font-weight: 600;
@@ -241,6 +248,21 @@ thead th {
     text-decoration: underline;
     outline: none;
   }
+}
+
+.record-star {
+  display: inline-block;
+  flex-shrink: 0;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.record-star--gold {
+  color: #FFB800;
+}
+
+.record-star--silver {
+  color: #C0C0C0;
 }
 
 .track-artists {
