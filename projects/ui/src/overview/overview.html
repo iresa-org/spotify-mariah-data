@@ -81,6 +81,8 @@
             [class.audience-stat__delta--negative]="+followers()!.change < 0">
             {{ followers()!.change | numberWithSign }}
           </p>
+          } @else {
+          <p class="audience-stat__delta">-</p>
           }
         </div>
         }
@@ -127,8 +129,7 @@
       <div class="chart-wrap chart-wrap--line" role="img" aria-label="Line chart showing monthly listener counts">
         <ngx-charts-line-chart [view]="lineChartView()" [results]="listenersChart()" [scheme]="barColorScheme"
           [xAxis]="true" [yAxis]="true" [xAxisTickFormatting]="xAxisTickFormat" [xAxisLabel]="'Date'"
-          [showXAxisLabel]="true" [trimXAxisTicks]="false" [yAxisTickFormatting]="yAxisTickFormat"
-          [autoScale]="true" />
+          [showXAxisLabel]="true" [trimXAxisTicks]="false" [yAxisTickFormatting]="yAxisTickFormat" [autoScale]="true" />
       </div>
     </section>
     }

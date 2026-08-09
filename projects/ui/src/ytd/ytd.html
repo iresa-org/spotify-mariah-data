@@ -91,5 +91,16 @@
             </table>
         </div>
     </section>
-    }
+        }
+
+        @if (showScrollToTop()) {
+        <button
+            type="button"
+            class="scroll-top-btn"
+            aria-label="Scroll back to top"
+            (click)="scrollToTop()"
+        >
+            Back to top
+        </button>
+        }
 </section>

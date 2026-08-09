@@ -1,8 +1,9 @@
-import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { Component, computed, inject, OnInit, signal, DestroyRef } from '@angular/core';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { forkJoin } from 'rxjs';
+import { forkJoin, fromEvent, map, startWith } from 'rxjs';
 import { DailyDataApi, FormatCompactPipe, HistoricDataApi } from 'ui-shared';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 interface YtdTrack {
   uid: string;
@@ -29,13 +30,28 @@ interface AlbumYtd {
 export class Ytd implements OnInit {
   private readonly dailyDataApi = inject(DailyDataApi);
   private readonly historicDataApi = inject(HistoricDataApi);
+  private readonly document = inject(DOCUMENT);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly loading = signal(true);
   readonly topTracks = signal<YtdTrack[]>([]);
   readonly albumTotals = signal<AlbumYtd[]>([]);
   readonly trackCount = computed(() => this.topTracks().length);
+  readonly showScrollToTop = signal(false);
 
   ngOnInit(): void {
+    const scrollTarget = this.document.defaultView;
+    if (scrollTarget) {
+      fromEvent(scrollTarget, 'scroll')
+        .pipe(
+          startWith(null),
+          map(() => scrollTarget.scrollY > 280),
+          takeUntilDestroyed(this.destroyRef)
+        )
+        .subscribe((shouldShow) => {
+          this.showScrollToTop.set(shouldShow);
+        });
+    }
     forkJoin({
       tracksLoaded: this.dailyDataApi.loadTracks(),
       ytd: this.historicDataApi.loadYtd(),
@@ -89,5 +105,9 @@ export class Ytd implements OnInit {
         this.loading.set(false);
       },
     });
+  }
+
+  scrollToTop(): void {
+    this.document.defaultView?.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
