@@ -105,6 +105,7 @@ export class AlbumTrackList {
       id: group.discNumber,
       label: this.hasMultipleDiscs() ? `Disc ${group.discNumber}` : '',
       rows: group.tracks.map((track) => this.toTableRow(track)),
+      collapsedSummaryRows: [this.toDiscSummaryRow(group)],
     }));
 
     const summaryRow: AlbumTrackTableRow = {
@@ -134,6 +135,24 @@ export class AlbumTrackList {
       total: toNumber(track.playcount),
       daily: toNumber(track.change),
       change: toNumber(track.percent),
+    };
+  }
+
+  private toDiscSummaryRow(group: DiscTrackGroup): AlbumTrackTableRow {
+    const total = group.tracks.reduce((sum, track) => sum + toNumber(track.playcount), 0);
+    const daily = group.tracks.reduce((sum, track) => sum + toNumber(track.change), 0);
+    const weightedPercent = group.tracks.reduce(
+      (sum, track) => sum + toNumber(track.playcount) * toNumber(track.percent),
+      0,
+    );
+
+    return {
+      uid: `${group.discNumber}-summary`,
+      rank: '-',
+      trackName: `Disc ${group.discNumber} total`,
+      total,
+      daily,
+      change: total > 0 ? weightedPercent / total : 0,
     };
   }
 }

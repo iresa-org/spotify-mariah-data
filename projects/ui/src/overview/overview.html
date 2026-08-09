@@ -126,7 +126,9 @@
       </div>
       <div class="chart-wrap chart-wrap--line" role="img" aria-label="Line chart showing monthly listener counts">
         <ngx-charts-line-chart [view]="lineChartView()" [results]="listenersChart()" [scheme]="barColorScheme"
-          [xAxis]="true" [yAxis]="true" [yAxisTickFormatting]="yAxisTickFormat" [autoScale]="true" />
+          [xAxis]="true" [yAxis]="true" [xAxisTickFormatting]="xAxisTickFormat" [xAxisLabel]="'Date'"
+          [showXAxisLabel]="true" [trimXAxisTicks]="false" [yAxisTickFormatting]="yAxisTickFormat"
+          [autoScale]="true" />
       </div>
     </section>
     }

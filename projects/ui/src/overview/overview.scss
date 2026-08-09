@@ -170,6 +170,11 @@
   }
 }
 
+.chart-wrap--line {
+  overflow: visible;
+  padding-bottom: 6px;
+}
+
 .audience-grid {
   display: grid;
   gap: 20px;
@@ -427,5 +432,9 @@
 
   .chart-wrap--bar-horizontal {
     height: clamp(260px, 95vw, 360px);
+  }
+
+  .chart-wrap--line {
+    padding-bottom: 8px;
   }
 }

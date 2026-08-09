@@ -7,11 +7,13 @@
 .ytd-page {
   display: grid;
   gap: 20px;
+  max-width: 100%;
 }
 
 .page-header {
   align-items: center;
   display: flex;
+  gap: 12px;
   justify-content: space-between;
 }
 
@@ -25,6 +27,7 @@
 
 .page-header__title {
   font-size: 1.6rem;
+  line-height: 1.2;
   margin: 6px 0 0;
 }
 
@@ -36,12 +39,19 @@
 .track-table-wrap,
 .album-table-wrap {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
 }
 
 .track-table,
 .album-table-wrap table {
   border-collapse: collapse;
-  table-layout: fixed;
+  table-layout: auto;
+  min-width: 100%;
+  width: 100%;
+}
+
+.panel {
   width: 100%;
 }
 
@@ -53,11 +63,17 @@
   padding: 10px 12px;
   text-align: left;
   vertical-align: middle;
+  white-space: normal;
+}
+
+.track-table tbody tr,
+.album-table-wrap tbody tr {
+  width: 100%;
 }
 
 .track-table th {
   font-weight: 600;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .col-rank {
@@ -69,15 +85,47 @@
   width: 44%;
 }
 
-.col-album,
+.col-album {
+  min-width: 220px;
+  width: 56%;
+}
+
 .col-album-name {
-  min-width: 180px;
-  width: 68%;
+  min-width: 220px;
+  width: 56%;
 }
 
 .col-metric {
+  min-width: 140px;
+  padding-left: 24px;
+  text-align: right;
+  white-space: nowrap;
+  width: 14%;
+}
+
+.track-table .col-metric {
+  min-width: 140px;
+  padding-left: 24px;
+  text-align: right;
+  white-space: nowrap;
+  width: 14%;
+}
+
+.album-table-wrap .col-rank {
+  width: 48px;
+}
+
+.album-table-wrap .col-album-name {
+  min-width: 220px;
+  width: 72%;
+}
+
+.album-table-wrap .col-metric {
   min-width: 120px;
-  width: 32%;
+  padding-left: 24px;
+  text-align: right;
+  white-space: nowrap;
+  width: 28%;
 }
 
 .track-table th.col-rank,
@@ -91,6 +139,7 @@
 .track-table th.col-metric,
 .track-table td.col-metric {
   box-sizing: border-box;
+  width: auto;
 }
 
 .track-cell,
@@ -111,8 +160,12 @@
   width: 36px;
 }
 
-.track-cell__name {
+.track-cell__name,
+.album-cell>div:last-child {
   font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .track-cell__subtitle {
@@ -121,17 +174,17 @@
 }
 
 .panel--loading {
-  min-height: 120px;
   display: grid;
+  min-height: 120px;
   place-items: center;
 }
 
 /* Virtual scroll viewport styling for tracks */
 .track-viewport {
-  height: 760px;
+  height: 460px;
   overflow: auto;
-  width: 100%;
   scrollbar-gutter: stable;
+  width: 100%;
 }
 
 .track-viewport .track-table {
@@ -141,4 +194,103 @@
 
 .track-viewport .track-table tbody tr {
   height: 48px;
+}
+
+@media (max-width: 768px) {
+  .ytd-page {
+    gap: 16px;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .page-header__title {
+    font-size: 1.25rem;
+  }
+
+  .track-table th,
+  .track-table td,
+  .album-table-wrap th,
+  .album-table-wrap td {
+    padding: 10px 8px;
+  }
+
+  .col-rank {
+    width: 40px;
+  }
+
+  .col-track {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .col-album,
+  .col-album-name {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .track-table .col-metric {
+    min-width: 92px;
+    width: auto;
+    flex: 1 1 auto;
+  }
+
+  .album-table-wrap .col-metric {
+    min-width: 92px;
+    width: 100%;
+  }
+
+  .mobile-hidden {
+    display: none;
+  }
+
+  .track-cell,
+  .album-cell {
+    gap: 8px;
+    min-height: 40px;
+  }
+
+  .track-cell__art,
+  .album-cell__art {
+    height: 40px;
+    width: 40px;
+  }
+
+  .track-viewport {
+    height: min(60vh, 560px);
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header__title {
+    font-size: 1.1rem;
+  }
+
+  .track-table th,
+  .track-table td,
+  .album-table-wrap th,
+  .album-table-wrap td {
+    padding: 8px 6px;
+  }
+
+  .track-cell__name {
+    font-size: 0.95rem;
+  }
+
+  .track-cell__art,
+  .album-cell__art {
+    height: 34px;
+    width: 34px;
+  }
+
+  .track-viewport {
+    height: 50vh;
+  }
+
+  .mobile-hidden {
+    display: none;
+  }
 }

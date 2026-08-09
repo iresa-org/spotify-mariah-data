@@ -22,6 +22,7 @@ export interface GroupedTableGroup<T> {
   id: string | number;
   label: string;
   rows: ReadonlyArray<T>;
+  collapsedSummaryRows?: ReadonlyArray<T>;
 }
 
 export interface GroupedTableCellContext<T> {
@@ -69,6 +70,10 @@ export class GroupedTableComponent<T> {
 
       if (!this.isGroupCollapsed(group.id)) {
         for (const row of group.rows) {
+          rows.push({ kind: 'data', group, row });
+        }
+      } else {
+        for (const row of group.collapsedSummaryRows ?? []) {
           rows.push({ kind: 'data', group, row });
         }
       }

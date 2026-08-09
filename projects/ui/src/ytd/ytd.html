@@ -29,7 +29,7 @@
                         <tr>
                             <th scope="col" class="col-rank">#</th>
                             <th scope="col" class="col-track">Track</th>
-                            <th scope="col" class="col-album">Album</th>
+                            <th scope="col" class="col-album mobile-hidden">Album</th>
                             <th scope="col" class="col-metric">YTD Streams</th>
                         </tr>
                     </thead>
@@ -43,7 +43,7 @@
                                     <div class="track-cell__name">{{ track.name }}</div>
                                 </div>
                             </th>
-                            <td class="col-album">{{ track.albumName }}</td>
+                            <td class="col-album mobile-hidden">{{ track.albumName }}</td>
                             <td class="col-metric">{{ track.ytdCount | formatCompact }}</td>
                         </tr>
                     </tbody>

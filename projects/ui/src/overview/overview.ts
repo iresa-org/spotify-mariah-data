@@ -100,4 +100,14 @@ export class Overview implements OnInit, OnDestroy {
   }
 
   yAxisTickFormat = (val: number) => formatCompact(val);
+
+  xAxisTickFormat = (val: string) => {
+    if (!val) return val;
+
+    const parts = val.split('-');
+    if (parts.length < 3) return val;
+
+    const [, month, day] = parts;
+    return `${MONTH_NAMES[month] ?? month} ${day}`;
+  };
 }
