@@ -27,7 +27,7 @@ function processUploadContent(list: SpotifyContentData[], prevFileContents: stri
   list.forEach((el) => {
     if (el.data.hasOwnProperty('playlistV2')) {
       processTrackContent(el as SpotifyTrackData, prevMap, map)
-    } else {
+    } else if (el.data.hasOwnProperty('artistUnion')) {
       artistData = el as SpotifyArtistData;
     }
 
@@ -42,7 +42,7 @@ function processUploadContent(list: SpotifyContentData[], prevFileContents: stri
   const videos = listWoDupl.filter(item => item.categories.includes('V'))
   const albumMap = filterAlbums(getAlbumsFromTracks(map))
 
-
+  console.log(artistData?.data.artistUnion)
   return {
     tracks,
     playCounts: {
@@ -74,6 +74,7 @@ function processPrevTracksChanges(input: string): Map<string, TrackDailyChange> 
 
 function getMonthlyListeners(prevDayInput: string = '', currentListeners: number): BaseDailyChange {
   const prevOutput = JSON.parse(prevDayInput) as DailyCountOutput;
+  console.log(currentListeners)
   const prevCount = prevOutput.monthlyListeners;
   return {
     count: String(currentListeners),
