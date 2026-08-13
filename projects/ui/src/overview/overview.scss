@@ -337,6 +337,55 @@
   white-space: nowrap;
 }
 
+.track-card__movement {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  min-width: 20px;
+}
+
+.track-card__movement-icon {
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+
+  &--up {
+    color: theme.$theme-positive;
+  }
+
+  &--down {
+    color: theme.$theme-negative;
+  }
+
+  &--neutral {
+    color: theme.$theme-muted;
+  }
+}
+
+.track-card__movement-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: theme.$theme-accent;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.track-card__movement-value {
+  font-size: 1rem;
+  font-weight: 600;
+  flex-shrink: 0;
+
+  &--up {
+    color: theme.$theme-positive;
+  }
+
+  &--down {
+    color: theme.$theme-negative;
+  }
+}
+
 @media (max-width: 900px) {
   .overview {
     gap: 18px;

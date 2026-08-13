@@ -1,5 +1,7 @@
 import { afterNextRender, Component, ElementRef, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faArrowDown, faArrowUp, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { DailyDataApi, formatCompact, FormatCompactPipe, HistoricDataApi, NumberWithSignPipe, PercentWithSignPipe } from 'ui-shared';
 
 interface ChartItem {
@@ -20,7 +22,7 @@ const MONTH_NAMES: Record<string, string> = {
 
 @Component({
   selector: 'lib-overview',
-  imports: [NgxChartsModule, FormatCompactPipe, PercentWithSignPipe, NumberWithSignPipe],
+  imports: [NgxChartsModule, FormatCompactPipe, PercentWithSignPipe, NumberWithSignPipe, FontAwesomeModule],
   templateUrl: './overview.html',
   styleUrl: './overview.scss',
 })
@@ -33,13 +35,17 @@ export class Overview implements OnInit, OnDestroy {
   readonly playCounts = signal<Record<string, { count: string; change: string; percentChange: string }> | null>(null);
   readonly monthlyChart = signal<ChartItem[]>([]);
   readonly categoryChart = signal<ChartItem[]>([]);
-  readonly topTracks = signal<{ name: string; playcount: number }[]>([]);
+  readonly topTracks = signal<{ name: string; playcount: number; diff: string }[]>([]);
   readonly listenersChart = signal<ChartSeries[]>([]);
   readonly monthlyListeners = signal<{ count: string, change: string } | null>(null);
   readonly followers = signal<{ count: string, change: string } | null>(null);
   readonly topCities = signal<{ city: string; country: string; region: string; numberOfListeners: number }[]>([]);
 
   readonly barColorScheme: Color = { name: 'mariah-bar', selectable: true, group: ScaleType.Ordinal, domain: ['#d72652', '#ea4b74', '#f47da0', '#f9b0c6', '#fce0ea', '#be1842', '#a01236', '#fce0ea', '#ea4b74', '#d72652', '#be1842', '#a01236', '#fce0ea', '#ea4b74', '#d72652'] };
+
+  readonly arrowUpIcon = faArrowUp;
+  readonly arrowDownIcon = faArrowDown;
+  readonly minusIcon = faMinus;
 
   readonly barChartView = signal<[number, number]>([600, 280]);
   readonly lineChartView = signal<[number, number]>([600, 300]);

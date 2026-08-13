@@ -1,12 +1,13 @@
 import { Component, computed, effect, inject, OnInit, output, signal } from '@angular/core';
 import { AlbumRecord } from '../album.config';
 import { DailyDataApi, FormatCompactPipe, FormatSignedCompactPipe, HistoricDataApi, PercentWithSignPipe, toNumber } from 'ui-shared';
+import { NgOptimizedImage } from '@angular/common';
 
 type RecordEntry = Record<string, { change: string; date: string }>;
 
 @Component({
   selector: 'lib-album-list',
-  imports: [FormatCompactPipe, FormatSignedCompactPipe, PercentWithSignPipe],
+  imports: [FormatCompactPipe, FormatSignedCompactPipe, PercentWithSignPipe, NgOptimizedImage],
   templateUrl: './album-list.html',
   styleUrl: './album-list.scss',
 })

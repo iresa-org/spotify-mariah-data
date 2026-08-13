@@ -1,4 +1,4 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule, DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { Component, computed, inject, OnInit, signal, DestroyRef } from '@angular/core';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { forkJoin, fromEvent, map, startWith } from 'rxjs';
@@ -23,7 +23,7 @@ interface AlbumYtd {
 @Component({
   selector: 'lib-ytd',
   standalone: true,
-  imports: [CommonModule, FormatCompactPipe, ScrollingModule],
+  imports: [CommonModule, FormatCompactPipe, ScrollingModule, NgOptimizedImage],
   templateUrl: './ytd.html',
   styleUrl: './ytd.scss',
 })

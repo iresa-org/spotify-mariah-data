@@ -69,7 +69,7 @@
                   @if (getAlbumArt(track)) {
                     <img
                       class="track-art"
-                      [src]="getAlbumArt(track)"
+                      [ngSrc]="getAlbumArt(track)"
                       [alt]="track.album?.name + ' album art'"
                       loading="lazy"
                       width="40"
@@ -181,7 +181,7 @@
                   @if (getAlbumArt(track)) {
                     <img
                       class="track-art"
-                      [src]="getAlbumArt(track)"
+                      [ngSrc]="getAlbumArt(track)"
                       [alt]="track.album?.name + ' album art'"
                       loading="lazy"
                       width="40"

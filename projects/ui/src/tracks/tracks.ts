@@ -1,4 +1,4 @@
-import { DecimalPipe, DOCUMENT } from '@angular/common';
+import { DecimalPipe, DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
@@ -15,7 +15,7 @@ type RecordEntry = {
 
 @Component({
   selector: 'lib-tracks',
-  imports: [RouterLink, ScrollingModule, PercentWithSignPipe, FormatCompactPipe, DecimalPipe],
+  imports: [RouterLink, ScrollingModule, PercentWithSignPipe, FormatCompactPipe, DecimalPipe, NgOptimizedImage],
   templateUrl: './tracks.html',
   styleUrl: './tracks.scss',
 })

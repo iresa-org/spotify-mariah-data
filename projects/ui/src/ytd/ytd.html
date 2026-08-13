@@ -38,8 +38,10 @@
                             <td class="col-rank">{{ i + 1 }}</td>
                             <th scope="row" class="col-track">
                                 <div class="track-cell">
-                                    <img *ngIf="track.coverArt" class="track-cell__art" [src]="track.coverArt"
+                                    @if (track.coverArt) {
+                                    <img class="track-cell__art" [ngSrc]="track.coverArt"
                                         [alt]="track.albumName + ' album art'" width="48" height="48" loading="lazy" />
+                                    }
                                     <div class="track-cell__name">{{ track.name }}</div>
                                 </div>
                             </th>
@@ -78,7 +80,7 @@
                         <th scope="row" class="col-album-name">
                             <div class="album-cell">
                                 @if (album.image) {
-                                <img class="album-cell__art" [src]="album.image" [alt]="album.name + ' album art'"
+                                <img class="album-cell__art" [ngSrc]="album.image" [alt]="album.name + ' album art'"
                                     width="48" height="48" loading="lazy" />
                                 }
                                 <div>{{ album.name }}</div>
@@ -91,16 +93,11 @@
             </table>
         </div>
     </section>
-        }
+    }
 
-        @if (showScrollToTop()) {
-        <button
-            type="button"
-            class="scroll-top-btn"
-            aria-label="Scroll back to top"
-            (click)="scrollToTop()"
-        >
-            Back to top
-        </button>
-        }
+    @if (showScrollToTop()) {
+    <button type="button" class="scroll-top-btn" aria-label="Scroll back to top" (click)="scrollToTop()">
+        Back to top
+    </button>
+    }
 </section>

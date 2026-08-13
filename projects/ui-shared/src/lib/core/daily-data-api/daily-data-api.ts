@@ -118,9 +118,13 @@ export class DailyDataApi {
     return this.currMap.get(uid) ?? null;
   }
 
-  getTopTracks(): { name: string; playcount: number }[] {
+  getTopTracks(): { name: string; playcount: number; diff: string }[] {
     const items: any[] = this.trackListResp?.['artist']?.discography?.topTracks?.items ?? [];
-    return items.map(item => ({ name: item.track.name, playcount: +item.track.playcount }));
+    const map = new Map<string, { uid: string, diff: string }>();
+    this.trackListResp?.['topTracks']?.forEach((element: any) => {
+      map.set(element.uid, element.diff)
+    });
+    return items.map(item => ({ name: item.track.name, playcount: +item.track.playcount, diff: map.get(item.uid)!.diff }));
   }
 
   getFollowers(): { count: string, change: string } {

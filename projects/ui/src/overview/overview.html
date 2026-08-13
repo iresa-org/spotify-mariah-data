@@ -128,8 +128,8 @@
       </div>
       <div class="chart-wrap chart-wrap--line" role="img" aria-label="Line chart showing monthly listener counts">
         <ngx-charts-line-chart [view]="lineChartView()" [results]="listenersChart()" [scheme]="barColorScheme"
-          [xAxis]="true" [yAxis]="true" [xAxisTickFormatting]="xAxisTickFormat"
-          [showXAxisLabel]="true" [trimXAxisTicks]="false" [yAxisTickFormatting]="yAxisTickFormat" [autoScale]="true" />
+          [xAxis]="true" [yAxis]="true" [xAxisTickFormatting]="xAxisTickFormat" [showXAxisLabel]="true"
+          [trimXAxisTicks]="false" [yAxisTickFormatting]="yAxisTickFormat" [autoScale]="true" />
       </div>
     </section>
     }
@@ -145,6 +145,24 @@
       @for (track of topTracks(); track $index; let i = $index) {
       <li class="track-card">
         <span class="track-card__rank">{{ i + 1 }}</span>
+        <span class="track-card__movement">
+          @if (track.diff === 'NEW') {
+          <span class="track-card__movement-label">New</span>
+          } @else if (+track.diff > 0) {
+          <fa-icon class="track-card__movement-icon track-card__movement-icon--up" [icon]="arrowUpIcon"
+            aria-label="moved up" />
+          <span class="track-card__movement-value track-card__movement-value--up">{{ track.diff | numberWithSign
+            }}</span>
+          } @else if (+track.diff
+          < 0) { <fa-icon class="track-card__movement-icon track-card__movement-icon--down" [icon]="arrowDownIcon"
+            aria-label="moved down" />
+          <span class="track-card__movement-value track-card__movement-value--down">{{ track.diff | numberWithSign
+            }}</span>
+          } @else {
+          <fa-icon class="track-card__movement-icon track-card__movement-icon--neutral" [icon]="minusIcon"
+            aria-label="no movement" />
+          }
+        </span>
         <span class="track-card__name">{{ track.name }}</span>
         <span class="track-card__count">{{ track.playcount | formatCompact }}</span>
       </li>

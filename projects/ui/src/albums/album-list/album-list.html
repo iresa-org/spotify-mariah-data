@@ -10,7 +10,7 @@
         [attr.aria-selected]="selectedAlbumUri() === album.albumDetails.uri"
         [attr.aria-controls]="'album-tracks-' + album.albumDetails.uri" (click)="toggleAlbum(album.albumDetails.uri)">
         @if (getCoverArt(album)) {
-        <img class="album-card__art" [src]="getCoverArt(album)" [alt]="album.albumDetails.name + ' album cover'"
+        <img class="album-card__art" [ngSrc]="getCoverArt(album)" [alt]="album.albumDetails.name + ' album cover'"
             loading="lazy" width="128" height="128" />
         } @else {
         <div class="album-card__art album-card__art--placeholder" aria-hidden="true">
