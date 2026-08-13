@@ -124,11 +124,11 @@
     <section class="panel" aria-label="Monthly listeners chart">
       <div class="panel__heading">
         <h3>Monthly Listeners</h3>
-        <p>Spotify monthly listener count over time</p>
+        <p>Spotify monthly listener in last 28 days</p>
       </div>
       <div class="chart-wrap chart-wrap--line" role="img" aria-label="Line chart showing monthly listener counts">
         <ngx-charts-line-chart [view]="lineChartView()" [results]="listenersChart()" [scheme]="barColorScheme"
-          [xAxis]="true" [yAxis]="true" [xAxisTickFormatting]="xAxisTickFormat" [xAxisLabel]="'Date'"
+          [xAxis]="true" [yAxis]="true" [xAxisTickFormatting]="xAxisTickFormat"
           [showXAxisLabel]="true" [trimXAxisTicks]="false" [yAxisTickFormatting]="yAxisTickFormat" [autoScale]="true" />
       </div>
     </section>

@@ -38,6 +38,9 @@
 
 .track-table-wrap,
 .album-table-wrap {
+  background: theme.$theme-surface;
+  border: 1px solid theme.$theme-border;
+  border-radius: 12px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   width: 100%;
@@ -52,8 +55,9 @@
 }
 
 .panel {
-  width: 100%;
+  box-sizing: border-box;
   margin-bottom: 5rem;
+  width: 100%;
 }
 
 .track-table th,

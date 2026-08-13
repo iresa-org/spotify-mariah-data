@@ -3,13 +3,8 @@
     <div class="album-tracks__header" [id]="'album-tracks-' + album.albumDetails.uri">
         <div class="album-tracks__header-main">
             @if (album | albumLargeCoverArt; as coverArt) {
-            <img
-                class="album-tracks__cover"
-                [src]="coverArt"
-                [alt]="album.albumDetails.name + ' album cover'"
-                width="96"
-                height="96"
-            />
+            <img class="album-tracks__cover" [src]="coverArt" [alt]="album.albumDetails.name + ' album cover'"
+                width="96" height="96" />
             }
             <div>
                 <p class="album-tracks__eyebrow">Album Details</p>
@@ -19,12 +14,8 @@
         </div>
     </div>
 
-    <lib-grouped-table
-        [class.mobile]="isMobile()"
-        [ariaLabel]="album.albumDetails.name + ' track list'"
-        [columns]="tableColumns"
-        [groups]="tableGroups()"
-    >
+    <lib-grouped-table [class.mobile]="isMobile()" [ariaLabel]="album.albumDetails.name + ' track list'"
+        [columns]="tableColumns" [groups]="tableGroups()">
         <ng-template libGroupedTableCell="rank" let-row>
             <span class="rank">{{ row.rank }}</span>
         </ng-template>
@@ -45,7 +36,7 @@
 
         <ng-template libGroupedTableCell="change" let-row>
             <span [class.delta-positive]="row.change >= 0" [class.delta-negative]="row.change < 0">
-                {{ row.change | percentWithSign }}
+                {{ row.change | percentWithSign:'1.0-1' }}
             </span>
         </ng-template>
     </lib-grouped-table>

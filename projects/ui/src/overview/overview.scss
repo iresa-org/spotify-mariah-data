@@ -161,18 +161,16 @@
 }
 
 .chart-wrap--line {
-  overflow: hidden;
+  box-sizing: border-box;
+  overflow: visible;
+  padding-bottom: 6px;
+  padding-right: 18px;
 
   ngx-charts-line-chart {
     display: block;
     height: 100%;
-    width: 100%;
+    width: calc(100% - 18px);
   }
-}
-
-.chart-wrap--line {
-  overflow: visible;
-  padding-bottom: 6px;
 }
 
 .audience-grid {

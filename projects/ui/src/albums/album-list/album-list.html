@@ -19,19 +19,21 @@
         }
 
         <div class="album-card__body">
-                        <p class="album-card__name" [title]="album.albumDetails.name">
-                            <span class="album-card__title">{{ album.albumDetails.name }}</span>
-                            @if (recordMapLoaded()) {
-                                <span class="album-card__record-icons">
-                                    @if (hasRecord(album.albumDetails.uri, 'allTime')) {
-                                        <span class="record-star record-star--gold" title="Biggest streaming day ever" aria-label="Biggest streaming day ever">★</span>
-                                    }
-                                    @if (hasRecord(album.albumDetails.uri, 'ytd')) {
-                                        <span class="record-star record-star--silver" title="Biggest streaming day of the year" aria-label="Biggest streaming day of the year">★</span>
-                                    }
-                                </span>
-                            }
-                        </p>
+            <p class="album-card__name" [title]="album.albumDetails.name">
+                <span class="album-card__title">{{ album.albumDetails.name }}</span>
+                @if (recordMapLoaded()) {
+                <span class="album-card__record-icons">
+                    @if (hasRecord(album.albumDetails.uri, 'allTime')) {
+                    <span class="record-star record-star--gold" title="Biggest streaming day ever"
+                        aria-label="Biggest streaming day ever">★</span>
+                    }
+                    @if (hasRecord(album.albumDetails.uri, 'ytd')) {
+                    <span class="record-star record-star--silver" title="Biggest streaming day of the year"
+                        aria-label="Biggest streaming day of the year">★</span>
+                    }
+                </span>
+                }
+            </p>
             <dl class="album-card__stats" aria-label="Album stream stats">
                 <div>
                     <dt>Total</dt>
@@ -48,7 +50,7 @@
                     <dt>Change</dt>
                     <dd [class.delta-positive]="+album.dailyChanges.percentChange >= 0"
                         [class.delta-negative]="+album.dailyChanges.percentChange < 0">
-                        {{ album.dailyChanges.percentChange | percentWithSign }}
+                        {{ album.dailyChanges.percentChange | percentWithSign : '1.0-1' }}
                     </dd>
                 </div>
             </dl>

@@ -53,7 +53,7 @@ export class Overview implements OnInit, OnDestroy {
       this.resizeObserver = new ResizeObserver(([entry]) => {
         const w = entry.contentRect.width;
         this.barChartView.set([w, 280]);
-        this.lineChartView.set([w, 300]);
+        this.lineChartView.set([Math.max(w - 26, 320), 300]);
       });
       this.resizeObserver.observe(container);
     });
@@ -84,16 +84,17 @@ export class Overview implements OnInit, OnDestroy {
 
     this.historicDataApi.loadMonthly().subscribe(data => {
       this.monthlyChart.set(
-        data.months.map(m => ({ name: MONTH_NAMES[m.month] ?? m.month, value: +m.total }))
+        data.months.map(m => ({ name: MONTH_NAMES[Number(m.month)] ?? m.month, value: +m.total }))
       );
     });
 
     this.historicDataApi.loadMonthlyListeners().subscribe(data => {
       const series = Object.entries(data)
         .sort(([a], [b]) => a.localeCompare(b))
+        .slice(-28)
         .map(([date, count]) => {
           const [, month, day] = date.split('-');
-          return { name: `${MONTH_NAMES[month] ?? month} ${day}`, value: +count };
+          return { name: `${Number(month)}/${Number(day)}`, value: +count };
         });
       this.listenersChart.set([{ name: 'Monthly Listeners', series }]);
     });
