@@ -1,0 +1,38 @@
+@if (visible()) {
+<div class="ad-banner" aria-live="polite">
+  @if (selectedAd(); as ad) {
+  <div class="ad-banner__inner" role="region" aria-label="Sponsored content"
+    [style.backgroundColor]="ad.backgroundColor ?? '#fff'" [style.color]="ad.textColor ?? '#111'">
+    <div class="ad-banner__brand">
+      @if (ad.img) {
+      <img class="ad-banner__image" [src]="ad.img" [alt]="ad.title" />
+      }
+      <span class="ad-banner__badge">Sponsored</span>
+    </div>
+
+    <div class="ad-banner__content">
+      <p class="ad-banner__title">{{ ad.title }}</p>
+      @if (ad.description) {
+      <p class="ad-banner__description">{{ ad.description }}</p>
+      }
+      <a class="ad-banner__link" [href]="ad.url" target="_blank" rel="noopener noreferrer"
+        [style.color]="ad.textColor ?? '#111'">
+        {{ ad.actionText }}
+      </a>
+    </div>
+
+    <button class="ad-banner__close" type="button" (click)="visible.set(false)" aria-label="Close ad"
+      [style.color]="ad.textColor ?? '#111'">
+      <span aria-hidden="true">✕</span>
+    </button>
+  </div>
+  } @else {
+  <div class="ad-banner__inner ad-banner__inner--fallback" role="region" aria-label="Sponsored content">
+    <div class="ad-banner__content">
+      <p class="ad-banner__title">Check out our playlist of Mariah's greatest hits.</p>
+    </div>
+    <button class="ad-banner__close" type="button" (click)="visible.set(false)" aria-label="Close ad">✕</button>
+  </div>
+  }
+</div>
+}

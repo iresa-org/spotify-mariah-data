@@ -6,11 +6,11 @@ import { faAnglesLeft, faAnglesRight, faCalendarDays, faChartLine, faCompactDisc
 import { faFacebook, faInstagram, faTiktok, faXTwitter } from '@fortawesome/free-brands-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { DailyDataApi } from 'ui-shared';
+import { AdBannerComponent, DailyDataApi } from 'ui-shared';
 
 @Component({
   selector: 'lib-shell',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, FontAwesomeModule],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, FontAwesomeModule, AdBannerComponent],
   templateUrl: './shell.html',
   styleUrl: './shell.scss',
 })
@@ -33,6 +33,16 @@ export class Shell implements OnInit {
   readonly tracksIcon = faMusic;
   readonly albumsIcon = faCompactDisc;
   readonly ytdIcon = faCalendarDays;
+
+  readonly ads = [
+    {
+      title: 'Mariah Carey Stationhead Streaming Party is happening now',
+      url: 'https://www.stationhead.com/c/lambs',
+      img: 'https://stationhead-production1-images.s3.amazonaws.com/images/Channel/logo/672/f6ed0974-7ed7-46c1-8102-845d8d9eb5de.png',
+      backgroundColor: "#e5a193",
+      textColor: '#ffffff',
+      actionText: 'Join Now'
+    }]
 
   private readonly brandIconMap: Record<string, IconDefinition> = {
     FACEBOOK: faFacebook,

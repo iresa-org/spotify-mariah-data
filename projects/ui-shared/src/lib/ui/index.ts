@@ -7,3 +7,4 @@ export * from './pipes';
 export * from './injection-token';
 export * from './master-detail';
 export * from './grouped-table';
+export * from './ad-banner';
