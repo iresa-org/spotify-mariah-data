@@ -9,6 +9,7 @@ export interface AdConfig {
   backgroundColor?: string;
   textColor?: string;
   actionText?: string;
+  sponsored?: boolean;
 }
 
 @Component({
@@ -24,7 +25,7 @@ export class AdBannerComponent implements OnDestroy {
   private cycleSub: Subscription | null = null;
   private visibleSub: Subscription | null = null;
 
-  private readonly cycleMs = 40_000; // show a new ad every 40s
+  private readonly cycleMs = 30_000; // show a new ad every 40s
   private readonly visibleMs = 20_000; // visible for 20s
 
   constructor() {

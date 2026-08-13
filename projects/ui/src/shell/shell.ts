@@ -42,6 +42,14 @@ export class Shell implements OnInit {
       backgroundColor: "#e5a193",
       textColor: '#ffffff',
       actionText: 'Join Now'
+    },
+   {
+      title: 'Stream Mariah Carey\'s latest album \'Here For It All\'',
+      url: 'https://open.spotify.com/album/6MljmKZLh52AUR1v5WpWst',
+      img: 'https://i.scdn.co/image/ab67616d0000b2738923b2fb0074a7a01ce01571',
+      backgroundColor: "#333333",
+      textColor: '#FFFFFF',
+      actionText: 'Stream Now'
     }]
 
   private readonly brandIconMap: Record<string, IconDefinition> = {

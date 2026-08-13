@@ -7,7 +7,9 @@
       @if (ad.img) {
       <img class="ad-banner__image" [src]="ad.img" [alt]="ad.title" />
       }
+      @if (ad.sponsored) {
       <span class="ad-banner__badge">Sponsored</span>
+      }
     </div>
 
     <div class="ad-banner__content">
