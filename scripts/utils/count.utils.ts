@@ -8,11 +8,11 @@ export function isBiggerNumber(number1: number | string, number2: number | strin
 }
 
 export function addNumbers(number1: string, number2: string): BigInt {
-  return BigInt(number1) + BigInt(number2) 
+  return BigInt(number1) + BigInt(number2)
 }
 
 export function subtractNumbers(number1: string, number2: string): BigInt {
-  return BigInt(number2) - BigInt(number1) 
+  return BigInt(number2) - BigInt(number1)
 }
 
 function getDuplicates(map: Map<string, string[]>): Set<string> {
@@ -34,7 +34,7 @@ export function getDuplicateIds(list: TrackData[]) {
     const count = item.dailyChanges.count;
     const change = item.dailyChanges.change;
     const key = `${count}-${change}`;
-    
+
     if (!countIdMap.has(key)) {
       countIdMap.set(key, [item.trackDetails.uid])
     } else {
@@ -166,10 +166,19 @@ export function sortTracksOnAlbum(list: TrackData[]): any[] {
 
 export function calculateSum(arr: string[]): string {
   let total = BigInt(0);
-  
+
   for (const num of arr) {
     total += BigInt(num);
   }
-  
+
   return String(total);
+}
+
+export function calcRankDiff(currPos: number, prevPos: number | undefined): string {
+  // Handle new entries entering the top 10
+  if (prevPos === undefined || prevPos === null) {
+    return 'NEW';
+  }
+
+  return `${prevPos - currPos}`;
 }

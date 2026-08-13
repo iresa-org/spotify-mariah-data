@@ -21,7 +21,12 @@ export interface TrackContentItem {
 
 export interface ArtistContentItem {
   discography: {
-    topTracks: { items: TrackContentItem[] }
+    topTracks: {
+      items: {
+        uid: string;
+        track: TrackContentItem['itemV2']['data']
+      }[]
+    }
   },
   stats: {
     followers: number,

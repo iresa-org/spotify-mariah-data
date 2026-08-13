@@ -18,6 +18,7 @@ export interface GetDailyResult {
   artist: ArtistContentItem | null,
   monthlyListeners: BaseDailyChange,
   followers: BaseDailyChange,
+  topTracks: { uid: string, diff: string }[]
 }
 
 export interface DailyCountOutput {
@@ -30,4 +31,7 @@ export interface DailyCountOutput {
   monthlyListeners: string,
   followers: string,
   albums: AlbumData[];
+  topTracks: {
+    uid: string;
+  }[]
 }

@@ -2,8 +2,8 @@ import { readFile } from "fs/promises";
 import { clearFilesFromFolder, getLatestFile, writeToFile } from "./utils/file.utils.ts";
 import type { DailyCountOutput, GetDailyResult } from "./config/daily.config.ts";
 import { extractDateFromPath, formatDate, getTomorrowDate, getYesterdayDate, parseLocalDate } from "./utils/date.utils.ts";
-import { calcDailyChanges, calcPercentChange, convertToAlbumList, filterAlbums, getAlbumsFromTracks, getDuplicateIds, getTotalStreams, getTrackCategories, subtractNumbers } from "./utils/count.utils.ts";
-import type { SpotifyArtistData, SpotifyContentData, SpotifyTrackData } from "./config/source.config.ts";
+import { calcDailyChanges, calcPercentChange, convertToAlbumList, filterAlbums, getAlbumsFromTracks, getDuplicateIds, getTotalStreams, getTrackCategories, calcRankDiff, subtractNumbers } from "./utils/count.utils.ts";
+import type { ArtistContentItem, SpotifyArtistData, SpotifyContentData, SpotifyTrackData } from "./config/source.config.ts";
 import type { BaseDailyChange, TrackDailyChange, TrackData } from "./config/track.config.ts";
 
 function processTrackContent(el: SpotifyTrackData, prevMap: Map<string, TrackDailyChange>, map: Map<string, TrackData>) {
@@ -22,6 +22,7 @@ function processTrackContent(el: SpotifyTrackData, prevMap: Map<string, TrackDai
 function processUploadContent(list: SpotifyContentData[], prevFileContents: string | null, prevDate: Date): GetDailyResult {
   const map = new Map<string, TrackData>();
   const prevMap = prevFileContents ? processPrevTracksChanges(prevFileContents) : new Map<string, TrackDailyChange>();
+
   let artistData: SpotifyArtistData = {} as SpotifyArtistData;
 
   list.forEach((el) => {
@@ -40,9 +41,9 @@ function processUploadContent(list: SpotifyContentData[], prevFileContents: stri
   const soloList = leadList.filter(item => item.categories.includes('S'))
   const featuredList = listWoDupl.filter(item => item.categories.includes('F'))
   const videos = listWoDupl.filter(item => item.categories.includes('V'))
-  const albumMap = filterAlbums(getAlbumsFromTracks(map))
+  const albumMap = filterAlbums(getAlbumsFromTracks(map));
+  const artist = artistData ? artistData.data.artistUnion : null;
 
-  console.log(artistData?.data.artistUnion)
   return {
     tracks,
     playCounts: {
@@ -54,9 +55,10 @@ function processUploadContent(list: SpotifyContentData[], prevFileContents: stri
     },
     albums: convertToAlbumList(albumMap),
     lastUpdate: formatDate(prevDate),
-    artist: artistData ? artistData.data.artistUnion : null,
+    artist,
     monthlyListeners: getMonthlyListeners(prevFileContents ?? '', artistData?.data.artistUnion?.stats.monthlyListeners),
-    followers: getFollowers(prevFileContents ?? '', artistData?.data.artistUnion?.stats.followers)
+    followers: getFollowers(prevFileContents ?? '', artistData?.data.artistUnion?.stats.followers),
+    topTracks: getTopTracks(prevFileContents ?? '', artist)
   }
 }
 
@@ -72,9 +74,19 @@ function processPrevTracksChanges(input: string): Map<string, TrackDailyChange> 
   return map;
 }
 
+function processPrevTopTracks(input: string): Map<string, number> {
+  const map = new Map<string, number>();
+
+  const dailyCountOutput = JSON.parse(input) as DailyCountOutput;
+
+  dailyCountOutput.topTracks?.forEach((element, idx) => {
+    map.set(element.uid, idx)
+  });
+  return map;
+}
+
 function getMonthlyListeners(prevDayInput: string = '', currentListeners: number): BaseDailyChange {
   const prevOutput = JSON.parse(prevDayInput) as DailyCountOutput;
-  console.log(currentListeners)
   const prevCount = prevOutput.monthlyListeners;
   return {
     count: String(currentListeners),
@@ -91,6 +103,12 @@ function getFollowers(prevDayInput: string = '', currentFollowers: number): Base
     change: subtractNumbers(prevCount, String(currentFollowers)).toString(),
     percentChange: String(calcPercentChange(BigInt(prevCount), BigInt(currentFollowers)))
   }
+}
+
+function getTopTracks(prevDayInput: string = '', artist: ArtistContentItem | null): { uid: string, diff: string }[] {
+  const prevTopTracks = processPrevTopTracks(prevDayInput);
+  console.log(prevTopTracks)
+  return artist ? artist.discography.topTracks.items.map((item, idx) => ({ uid: item.uid, diff: calcRankDiff(idx, prevTopTracks.get(item.uid)) })) : []
 }
 
 async function main() {
@@ -129,7 +147,8 @@ async function main() {
       playCounts: resp.playCounts,
       monthlyListeners: resp.monthlyListeners.count,
       followers: resp.followers.count,
-      albums: resp.albums
+      albums: resp.albums,
+      topTracks: resp.artist?.discography.topTracks.items.map(item => ({ uid: item.uid })) ?? [] as any[]
     }
     writeToFile(`./daily`, `${formatDate(prevDate)}.json`, JSON.stringify(dailyResult))
 
