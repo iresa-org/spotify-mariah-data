@@ -7,6 +7,7 @@ import { faFacebook, faInstagram, faTiktok, faXTwitter } from '@fortawesome/free
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AdBannerComponent, DailyDataApi } from 'ui-shared';
+import { AdConfig } from '../../../ui-shared/src/lib/ui/ad-banner/ad-banner';
 
 @Component({
   selector: 'lib-shell',
@@ -34,22 +35,31 @@ export class Shell implements OnInit {
   readonly albumsIcon = faCompactDisc;
   readonly ytdIcon = faCalendarDays;
 
-  readonly ads = [
+  readonly ads: AdConfig[] = [
     {
       title: 'Mariah Carey Stationhead Streaming Party is happening now',
       url: 'https://www.stationhead.com/c/lambs',
       img: 'https://stationhead-production1-images.s3.amazonaws.com/images/Channel/logo/672/f6ed0974-7ed7-46c1-8102-845d8d9eb5de.png',
       backgroundColor: "#e5a193",
       textColor: '#ffffff',
-      actionText: 'Join Now'
+      actionText: 'Join Now',
+      sponsored: true
     },
-   {
+    {
       title: 'Stream Mariah Carey\'s latest album \'Here For It All\'',
       url: 'https://open.spotify.com/album/6MljmKZLh52AUR1v5WpWst',
       img: 'https://i.scdn.co/image/ab67616d0000b2738923b2fb0074a7a01ce01571',
       backgroundColor: "#333333",
       textColor: '#FFFFFF',
       actionText: 'Stream Now'
+    },
+    {
+      title: '\'Daydream30\' is OUT now',
+      url: 'https://open.spotify.com/album/3KGlZ9YeHexP80A3scG86n',
+      img: 'https://i.scdn.co/image/ab67616d0000485100f00f307ab0026f13e26b45',
+      backgroundColor: "#383838",
+      textColor: '#FFFFFF',
+      actionText: 'See here'
     }]
 
   private readonly brandIconMap: Record<string, IconDefinition> = {
