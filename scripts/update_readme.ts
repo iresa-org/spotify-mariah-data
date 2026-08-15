@@ -84,7 +84,7 @@ function generateReadmeContent({
   albums
 }: GenerateReadmeContentParams): string {
   const content = `# Mariah Carey on Spotify - Last Updated: ${lastUpdate}
-Monthly Listeners: ${formatNumber(monthlyListeners.count)} (${formatChange(monthlyListeners.change)})
+Monthly Listeners: ${formatNumber(monthlyListeners.count)} (${formatChange(monthlyListeners.change)})<br>
 Followers: ${formatNumber(followers.count)} (${formatChange(followers.change)})
 
 ## Streams Overview
