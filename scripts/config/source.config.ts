@@ -6,6 +6,7 @@ export interface TrackContentItem {
   uid: string;
   itemV2: {
     data: {
+      name?: string;
       playcount: string;
       artists: TrackArtists;
       mediaType: string;
