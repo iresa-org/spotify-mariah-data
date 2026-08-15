@@ -5,6 +5,7 @@ import { extractDateFromPath, formatDate, getTomorrowDate, getYesterdayDate, par
 import { calcDailyChanges, calcPercentChange, convertToAlbumList, filterAlbums, getAlbumsFromTracks, getDuplicateIds, getTotalStreams, getTrackCategories, calcRankDiff, subtractNumbers } from "./utils/count.utils.ts";
 import type { ArtistContentItem, SpotifyArtistData, SpotifyContentData, SpotifyTrackData } from "./config/source.config.ts";
 import type { BaseDailyChange, TrackDailyChange, TrackData } from "./config/track.config.ts";
+import { extractHarContent } from "./utils/har-reader.utils.ts";
 
 function processTrackContent(el: SpotifyTrackData, prevMap: Map<string, TrackDailyChange>, map: Map<string, TrackData>) {
   const content = el.data.playlistV2?.content;
@@ -107,7 +108,6 @@ function getFollowers(prevDayInput: string = '', currentFollowers: number): Base
 
 function getTopTracks(prevDayInput: string = '', artist: ArtistContentItem | null): { uid: string, diff: string }[] {
   const prevTopTracks = processPrevTopTracks(prevDayInput);
-  console.log(prevTopTracks)
   return artist ? artist.discography.topTracks.items.map((item, idx) => ({ uid: item.uid, diff: calcRankDiff(idx, prevTopTracks.get(item.uid)) })) : []
 }
 
@@ -117,7 +117,7 @@ async function main() {
   try {
 
     // Read the latest file from /upload directory
-    const uploadFilePath = await getLatestFile('./upload', ['.json']);
+    const uploadFilePath = await getLatestFile('./upload', ['.har']);
     if (!uploadFilePath) {
       console.log('No upload. Skip');
       return;
@@ -134,7 +134,7 @@ async function main() {
 
     // Parse data and calculate changes
     const uploadFileContents = await readFile(uploadFilePath!, 'utf-8');
-    const resp = processUploadContent(JSON.parse(uploadFileContents), prevFileContents, prevDate)
+    const resp = processUploadContent(extractHarContent(uploadFileContents), prevFileContents, prevDate)
 
     // Write to result
     const result = JSON.stringify(resp);
