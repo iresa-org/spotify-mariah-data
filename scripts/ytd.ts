@@ -1,6 +1,9 @@
 import { readFile } from "fs/promises";
+import { promises as fs } from "fs";
+import * as path from "path";
 import { getLatestFile, getOldestFile, writeToFile } from "./utils/file.utils.ts";
 import type { DailyCountOutput } from "./config/daily.config.ts";
+import type { AlbumData } from "./config/album.config.ts";
 import type { YTDSumModel } from "./config/ytd.config.ts";
 import { subtractNumbers } from "./utils/count.utils.ts";
 import type { BaseDailyChange } from "./config/track.config.ts";
@@ -55,19 +58,102 @@ async function calcTrackYtd(latestDailyChanges: Map<string, BaseDailyChange>): P
   }
 }
 
-function calcAlbumYtd(input: string, trackYTD: Record<string, string>): Record<string, string> {
+function calcAlbumSums(albums: AlbumData[], trackSums: Record<string, string>): Record<string, string> {
 
-  const dailyCountOutput = JSON.parse(input) as DailyCountOutput;
   const albumMap: YTDSumModel = new Map();
 
-  dailyCountOutput.albums?.forEach(album => {
+  albums?.forEach(album => {
     const total = album.albumDetails.tracks.reduce((acc, trackUid) => {
-      const trackYtdValue = trackYTD[trackUid] ?? '0';
-      return String(BigInt(acc) + BigInt(trackYtdValue));
+      const trackValue = trackSums[trackUid] ?? '0';
+      return String(BigInt(acc) + BigInt(trackValue));
     }, '0');
     albumMap.set(album.uri, total);
   });
   return convertMapToObject(albumMap);
+}
+
+function cleanMapInPlace(map: Map<any, any>): Map<any, any> {
+  for (const [key, value] of map.entries()) {
+    if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
+      map.delete(key);
+    }
+  }
+  return map;
+}
+
+// Groups daily file paths (YYYY-MM-DD.json) inside /daily by their MM month key.
+async function groupFilesByMonth(directoryPath: string): Promise<Map<string, string[]>> {
+  const groups = new Map<string, string[]>();
+  for (let i = 1; i <= 12; i++) {
+    groups.set(i.toString().padStart(2, '0'), []);
+  }
+
+  try {
+    const files = await fs.readdir(directoryPath);
+    const dateRegex = /^(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])/;
+
+    for (const file of files) {
+      const match = file.match(dateRegex);
+      if (match) {
+        const month = match[2];
+        if (month && groups.has(month)) {
+          groups.get(month)!.push(path.join(directoryPath, file));
+        }
+      }
+    }
+  } catch (error) {
+    console.error(`Error reading directory: ${(error as Error).message}`);
+  }
+
+  return cleanMapInPlace(groups);
+}
+
+// Sums each track's daily "change" across all files in a month.
+function sumTrackChangesForMonth(fileContents: DailyCountOutput[]): Record<string, string> {
+  const map = new Map<string, bigint>();
+
+  for (const content of fileContents) {
+    content.tracks.forEach(track => {
+      const current = map.get(track.uid) ?? BigInt(0);
+      map.set(track.uid, current + BigInt(track.change));
+    });
+  }
+
+  const result = new Map<string, string>();
+  for (const [uid, value] of map) {
+    result.set(uid, String(value));
+  }
+  return convertMapToObject(result);
+}
+
+async function calcMonthly(): Promise<Record<string, { tracks: Record<string, string>, albums: Record<string, string> }>> {
+  const groups = await groupFilesByMonth('./daily');
+  const result: Record<string, { tracks: Record<string, string>, albums: Record<string, string> }> = {};
+
+  for (const [month, files] of groups) {
+    const sortedFiles = [...files].sort();
+    const contents = await Promise.all(
+      sortedFiles.map(async file => JSON.parse(await readFile(file, 'utf-8')) as DailyCountOutput)
+    );
+
+    const tracks = sumTrackChangesForMonth(contents);
+    // Use the latest day's albums list within the month for the album -> track mapping.
+    const latestContent = contents[contents.length - 1]!;
+    const albums = calcAlbumSums(latestContent.albums ?? [], tracks);
+
+    result[month] = { tracks, albums };
+  }
+  return result;
+}
+
+// Reads the previously written ytd.json so months without /daily files anymore aren't lost.
+async function readExistingMonthly(): Promise<Record<string, { tracks: Record<string, string>, albums: Record<string, string> }>> {
+  try {
+    const contents = await readFile('./ytd/ytd.json', 'utf-8');
+    return (JSON.parse(contents).monthly) ?? {};
+  } catch {
+    return {};
+  }
 }
 
 async function main() {
@@ -86,9 +172,13 @@ async function main() {
     const latestDailyChanges = processTrackDailyChange(latestDailyChangeContents);
 
     const tracks = await calcTrackYtd(latestDailyChanges);
-    const albums = await calcAlbumYtd(latestDailyChangeContents, tracks);
+    const latestDailyCountOutput = JSON.parse(latestDailyChangeContents) as DailyCountOutput;
+    const albums = calcAlbumSums(latestDailyCountOutput.albums ?? [], tracks);
 
-    writeToFile(`./ytd`, 'ytd.json', JSON.stringify({ tracks, albums }))
+    const existingMonthly = await readExistingMonthly();
+    const monthly = { ...existingMonthly, ...await calcMonthly() };
+
+    writeToFile(`./ytd`, 'ytd.json', JSON.stringify({ ytd: { tracks, albums }, monthly }))
   } catch (error) {
     console.error('Error writing file:', error);
   }
