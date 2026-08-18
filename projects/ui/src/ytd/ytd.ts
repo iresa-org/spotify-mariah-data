@@ -2,7 +2,7 @@ import { CommonModule, DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { Component, computed, inject, OnInit, signal, DestroyRef } from '@angular/core';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { forkJoin, fromEvent, map, startWith } from 'rxjs';
-import { DailyDataApi, FormatCompactPipe, HistoricDataApi } from 'ui-shared';
+import { DailyDataApi, FormatCompactPipe, HistoricDataApi, YtdData } from 'ui-shared';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 interface YtdTrack {
@@ -20,6 +20,28 @@ interface AlbumYtd {
   image?: string;
 }
 
+interface PeriodOption {
+  value: string;
+  label: string;
+}
+
+const YTD_PERIOD = 'ytd';
+
+const MONTH_NAMES = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
 @Component({
   selector: 'lib-ytd',
   standalone: true,
@@ -33,11 +55,70 @@ export class Ytd implements OnInit {
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
 
+  private readonly ytdData = signal<YtdData | null>(null);
+  private readonly trackMeta = signal(new Map<string, YtdTrack>());
+  private readonly albumMeta = signal(new Map<string, { name: string; image?: string }>());
+
   readonly loading = signal(true);
-  readonly topTracks = signal<YtdTrack[]>([]);
-  readonly albumTotals = signal<AlbumYtd[]>([]);
-  readonly trackCount = computed(() => this.topTracks().length);
   readonly showScrollToTop = signal(false);
+  readonly selectedPeriod = signal(YTD_PERIOD);
+
+  readonly periodOptions = computed<PeriodOption[]>(() => {
+    const months = Object.keys(this.ytdData()?.monthly ?? {}).sort();
+    return [
+      { value: YTD_PERIOD, label: 'YTD (entire year)' },
+      ...months.map((month) => ({
+        value: month,
+        label: MONTH_NAMES[Number(month) - 1] ?? month,
+      })),
+    ];
+  });
+
+  readonly periodLabel = computed(
+    () => this.periodOptions().find((option) => option.value === this.selectedPeriod())?.label ?? ''
+  );
+
+  readonly isYtdPeriod = computed(() => this.selectedPeriod() === YTD_PERIOD);
+
+  private readonly selectedTotals = computed(() => {
+    const data = this.ytdData();
+    if (!data) return null;
+    const period = this.selectedPeriod();
+    return period === YTD_PERIOD ? data.ytd : (data.monthly?.[period] ?? null);
+  });
+
+  readonly topTracks = computed<YtdTrack[]>(() => {
+    const totals = this.selectedTotals();
+    if (!totals) return [];
+    const meta = this.trackMeta();
+    return Object.entries(totals.tracks ?? {})
+      .map(([uid, count]) => ({
+        uid,
+        name: meta.get(uid)?.name ?? '',
+        albumName: meta.get(uid)?.albumName ?? '',
+        ytdCount: Number(count),
+        coverArt: meta.get(uid)?.coverArt,
+      }))
+      .filter((track) => track.ytdCount > 0 && !!track.name)
+      .sort((a, b) => b.ytdCount - a.ytdCount)
+      .slice(0, 200);
+  });
+
+  readonly albumTotals = computed<AlbumYtd[]>(() => {
+    const totals = this.selectedTotals();
+    if (!totals) return [];
+    const meta = this.albumMeta();
+    return Object.entries(totals.albums ?? {})
+      .map(([uri, count]) => ({
+        uri,
+        name: meta.get(uri)?.name ?? uri,
+        image: meta.get(uri)?.image,
+        ytdCount: Number(count),
+      }))
+      .sort((a, b) => b.ytdCount - a.ytdCount);
+  });
+
+  readonly trackCount = computed(() => this.topTracks().length);
 
   ngOnInit(): void {
     const scrollTarget = this.document.defaultView;
@@ -57,54 +138,39 @@ export class Ytd implements OnInit {
       ytd: this.historicDataApi.loadYtd(),
     }).subscribe({
       next: ({ ytd }) => {
-        const allTracks = this.dailyDataApi.getAll();
-        const trackMap = new Map<string, any>();
+        const trackMap = new Map<string, YtdTrack>();
         const albumMap = new Map<string, { name: string; image?: string }>();
 
-        allTracks.forEach((track: any) => {
-          if (track.uid) {
-            trackMap.set(track.uid, track);
-          }
+        this.dailyDataApi.getAll().forEach((track: any) => {
           const album = track.album;
-          if (album?.uri && !albumMap.has(album.uri)) {
-            albumMap.set(album.uri, {
-              name: album.name ?? album.uri,
-              image: album.coverArt?.sources?.[0]?.url,
+          const coverArt = album?.coverArt?.sources?.[0]?.url;
+          if (track.uid) {
+            trackMap.set(track.uid, {
+              uid: track.uid,
+              name: track.name,
+              albumName: album?.name ?? '',
+              ytdCount: 0,
+              coverArt,
             });
+          }
+          if (album?.uri && !albumMap.has(album.uri)) {
+            albumMap.set(album.uri, { name: album.name ?? album.uri, image: coverArt });
           }
         });
 
-        const tracks = Object.entries(ytd.tracks || {}).
-          map(([uid, count]) => {
-            const track = trackMap.get(uid);
-            return {
-              uid,
-              name: track?.name,
-              albumName: track?.album?.name ?? '',
-              ytdCount: Number(count),
-              coverArt: track?.album?.coverArt?.sources?.[0]?.url,
-            } as YtdTrack;
-          }).
-          filter((track) => track.ytdCount > 0).
-          sort((a, b) => b.ytdCount - a.ytdCount)
-;
-
-        this.topTracks.set(tracks.slice(0, 200).filter(track => !!track.name));
-
-        const albums = Object.entries(ytd.albums || {}).map(([uri, count]) => ({
-          uri,
-          name: albumMap.get(uri)?.name ?? uri,
-          image: albumMap.get(uri)?.image,
-          ytdCount: Number(count),
-        })).sort((a, b) => b.ytdCount - a.ytdCount);
-
-        this.albumTotals.set(albums);
+        this.trackMeta.set(trackMap);
+        this.albumMeta.set(albumMap);
+        this.ytdData.set(ytd);
         this.loading.set(false);
       },
       error: () => {
         this.loading.set(false);
       },
     });
+  }
+
+  selectPeriod(value: string): void {
+    this.selectedPeriod.set(value);
   }
 
   scrollToTop(): void {

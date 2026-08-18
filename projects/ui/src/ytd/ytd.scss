@@ -31,6 +31,32 @@
   margin: 6px 0 0;
 }
 
+.period-picker {
+  display: grid;
+  gap: 4px;
+}
+
+.period-picker__label {
+  color: theme.$theme-muted;
+  font-size: 0.7rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.period-picker__select {
+  background: theme.$theme-surface;
+  border: 1px solid theme.$theme-border;
+  border-radius: 8px;
+  color: inherit;
+  font: inherit;
+  padding: 8px 10px;
+}
+
+.col-empty {
+  color: theme.$theme-muted;
+  text-align: center;
+}
+
 .panel__heading {
   display: grid;
   gap: 8px;

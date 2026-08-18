@@ -4,6 +4,16 @@
             <p class="page-header__eyebrow">Year-to-date</p>
             <h2 class="page-header__title">Top Tracks &amp; Album Streams</h2>
         </div>
+
+        <div class="period-picker">
+            <label class="period-picker__label" for="ytd-period">Period</label>
+            <select id="ytd-period" class="period-picker__select" [value]="selectedPeriod()"
+                (change)="selectPeriod($any($event.target).value)">
+                @for (option of periodOptions(); track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+                }
+            </select>
+        </div>
     </header>
 
     @if (loading()) {
@@ -13,7 +23,7 @@
     } @else {
     <section class="panel" aria-label="Top tracks by year-to-date streams">
         <div class="panel__heading">
-            <h3>Top 200 Tracks of the Year</h3>
+            <h3>{{ isYtdPeriod() ? 'Top 200 Tracks of the Year' : 'Top 200 Tracks in ' + periodLabel() }}</h3>
         </div>
 
         <div class="track-table-wrap">
@@ -30,7 +40,7 @@
                             <th scope="col" class="col-rank">#</th>
                             <th scope="col" class="col-track">Track</th>
                             <th scope="col" class="col-album mobile-hidden">Album</th>
-                            <th scope="col" class="col-metric">YTD Streams</th>
+                            <th scope="col" class="col-metric">{{ isYtdPeriod() ? 'YTD Streams' : 'Streams' }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,7 +66,7 @@
 
     <section class="panel" aria-label="Album year-to-date streams">
         <div class="panel__heading">
-            <h3>Year-to-date Streams by Album</h3>
+            <h3>{{ isYtdPeriod() ? 'Year-to-date Streams by Album' : periodLabel() + ' Streams by Album' }}</h3>
         </div>
 
         <div class="album-table-wrap">
@@ -70,7 +80,7 @@
                     <tr>
                         <th scope="col" class="col-rank">#</th>
                         <th scope="col" class="col-album-name">Album</th>
-                        <th scope="col" class="col-metric">YTD Streams</th>
+                        <th scope="col" class="col-metric">{{ isYtdPeriod() ? 'YTD Streams' : 'Streams' }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -87,6 +97,10 @@
                             </div>
                         </th>
                         <td class="col-metric">{{ album.ytdCount | formatCompact }}</td>
+                    </tr>
+                    } @empty {
+                    <tr>
+                        <td class="col-empty" colspan="3">No album streams available for {{ periodLabel() }}.</td>
                     </tr>
                     }
                 </tbody>

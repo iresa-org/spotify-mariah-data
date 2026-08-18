@@ -16,9 +16,15 @@ export type RecordEntry = Record<string, { change: string; date: string }>;
 
 export type YtdEntry = Record<string, string>;
 
-export interface YtdData {
+export interface YtdTotals {
   tracks: YtdEntry;
   albums: YtdEntry;
+}
+
+export interface YtdData {
+  ytd: YtdTotals;
+  /** month number (MM) → totals for that month */
+  monthly: Record<string, YtdTotals>;
 }
 
 /** uid → { date → streamCount } */

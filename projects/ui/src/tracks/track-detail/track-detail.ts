@@ -79,7 +79,7 @@ export class TrackDetail implements OnInit {
         const ytdRecMap = ytdRec.tracks;
         this.ytdRecord.set(ytdRecMap[uid] ? { ...ytdRecMap[uid] } : null);
 
-        const ytdEntry = ytd.tracks[uid];
+        const ytdEntry = ytd.ytd.tracks[uid];
         this.ytdTotal.set(ytdEntry);
 
         this.historicalSeries.set(this.buildSeries(uid, historical));
