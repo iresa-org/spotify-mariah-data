@@ -35,7 +35,9 @@ export function getDuplicateIds(list: TrackData[]) {
     const change = item.dailyChanges.change;
     const key = `${count}-${change}`;
 
-    if (!countIdMap.has(key)) {
+    if (Number(count) === 0 && Number(change) === 0) {
+      countIdMap.set(key, [item.trackDetails.uid])
+    } else if ((!countIdMap.has(key))) {
       countIdMap.set(key, [item.trackDetails.uid])
     } else {
       countIdMap.set(key, [...countIdMap.get(key)!, item.trackDetails.uid])
