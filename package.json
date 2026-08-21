@@ -20,6 +20,7 @@
   "homepage": "https://github.com/iresa-org/spotify-mariah-data#readme",
   "devDependencies": {
     "@types/node": "^24.13.1",
+    "playwright": "^1.62.1",
     "typescript": "^6.0.3"
   }
 }
