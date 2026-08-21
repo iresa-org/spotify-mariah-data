@@ -1,20 +1,16 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Calculate daily
+name: Scan for stats
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on:
-  push:
-    branches:
-      - data
-    paths:
-      - upload/**
+  workflow_dispatch: # Enables the manual trigger button
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  run-daily:
+  scan-stats:
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.1-noble
 
     permissions:
       # Give the default GITHUB_TOKEN write permission to commit and push the
@@ -35,7 +31,10 @@ jobs:
         node-version: 24.16
 
     - name: Install
-      run: npm install
+      run: npm ci
+
+    - name: Scan Spotify data
+      run: node scripts/update_data.ts
 
     - name: Run daily
       run: node scripts/daily.ts
@@ -58,8 +57,10 @@ jobs:
     - name: Update README
       run: node scripts/update_readme.ts
 
-    # Commit all changed files back to the repository
-    - uses: stefanzweifel/git-auto-commit-action@v7
+    - name: Commit all changed files back to the repository
+      if: success()
+      uses: stefanzweifel/git-auto-commit-action@v7
+
 
         
 
