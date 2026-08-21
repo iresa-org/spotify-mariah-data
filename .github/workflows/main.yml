@@ -25,6 +25,13 @@ jobs:
         # Value already defaults to true, but `persist-credentials` is required to push new commits to the repository.
         persist-credentials: true
 
+    # Running inside a container image gives files a different owner UID than the
+    # Actions runner expects, so git refuses to operate on the checkout ("dubious
+    # ownership") and later git commands (including git-auto-commit-action) silently
+    # see no changes. Mark the workspace as safe before any other git command runs.
+    - name: Mark workspace as safe for git
+      run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
     - name: Use Node.js 24.16
       uses: actions/setup-node@v6
       with:
