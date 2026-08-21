@@ -1,15 +1,23 @@
 import * as path from 'path';
+import { mkdir } from 'fs/promises';
 import { chromium, type Page } from 'playwright';
 import { formatDate } from './utils/date.utils.ts';
 
 const PLAYLIST_URL = 'https://open.spotify.com/playlist/4W9ZFDZXQ5qxHzY6Lvtz2E?si=96fd5341d67e4e62&nd=1&dlsi=18b7dd86d16248b9';
 const ARTIST_URL = 'https://open.spotify.com/artist/4iHNK0tOyZPYnBU7nGAgpQ';
-const ARTIST_LOAD_DELAY = 5000;
+const ARTIST_LOAD_DELAY = Number(process.env.SPOTIFY_ARTIST_LOAD_DELAY_MS ?? '5000');
 const UPLOAD_DIR = path.join(process.cwd(), 'upload');
-const SCROLL_STEP = 1400;
-const SCROLL_DELAY = 700;
-const MAX_SCROLLS = 2000;
-const STABLE_LIMIT = 8;
+const SCROLL_STEP = Number(process.env.SPOTIFY_SCROLL_STEP ?? '1400');
+const SCROLL_DELAY = Number(process.env.SPOTIFY_SCROLL_DELAY_MS ?? '700');
+const MAX_SCROLLS = Number(process.env.SPOTIFY_MAX_SCROLLS ?? '2000');
+const STABLE_LIMIT = Number(process.env.SPOTIFY_STABLE_LIMIT ?? '8');
+const NAVIGATION_TIMEOUT = Number(process.env.SPOTIFY_NAVIGATION_TIMEOUT_MS ?? '90000');
+const ACTION_TIMEOUT = Number(process.env.SPOTIFY_ACTION_TIMEOUT_MS ?? '30000');
+const GOTO_RETRIES = Number(process.env.SPOTIFY_GOTO_RETRIES ?? '3');
+const IS_CI = process.env.CI === 'true';
+const HEADLESS = process.env.SPOTIFY_HEADLESS
+  ? process.env.SPOTIFY_HEADLESS !== 'false'
+  : true;
 
 // Spotify renders the tracklist in a virtualised container, so the window itself never scrolls
 const SCROLL_CONTAINER_SELECTOR = '.main-view-container__scroll-node';
@@ -27,6 +35,26 @@ async function acceptCookies(page: Page) {
   } catch {
     // Banner is not always shown
   }
+}
+
+async function gotoWithRetry(page: Page, url: string, attempts = GOTO_RETRIES) {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      await page.goto(url, { waitUntil: 'domcontentloaded', timeout: NAVIGATION_TIMEOUT });
+      return;
+    } catch (error) {
+      lastError = error;
+      console.warn(`Navigation failed (${attempt}/${attempts}) for ${url}`);
+
+      if (attempt < attempts) {
+        await page.waitForTimeout(1500 * attempt);
+      }
+    }
+  }
+
+  throw lastError;
 }
 
 async function scrollToBottom(page: Page) {
@@ -156,26 +184,36 @@ async function scrollToBottom(page: Page) {
 async function main() {
   console.log('Scan data for updates...');
 
+  await mkdir(UPLOAD_DIR, { recursive: true });
+
   const harPath = path.join(UPLOAD_DIR, `${formatDate(new Date())}.har`);
-  const browser = await chromium.launch({ headless: false });
+  const browser = await chromium.launch({
+    headless: HEADLESS,
+    args: IS_CI
+      ? ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+      : []
+  });
   const context = await browser.newContext({
     recordHar: {
       path: harPath,
       content: 'embed',
       urlFilter: '**/query*'
-    }
+    },
+    ignoreHTTPSErrors: true
   });
 
   const page = await context.newPage();
+  page.setDefaultTimeout(ACTION_TIMEOUT);
+  page.setDefaultNavigationTimeout(NAVIGATION_TIMEOUT);
 
   try {
-    await page.goto(PLAYLIST_URL, { waitUntil: 'domcontentloaded' });
+    await gotoWithRetry(page, PLAYLIST_URL);
     await acceptCookies(page);
     await page.waitForTimeout(SCROLL_DELAY);
     await scrollToBottom(page);
 
     console.log('Loading artist page...');
-    await page.goto(ARTIST_URL, { waitUntil: 'domcontentloaded' });
+    await gotoWithRetry(page, ARTIST_URL);
     await page.waitForTimeout(ARTIST_LOAD_DELAY);
   } finally {
     // Closing the context flushes every captured /query request into a single HAR file
@@ -187,4 +225,7 @@ async function main() {
 }
 
 // Run the script
-main();
+main().catch((error) => {
+  console.error('Failed to update Spotify HAR data:', error);
+  process.exitCode = 1;
+});
