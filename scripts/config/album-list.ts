@@ -1,7 +1,6 @@
 export const SELECTED_ALBUMS = [
   'spotify:album:0O4U8aVbBcWrq38ax0T6AO',     // The Emancipation Of Mimi (20th Anniversary Edition)
   'spotify:album:0SHpIbyBLUugMXsl3yNkUz',     // Emotions
-  'spotify:album:0cS9prZ8u3fdbc7lmtCaMV',     // Merry Christmas (Deluxe Anniversary Edition)
   'spotify:album:0v1DRRYBXYg1uVN1CIsyy0',     // The Rarities
   'spotify:album:1GzBLltCCKsiIJM3T3AWj3',     // Music Box: 30th Anniversary Edition
   'spotify:album:3KGlZ9YeHexP80A3scG86n',     // Daydream (30th Anniversary Edition)
@@ -19,5 +18,6 @@ export const SELECTED_ALBUMS = [
   'spotify:album:6yitEMT7G4qfIcV3jWXP8I',     // Rainbow: 25th Anniversary Expanded Edition
   'spotify:album:0gTbDhU0tDmXdXn2RNWO2l',     // Charmbracelet
   'spotify:album:7GTZRYNB0eAig7UTsb54XG',     // The Remixes
-  'spotify:album:0jpGebANqbNNKbWHq2XhEM'      // MTV Unplugged EP
+  'spotify:album:0jpGebANqbNNKbWHq2XhEM',     // MTV Unplugged EP
+  'spotify:album:5OkzvMKeDtKPMogoEXEDyK',     // Merry Christmas (Japan Deluxe Anniversary Edition)
 ]
