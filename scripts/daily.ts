@@ -1,5 +1,5 @@
 import { readFile } from "fs/promises";
-import { clearFilesFromFolder, getLatestFile, writeToFile } from "./utils/file.utils.ts";
+import { getLatestFile, writeToFile } from "./utils/file.utils.ts";
 import type { DailyCountOutput, GetDailyResult } from "./config/daily.config.ts";
 import { extractDateFromPath, formatDate, getTomorrowDate, getYesterdayDate, parseLocalDate } from "./utils/date.utils.ts";
 import { calcDailyChanges, calcPercentChange, convertToAlbumList, filterAlbums, getAlbumsFromTracks, getDuplicateIds, getTotalStreams, getTrackCategories, calcRankDiff, subtractNumbers } from "./utils/count.utils.ts";
@@ -151,9 +151,6 @@ async function main() {
       topTracks: resp.artist?.discography.topTracks.items.map(item => ({ uid: item.uid })) ?? [] as any[]
     }
     writeToFile(`./daily`, `${formatDate(prevDate)}.json`, JSON.stringify(dailyResult))
-
-    // Clean upload folder
-    clearFilesFromFolder('./upload', ['.txt'])
 
   } catch (error) {
     console.error('Error writing file:', error);

@@ -2,6 +2,7 @@ import * as path from 'path';
 import { mkdir } from 'fs/promises';
 import { chromium, type Page } from 'playwright';
 import { formatDate } from './utils/date.utils.ts';
+import { clearFilesFromFolder } from './utils/file.utils.ts';
 
 const PLAYLIST_URL = 'https://open.spotify.com/playlist/4W9ZFDZXQ5qxHzY6Lvtz2E?si=96fd5341d67e4e62&nd=1&dlsi=18b7dd86d16248b9';
 const ARTIST_URL = 'https://open.spotify.com/artist/4iHNK0tOyZPYnBU7nGAgpQ';
@@ -185,6 +186,9 @@ async function main() {
   console.log('Scan data for updates...');
 
   await mkdir(UPLOAD_DIR, { recursive: true });
+
+  // Clean upload folder
+  clearFilesFromFolder('./upload', ['.txt'])
 
   const harPath = path.join(UPLOAD_DIR, `${formatDate(new Date())}.har`);
   const browser = await chromium.launch({
