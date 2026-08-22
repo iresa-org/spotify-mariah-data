@@ -110,9 +110,11 @@ export function calcPercentChange(prevChange: BigInt, newChange: BigInt): number
 export function convertToAlbumList(map: Map<string, TrackData[]>): AlbumData[] {
   const arr: AlbumData[] = [];
   for (let [_, value] of map) {
-    const playcount = value.reduce((sum, item) => sum + BigInt(item.dailyChanges.count), BigInt(0));
-    const change = value.reduce((sum, item) => sum + BigInt(item.dailyChanges.change), BigInt(0));
-    const prevChange = value.reduce((sum, item) => sum + BigInt(item.dailyChanges.prevChange ?? 0), BigInt(0));
+    const duplicateIds = getDuplicateIds(value);
+    const uniqueCounts = value.filter(item => !duplicateIds.has(item.trackDetails.uid));
+    const playcount = uniqueCounts.reduce((sum, item) => sum + BigInt(item.dailyChanges.count), BigInt(0));
+    const change = uniqueCounts.reduce((sum, item) => sum + BigInt(item.dailyChanges.change), BigInt(0));
+    const prevChange = uniqueCounts.reduce((sum, item) => sum + BigInt(item.dailyChanges.prevChange ?? 0), BigInt(0));
     const percentChange = calcPercentChange(prevChange, change)
     const firstTrack = value[0];
     arr.push({
