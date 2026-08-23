@@ -16,6 +16,8 @@ jobs:
       # Give the default GITHUB_TOKEN write permission to commit and push the
       # added or changed files to the repository.
       contents: write
+      # Required for the `gh pr create` step to open a PR into the data branch.
+      pull-requests: write
 
     steps:
     - name: Checkout
@@ -67,6 +69,16 @@ jobs:
     - name: Commit all changed files back to the repository
       if: success()
       uses: stefanzweifel/git-auto-commit-action@v7
+
+    - name: Open PR to sync changes into data branch
+      if: success()
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh pr create --base data --head "${{ github.ref_name }}" \
+          --title "Sync stats into data" \
+          --body-file README.md \
+          || echo "PR already exists, skipping"
 
 
         
