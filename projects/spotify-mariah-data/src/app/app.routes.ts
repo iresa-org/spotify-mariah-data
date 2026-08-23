@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
     {
-        path: 'classic',
+        path: 'test',
         loadComponent: () => import('classic-ui').then((c) => c.Shell),
         children: [
             {
@@ -19,7 +19,7 @@ export const routes: Routes = [
         ]
     },
     {
-        path: 'ui',
+        path: '',
         loadComponent: () => import('ui').then((c) => c.Shell),
         children: [
             {
@@ -50,7 +50,7 @@ export const routes: Routes = [
             { path: '', redirectTo: 'overview', pathMatch: 'full' },
         ]
     },
-    { path: '', redirectTo: 'classic', pathMatch: 'full' },
-    { path: '**', redirectTo: 'classic' },
+    { path: '', redirectTo: '', pathMatch: 'full' },
+    { path: '**', redirectTo: '' },
 ];
 
