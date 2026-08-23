@@ -54,10 +54,20 @@ async function calculateMonthlySum(map: Map<string, string[]>): Promise<Map<stri
   // read all files
   const fileContents = await readFilesMap(files)
 
-  // calc sum of each month
-  for (let [key, days] of map) {
-    const counts = calculateSum(days.map(day => fileContents.get(day)?.playCounts.total.change ?? '0'))
-    groups.set(key, counts);
+  // Calculate from cumulative totals at the month's boundaries.
+  for (const [key, days] of map) {
+    const sortedDays = [...days].sort();
+    const firstDay = fileContents.get(sortedDays[0]!);
+
+    if (sortedDays.length === 1) {
+      groups.set(key, firstDay?.playCounts.total.change ?? '0');
+      continue;
+    }
+
+    const latestDay = fileContents.get(sortedDays.at(-1)!);
+    const firstTotal = firstDay?.playCounts.total.count ?? '0';
+    const latestTotal = latestDay?.playCounts.total.count ?? '0';
+    groups.set(key, String(BigInt(latestTotal) - BigInt(firstTotal)));
   }
   return groups;
 }
