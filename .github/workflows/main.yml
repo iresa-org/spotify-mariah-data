@@ -72,13 +72,13 @@ jobs:
 
     - name: Open PR to sync changes into data branch
       if: success()
-      env:
-        GH_TOKEN: ${{ github.token }}
-      run: |
-        gh pr create --base data --head "${{ github.ref_name }}" \
-          --title "Sync stats into data" \
-          --body-file README.md \
-          || echo "PR already exists, skipping"
+      uses: peter-evans/create-pull-request@v7
+      with:
+        token: ${{ github.token }}
+        base: data
+        branch: ${{ github.ref_name }}
+        title: "Sync stats into data"
+        body-path: README.md
 
 
         
