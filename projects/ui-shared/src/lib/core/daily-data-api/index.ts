@@ -2,4 +2,4 @@
  * Public API Surface of ui-shared
  */
 
-export { DailyDataApi } from './daily-data-api';
+export { DailyDataApi, DAILY_DATA_BRANCH } from './daily-data-api';

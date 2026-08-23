@@ -1,10 +1,14 @@
 import { Component, ElementRef, HostListener, inject, OnInit, Renderer2, signal, viewChild } from '@angular/core';
-import { DailyDataApi, WINDOW } from 'ui-shared';
+import { DAILY_DATA_BRANCH, DailyDataApi, WINDOW } from 'ui-shared';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'lib-shell',
   imports: [RouterOutlet, RouterLink],
+  providers: [
+    DailyDataApi,
+    { provide: DAILY_DATA_BRANCH, useValue: 'test_data' },
+  ],
   templateUrl: './shell.html',
   styleUrl: './shell.scss',
 })

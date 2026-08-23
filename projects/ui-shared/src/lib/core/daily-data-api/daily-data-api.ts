@@ -1,8 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable, of, take, tap } from 'rxjs';
 
-const GET_DATA_URL = 'https://raw.githubusercontent.com/iresa-org/spotify-mariah-data/refs/heads/data/result/current.json'
+export const DAILY_DATA_BRANCH = new InjectionToken<string>('DAILY_DATA_BRANCH', {
+  providedIn: 'root',
+  factory: () => 'data',
+});
 
 @Injectable({
   providedIn: 'root',
@@ -25,13 +28,16 @@ export class DailyDataApi {
 
   private http = inject(HttpClient);
 
+  private dataBranch = inject(DAILY_DATA_BRANCH);
+
   loadTracks(): Observable<any> {
     if (this.currMap.size > 0) {
       return of(true).pipe(take(1))
     }
     let params = new HttpParams();
     params = params.append('salt', (new Date()).getTime())
-    return this.http.get(GET_DATA_URL, { params }).pipe(
+    const dataUrl = `https://raw.githubusercontent.com/iresa-org/spotify-mariah-data/refs/heads/${this.dataBranch}/result/current.json`;
+    return this.http.get(dataUrl, { params }).pipe(
       tap((data) => this.processTrackList(data))
     )
   }
