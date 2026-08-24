@@ -406,6 +406,10 @@
   .audience-grid {
     grid-template-columns: 1fr;
   }
+
+  .audience-stat {
+    margin-top: 12px;
+  }
 }
 
 @media (max-width: 560px) {
@@ -431,6 +435,10 @@
 
   .kpi-card__value {
     font-size: 1.2rem;
+  }
+
+  .audience-stat {
+    margin-top: 12px;
   }
 
   .panel {

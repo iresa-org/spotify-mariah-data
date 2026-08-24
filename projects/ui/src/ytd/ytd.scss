@@ -183,7 +183,6 @@
 
 .track-cell__art,
 .album-cell__art {
-  border-radius: 8px;
   display: block;
   flex-shrink: 0;
   height: 36px;
@@ -239,6 +238,10 @@
 
   .page-header__title {
     font-size: 1.25rem;
+  }
+
+  .period-picker {
+    width: 100%;
   }
 
   .track-table th,
