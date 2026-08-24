@@ -4,6 +4,9 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
 import { fromEvent, map, startWith } from 'rxjs';
 import { DailyDataApi, FormatCompactPipe, HistoricDataApi, PercentWithSignPipe } from 'ui-shared';
 import { TRACK_CATEGORIES, FilterType, TrackItem } from './tracks.config';
@@ -13,9 +16,12 @@ type RecordEntry = {
   date: string;
 };
 
+type TrackSortKey = 'name' | 'playcount' | 'change' | 'percent';
+type SortDirection = 'ascending' | 'descending';
+
 @Component({
   selector: 'lib-tracks',
-  imports: [RouterLink, ScrollingModule, PercentWithSignPipe, FormatCompactPipe, DecimalPipe, NgOptimizedImage],
+  imports: [RouterLink, ScrollingModule, PercentWithSignPipe, FormatCompactPipe, DecimalPipe, NgOptimizedImage, FontAwesomeModule],
   templateUrl: './tracks.html',
   styleUrl: './tracks.scss',
 })
@@ -29,6 +35,10 @@ export class Tracks implements OnInit {
   readonly filterTabs = TRACK_CATEGORIES;
   readonly activeFilter = signal<FilterType>('T');
   readonly searchQuery = signal('');
+  readonly sortKey = signal<TrackSortKey>('change');
+  readonly sortDirection = signal<SortDirection>('descending');
+  readonly sortAscendingIcon = faSortUp;
+  readonly sortDescendingIcon = faSortDown;
   readonly desktopRowHeight = 64;
   readonly showScrollToTop = signal(false);
   readonly allTimeRecordMap = signal<Record<string, RecordEntry> | null>(null);
@@ -52,12 +62,20 @@ export class Tracks implements OnInit {
       F: this.dailyDataApi.getFeatured,
       V: this.dailyDataApi.getVideos,
     };
-    const sorted = [...getterMap[filter]()].sort((a, b) => b.change - a.change);
-    if (!query) return sorted;
-    return sorted.filter(track =>
+    const filtered = !query ? getterMap[filter]() : getterMap[filter]().filter(track =>
       track.name?.toLowerCase().includes(query) ||
       track.album?.name?.toLowerCase().includes(query)
     );
+    const sortKey = this.sortKey();
+    const direction = this.sortDirection() === 'ascending' ? 1 : -1;
+
+    return [...filtered].sort((a, b) => {
+      if (sortKey === 'name') {
+        return direction * (a.name ?? '').localeCompare(b.name ?? '');
+      }
+
+      return direction * (Number(a[sortKey]) - Number(b[sortKey]));
+    });
   });
 
   ngOnInit(): void {
@@ -111,6 +129,28 @@ export class Tracks implements OnInit {
 
   trackByUid(_index: number, track: TrackItem): string {
     return track.uid;
+  }
+
+  sortBy(column: TrackSortKey): void {
+    if (this.sortKey() === column) {
+      this.sortDirection.update(direction => direction === 'ascending' ? 'descending' : 'ascending');
+      return;
+    }
+
+    this.sortKey.set(column);
+    this.sortDirection.set(column === 'name' ? 'ascending' : 'descending');
+  }
+
+  getAriaSort(column: TrackSortKey): 'none' | SortDirection {
+    return this.sortKey() === column ? this.sortDirection() : 'none';
+  }
+
+  isSortedColumn(column: TrackSortKey): boolean {
+    return this.sortKey() === column;
+  }
+
+  getSortIcon(column: TrackSortKey): IconDefinition {
+    return this.sortDirection() === 'ascending' ? this.sortAscendingIcon : this.sortDescendingIcon;
   }
 
   getAlbumArt(track: TrackItem): string {

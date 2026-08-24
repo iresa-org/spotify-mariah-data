@@ -38,7 +38,7 @@
   <section class="panel" aria-label="Tracks list">
     <div class="panel__heading">
       <h3>All Tracks</h3>
-      <p>{{ list().length }} tracks &mdash; sorted by daily streams</p>
+      <p>{{ list().length }} tracks</p>
     </div>
 
     <div class="table-wrap">
@@ -129,7 +129,7 @@
           </tbody>
         </table>
       } @else {
-        <table class="tracks-table tracks-table--head" aria-hidden="true">
+        <table class="tracks-table tracks-table--head">
           <colgroup>
             <col class="col-rank" />
             <col class="col-track" />
@@ -140,10 +140,38 @@
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Track</th>
-              <th scope="col" class="metric-header">Total</th>
-              <th scope="col" class="metric-header">Daily</th>
-              <th scope="col" class="metric-header">Change</th>
+              <th scope="col" [attr.aria-sort]="getAriaSort('name')">
+                <button type="button" class="sort-btn" (click)="sortBy('name')">
+                  Track
+                  @if (isSortedColumn('name')) {
+                    <fa-icon [icon]="getSortIcon('name')" aria-hidden="true" />
+                  }
+                </button>
+              </th>
+              <th scope="col" class="metric-header" [attr.aria-sort]="getAriaSort('playcount')">
+                <button type="button" class="sort-btn" (click)="sortBy('playcount')">
+                  Total
+                  @if (isSortedColumn('playcount')) {
+                    <fa-icon [icon]="getSortIcon('playcount')" aria-hidden="true" />
+                  }
+                </button>
+              </th>
+              <th scope="col" class="metric-header" [attr.aria-sort]="getAriaSort('change')">
+                <button type="button" class="sort-btn" (click)="sortBy('change')">
+                  Daily
+                  @if (isSortedColumn('change')) {
+                    <fa-icon [icon]="getSortIcon('change')" aria-hidden="true" />
+                  }
+                </button>
+              </th>
+              <th scope="col" class="metric-header" [attr.aria-sort]="getAriaSort('percent')">
+                <button type="button" class="sort-btn" (click)="sortBy('percent')">
+                  Change
+                  @if (isSortedColumn('percent')) {
+                    <fa-icon [icon]="getSortIcon('percent')" aria-hidden="true" />
+                  }
+                </button>
+              </th>
             </tr>
           </thead>
         </table>

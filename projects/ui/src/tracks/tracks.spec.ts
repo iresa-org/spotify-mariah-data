@@ -11,7 +11,10 @@ describe('Tracks', () => {
 
   beforeEach(async () => {
     const dailyDataApiStub = {
-      getAll: () => [{ uid: 'track-1', playcount: 100, change: 10, percent: 0, artists: [] }],
+      getAll: () => [
+        { uid: 'track-1', name: 'Zebra', playcount: 100, change: 10, percent: 0, artists: [] },
+        { uid: 'track-2', name: 'Apple', playcount: 200, change: 20, percent: 0.5, artists: [] },
+      ],
       getLead: () => [],
       getSolo: () => [],
       getFeatured: () => [],
@@ -53,5 +56,19 @@ describe('Tracks', () => {
   it('should recognize all-time and year records for the latest update day', () => {
     expect(component.hasRecord('track-1', 'allTime')).toBeTrue();
     expect(component.hasRecord('track-1', 'ytd')).toBeTrue();
+  });
+
+  it('cycles a desktop column through ascending, descending, and default sorting', () => {
+    component.sortBy('name');
+    expect(component.list().map(track => track.uid)).toEqual(['track-2', 'track-1']);
+    expect(component.getAriaSort('name')).toBe('ascending');
+
+    component.sortBy('name');
+    expect(component.list().map(track => track.uid)).toEqual(['track-1', 'track-2']);
+    expect(component.getAriaSort('name')).toBe('descending');
+
+    component.sortBy('name');
+    expect(component.list().map(track => track.uid)).toEqual(['track-2', 'track-1']);
+    expect(component.getAriaSort('name')).toBe('none');
   });
 });
