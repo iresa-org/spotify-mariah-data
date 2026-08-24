@@ -2,7 +2,7 @@ import { promises as fs } from 'fs';
 import { writeToFile } from "./utils/file.utils.ts";
 import type { DailyCountOutput } from './config/daily.config.ts';
 import * as path from 'path';
-import { calculateSum } from './utils/count.utils.ts';
+import { calculateSum, subtractNumbers } from './utils/count.utils.ts';
 
 function cleanMapInPlace(map: Map<any, any>): Map<any, any> {
   for (const [key, value] of map.entries()) {
@@ -67,7 +67,7 @@ async function calculateMonthlySum(map: Map<string, string[]>): Promise<Map<stri
     const latestDay = fileContents.get(sortedDays.at(-1)!);
     const firstTotal = firstDay?.playCounts.total.count ?? '0';
     const latestTotal = latestDay?.playCounts.total.count ?? '0';
-    groups.set(key, String(BigInt(latestTotal) - BigInt(firstTotal)));
+    groups.set(key, String(subtractNumbers(firstTotal, latestTotal)));
   }
   return groups;
 }
