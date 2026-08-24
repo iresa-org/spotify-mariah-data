@@ -126,11 +126,11 @@ export class DailyDataApi {
 
   getTopTracks(): { name: string; playcount: number; diff: string }[] {
     const items: any[] = this.trackListResp?.['artist']?.discography?.topTracks?.items ?? [];
-    const map = new Map<string, { uid: string, diff: string }>();
+    const map = new Map<string, string>();
     this.trackListResp?.['topTracks']?.forEach((element: any) => {
       map.set(element.uid, element.diff)
     });
-    return items.map(item => ({ name: item.track.name, playcount: +item.track.playcount, diff: map.get(item.uid)!.diff }));
+    return items.map(item => ({ name: item.track.name, playcount: +item.track.playcount, diff: map.get(item.uid) ?? '' }));
   }
 
   getFollowers(): { count: string, change: string } {
