@@ -1,0 +1,77 @@
+<section class="panel" aria-label="Top tracks by year-to-date streams">
+  <div class="panel__heading">
+    <h3>{{ title() }}</h3>
+  </div>
+
+  <div class="track-table-wrap">
+    @if (isMobile()) {
+      <table class="track-table track-table--mobile">
+        <colgroup>
+          <col class="col-rank" />
+          <col class="col-track" />
+          <col class="col-metric" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th scope="col" class="col-rank">#</th>
+            <th scope="col" class="col-track">Track</th>
+            <th scope="col" class="col-metric">{{ metricLabel() }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (track of tracks(); track track.uid; let i = $index) {
+            <tr>
+              <td class="col-rank" data-label="#">{{ i + 1 }}</td>
+              <th scope="row" class="col-track">
+                <div class="track-cell">
+                  @if (track.coverArt) {
+                    <img class="track-cell__art" [ngSrc]="track.coverArt" [alt]="track.albumName + ' album art'" width="48" height="48" loading="lazy" />
+                  }
+                  <div>
+                    <div class="track-cell__name">{{ track.name }}</div>
+                    <div class="track-cell__album-mobile">{{ track.albumName }}</div>
+                  </div>
+                </div>
+              </th>
+              <td class="col-metric" [attr.data-label]="metricLabel()">{{ track.ytdCount | formatCompact }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+    <cdk-virtual-scroll-viewport class="track-viewport" itemSize="64">
+      <table class="track-table">
+        <colgroup>
+          <col class="col-rank" />
+          <col class="col-track" />
+          <col class="col-album" />
+          <col class="col-metric" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th scope="col" class="col-rank">#</th>
+            <th scope="col" class="col-track">Track</th>
+            <th scope="col" class="col-album mobile-hidden">Album</th>
+            <th scope="col" class="col-metric">{{ metricLabel() }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *cdkVirtualFor="let track of tracks(); let i = index">
+            <td class="col-rank" data-label="#">{{ i + 1 }}</td>
+            <th scope="row" class="col-track">
+              <div class="track-cell">
+                @if (track.coverArt) {
+                  <img class="track-cell__art" [ngSrc]="track.coverArt" [alt]="track.albumName + ' album art'" width="48" height="48" loading="lazy" />
+                }
+                <div class="track-cell__name">{{ track.name }}</div>
+              </div>
+            </th>
+            <td class="col-album mobile-hidden" data-label="Album">{{ track.albumName }}</td>
+            <td class="col-metric" [attr.data-label]="metricLabel()">{{ track.ytdCount | formatCompact }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </cdk-virtual-scroll-viewport>
+    }
+  </div>
+</section>

@@ -1,29 +1,11 @@
-import { CommonModule, DOCUMENT, NgOptimizedImage } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { Component, computed, inject, OnInit, signal, DestroyRef } from '@angular/core';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 import { forkJoin, fromEvent, map, startWith } from 'rxjs';
-import { DailyDataApi, FormatCompactPipe, HistoricDataApi, YtdData } from 'ui-shared';
+import { DailyDataApi, HistoricDataApi, YtdData } from 'ui-shared';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-
-interface YtdTrack {
-  uid: string;
-  name: string;
-  albumName: string;
-  ytdCount: number;
-  coverArt?: string;
-}
-
-interface AlbumYtd {
-  uri: string;
-  name: string;
-  ytdCount: number;
-  image?: string;
-}
-
-interface PeriodOption {
-  value: string;
-  label: string;
-}
+import { YtdTopTracks } from './top-tracks/top-tracks';
+import { YtdTopAlbums } from './top-albums/top-albums';
+import { AlbumYtd, PeriodOption, YtdTrack } from './ytd.types';
 
 const YTD_PERIOD = 'ytd';
 
@@ -45,7 +27,7 @@ const MONTH_NAMES = [
 @Component({
   selector: 'lib-ytd',
   standalone: true,
-  imports: [CommonModule, FormatCompactPipe, ScrollingModule, NgOptimizedImage],
+  imports: [CommonModule, YtdTopTracks, YtdTopAlbums],
   templateUrl: './ytd.html',
   styleUrl: './ytd.scss',
 })

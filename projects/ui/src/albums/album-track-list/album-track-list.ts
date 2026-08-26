@@ -12,6 +12,7 @@ import {
   GroupedTableGroup,
   PercentWithSignPipe,
   toNumber,
+  FormatCompactPipe,
 } from 'ui-shared';
 
 interface AlbumTrackTableRow {
@@ -31,6 +32,7 @@ interface AlbumTrackTableRow {
     GroupedTableComponent,
     GroupedTableCellDirective,
     PercentWithSignPipe,
+    FormatCompactPipe
   ],
   templateUrl: './album-track-list.html',
   styleUrl: './album-track-list.scss',

@@ -25,13 +25,23 @@
         </ng-template>
 
         <ng-template libGroupedTableCell="total" let-row>
-            {{ row.total | number }}
+            @if (isMobile()) {
+            <span> {{ row.total | formatCompact }}</span>
+            } @else {
+            <span> {{ row.total | number }}</span>
+            }
         </ng-template>
 
         <ng-template libGroupedTableCell="daily" let-row>
+            @if (isMobile()) {
+            <span [class.delta-positive]="row.daily >= 0" [class.delta-negative]="row.daily < 0">
+                {{ row.daily | formatCompact }}
+            </span>
+            } @else {
             <span [class.delta-positive]="row.daily >= 0" [class.delta-negative]="row.daily < 0">
                 {{ row.daily | number }}
             </span>
+            }
         </ng-template>
 
         <ng-template libGroupedTableCell="change" let-row>

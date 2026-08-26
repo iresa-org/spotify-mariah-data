@@ -1,0 +1,42 @@
+<section class="panel" aria-label="Album year-to-date streams">
+  <div class="panel__heading">
+    <h3>{{ title() }}</h3>
+  </div>
+
+  <div class="album-table-wrap">
+    <table class="track-table">
+      <colgroup>
+        <col class="col-rank" />
+        <col class="col-album-name" />
+        <col class="col-metric" />
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col" class="col-rank">#</th>
+          <th scope="col" class="col-album-name">Album</th>
+          <th scope="col" class="col-metric">{{ metricLabel() }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (album of albums(); track album.uri; let i = $index) {
+          <tr>
+            <td class="col-rank" data-label="#">{{ i + 1 }}</td>
+            <th scope="row" class="col-album-name">
+              <div class="album-cell">
+                @if (album.image) {
+                  <img class="album-cell__art" [ngSrc]="album.image" [alt]="album.name + ' album art'" width="48" height="48" loading="lazy" />
+                }
+                <div>{{ album.name }}</div>
+              </div>
+            </th>
+            <td class="col-metric" [attr.data-label]="metricLabel()">{{ album.ytdCount | formatCompact }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td class="col-empty" colspan="3">No album streams available for {{ periodLabel() }}.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
