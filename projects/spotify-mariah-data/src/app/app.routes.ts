@@ -45,7 +45,19 @@ export const routes: Routes = [
             {
                 path: 'ytd',
                 loadComponent: () => import('ui').then((c) => c.Ytd),
-                title: 'YTD – Mariah Carey Streams',
+                children: [
+                    {
+                        path: 'tracks',
+                        loadComponent: () => import('ui').then((c) => c.YtdTracks),
+                        title: 'YTD Tracks – Mariah Carey Streams',
+                    },
+                    {
+                        path: 'albums',
+                        loadComponent: () => import('ui').then((c) => c.YtdAlbums),
+                        title: 'YTD Albums – Mariah Carey Streams',
+                    },
+                    { path: '', redirectTo: 'tracks', pathMatch: 'full' },
+                ],
             },
             { path: '', redirectTo: 'overview', pathMatch: 'full' },
         ]

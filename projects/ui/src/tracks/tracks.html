@@ -130,6 +130,7 @@
         </table>
       } @else {
         <table class="tracks-table tracks-table--head">
+          <caption class="sr-only">Tracks sorted by daily streams</caption>
           <colgroup>
             <col class="col-rank" />
             <col class="col-track" />
@@ -174,36 +175,9 @@
               </th>
             </tr>
           </thead>
-        </table>
-
-        <cdk-virtual-scroll-viewport
-          class="tracks-viewport"
-          scrollWindow
-          [itemSize]="desktopRowHeight"
-          [minBufferPx]="desktopRowHeight * 6"
-          [maxBufferPx]="desktopRowHeight * 12"
-          aria-label="Virtualized tracks list"
-        >
-          <table class="tracks-table tracks-table--body">
-            <caption class="sr-only">Tracks sorted by daily streams</caption>
-            <colgroup>
-              <col class="col-rank" />
-              <col class="col-track" />
-              <col class="col-metric" />
-              <col class="col-metric" />
-              <col class="col-metric" />
-            </colgroup>
-            <thead class="sr-only">
+          <tbody>
+            @for (track of list(); track track.uid; let i = $index) {
               <tr>
-                <th scope="col">#</th>
-                <th scope="col">Track</th>
-                <th scope="col">Total</th>
-                <th scope="col">Daily</th>
-                <th scope="col">Change</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *cdkVirtualFor="let track of list(); let i = index; trackBy: trackByUid">
                 <td class="rank" data-label="Rank">{{ i + 1 }}</td>
                 <th scope="row" class="track-cell">
                   @if (getAlbumArt(track)) {
@@ -258,9 +232,9 @@
                   {{ track.percent | percentWithSign }}
                 </td>
               </tr>
-            </tbody>
-          </table>
-        </cdk-virtual-scroll-viewport>
+            }
+          </tbody>
+        </table>
       }
     </div>
   </section>

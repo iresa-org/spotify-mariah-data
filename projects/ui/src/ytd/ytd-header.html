@@ -1,0 +1,16 @@
+<header class="page-header">
+  <div>
+    <p class="page-header__eyebrow">Year-to-date</p>
+    <h2 class="page-header__title">{{ title() }}</h2>
+  </div>
+
+  <div class="period-picker">
+    <label class="period-picker__label" [for]="periodId()">Period</label>
+    <select class="period-picker__select" [id]="periodId()" [value]="selectedPeriod()"
+      (change)="onPeriodChange($event)">
+      @for (option of periodOptions(); track option.value) {
+      <option [value]="option.value">{{ option.label }}</option>
+      }
+    </select>
+  </div>
+</header>

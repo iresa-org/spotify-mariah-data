@@ -2,6 +2,7 @@
 
 :host {
   display: block;
+  height: 100vh;
   color: theme.$theme-text;
   font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
 }
@@ -16,7 +17,8 @@
   box-shadow: theme.$theme-shadow;
   display: grid;
   grid-template-columns: 260px minmax(0, 1fr);
-  min-height: 720px;
+  height: 100%;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -26,8 +28,20 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  height: 100%;
+  min-height: 0;
   padding: 28px 20px;
   position: relative;
+}
+
+.dashboard__sidebar-scroll {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .sidebar-header {
@@ -131,6 +145,13 @@
   margin-top: 24px;
 }
 
+.nav__item {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+}
+
 .nav__link {
   align-items: center;
   border-radius: 10px;
@@ -142,6 +163,15 @@
   min-height: 40px;
   padding: 10px 12px;
   text-decoration: none;
+  flex: 1 1 auto;
+}
+
+.nav__button {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  width: 100%;
 }
 
 .nav__icon {
@@ -151,6 +181,12 @@
 
 .nav__label {
   display: inline;
+}
+
+.nav__expand-icon {
+  font-size: 0.72rem;
+  margin-left: auto;
+  transition: transform 160ms ease;
 }
 
 .nav__link:hover,
@@ -164,6 +200,46 @@
   background: color-mix(in srgb, theme.$theme-surface 16%, transparent);
   color: theme.$theme-surface;
   font-weight: 600;
+}
+
+.nav__item--submenu-open > .nav__button {
+  background: color-mix(in srgb, theme.$theme-surface 16%, transparent);
+  color: theme.$theme-surface;
+}
+
+.nav__submenu {
+  display: none;
+  flex-basis: 100%;
+  flex-direction: column;
+  gap: 4px;
+  margin: -2px 0 2px;
+  padding-left: 34px;
+}
+
+.nav__item--submenu-open .nav__submenu {
+  display: flex;
+}
+
+.nav__sublink {
+  color: color-mix(in srgb, theme.$theme-surface 60%, theme.$theme-muted 40%);
+  font-size: 0.85rem;
+  padding: 5px 0;
+  text-decoration: none;
+}
+
+.nav__sublink:hover,
+.nav__sublink:focus-visible {
+  color: theme.$theme-surface;
+  outline: none;
+}
+
+.nav__sublink--active {
+  color: theme.$theme-surface;
+  font-weight: 600;
+}
+
+.submenu-overlay {
+  display: none;
 }
 
 .external-links {
@@ -181,7 +257,7 @@
   display: inline-flex;
   font-size: 1.1rem;
   justify-content: center;
-  padding: 8px;
+  justify-content: center;
   text-decoration: none;
   width: 36px;
   height: 36px;
@@ -197,6 +273,7 @@
 .external-link__icon {
   flex-shrink: 0;
   font-size: 0.72rem;
+  margin-left: auto;
 }
 
 .sidebar-stats {
@@ -241,6 +318,7 @@
 
   .dashboard--sidebar-minimized .brand__meta,
   .dashboard--sidebar-minimized .nav__label,
+  .dashboard--sidebar-minimized .nav__submenu,
   .dashboard--sidebar-minimized .sidebar-stats {
     display: none;
   }
@@ -480,9 +558,17 @@ thead th {
     gap: 1rem;
   }
 
+  .nav__item {
+    display: flex;
+  }
+
   .nav__link {
     justify-content: center;
     padding: 10px;
+  }
+
+  .nav__button {
+    justify-content: flex-start;
   }
 
   .nav__icon {
@@ -514,6 +600,84 @@ thead th {
 
   .external-links {
     display: none;
+  }
+
+  .submenu-overlay {
+    align-items: flex-start;
+    background: color-mix(in srgb, theme.$theme-text 44%, transparent);
+    display: flex;
+    inset: 0;
+    justify-content: center;
+    padding: 92px 16px 16px;
+    position: fixed;
+    z-index: 20;
+  }
+
+  .submenu-overlay__panel {
+    background: theme.$theme-alt-bg;
+    border: 1px solid color-mix(in srgb, theme.$theme-surface 18%, transparent);
+    border-radius: 12px;
+    box-shadow: 0 22px 54px color-mix(in srgb, theme.$theme-text 32%, transparent);
+    color: theme.$theme-surface;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 320px;
+    padding: 12px;
+    width: min(320px, 100%);
+  }
+
+  .submenu-overlay__header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .submenu-overlay__title {
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .submenu-overlay__close {
+    align-items: center;
+    background: color-mix(in srgb, theme.$theme-surface 10%, transparent);
+    border: 1px solid color-mix(in srgb, theme.$theme-surface 14%, transparent);
+    border-radius: 8px;
+    color: theme.$theme-surface;
+    cursor: pointer;
+    display: inline-flex;
+    font: inherit;
+    height: 36px;
+    justify-content: center;
+    width: 36px;
+  }
+
+  .submenu-overlay__close:hover,
+  .submenu-overlay__close:focus-visible {
+    background: color-mix(in srgb, theme.$theme-surface 16%, transparent);
+    outline: none;
+  }
+
+  .submenu-overlay__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .submenu-overlay__link {
+    border-radius: 8px;
+    color: color-mix(in srgb, theme.$theme-surface 72%, theme.$theme-muted 28%);
+    padding: 10px 12px;
+    text-decoration: none;
+  }
+
+  .submenu-overlay__link:hover,
+  .submenu-overlay__link:focus-visible,
+  .submenu-overlay__link--active {
+    background: color-mix(in srgb, theme.$theme-surface 12%, transparent);
+    color: theme.$theme-surface;
+    outline: none;
   }
 }
 

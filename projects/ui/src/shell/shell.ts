@@ -1,8 +1,8 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faAnglesLeft, faAnglesRight, faCalendarDays, faChartLine, faCompactDisc, faMusic } from '@fortawesome/free-solid-svg-icons';
+import { faAnglesLeft, faAnglesRight, faCalendarDays, faChartLine, faChevronDown, faChevronUp, faCompactDisc, faMusic, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { faFacebook, faInstagram, faTiktok, faXTwitter } from '@fortawesome/free-brands-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
@@ -24,6 +24,8 @@ export class Shell implements OnInit {
   readonly lastUpdated = signal('');
   readonly isMobile = signal(false);
   readonly sidenavMinimized = signal(false);
+  readonly openMobileSubmenuRoute = signal<string | null>(null);
+  readonly openMobileSubmenu = computed(() => this.navItems.find((item) => item.route === this.openMobileSubmenuRoute()));
   readonly externalLinks = signal<{ name: string; url: string; icon: IconDefinition }[]>([]);
   readonly artistImage = signal<string | null>(null);
   readonly worldRank = signal<number>(0);
@@ -34,6 +36,23 @@ export class Shell implements OnInit {
   readonly tracksIcon = faMusic;
   readonly albumsIcon = faCompactDisc;
   readonly ytdIcon = faCalendarDays;
+  readonly closeIcon = faXmark;
+  readonly submenuExpandIcon = faChevronDown;
+  readonly submenuCollapseIcon = faChevronUp;
+  readonly navItems = [
+    { route: 'overview', label: 'Overview', icon: this.overviewIcon, children: [] },
+    { route: 'tracks', label: 'Tracks', icon: this.tracksIcon, children: [] },
+    { route: 'albums', label: 'Albums', icon: this.albumsIcon, children: [] },
+    {
+      route: 'ytd',
+      label: 'YTD',
+      icon: this.ytdIcon,
+      children: [
+        { label: 'Tracks', route: 'ytd/tracks' },
+        { label: 'Albums', route: 'ytd/albums' },
+      ],
+    },
+  ];
 
   readonly ads: AdConfig[] = [
     {
@@ -77,6 +96,14 @@ export class Shell implements OnInit {
     this.sidenavMinimized.update((isMinimized) => !isMinimized);
   }
 
+  toggleSubmenu(route: string): void {
+    this.openMobileSubmenuRoute.update((openRoute) => openRoute === route ? null : route);
+  }
+
+  closeMobileSubmenu(): void {
+    this.openMobileSubmenuRoute.set(null);
+  }
+
   ngOnInit(): void {
     this.breakpointObserver
       .observe('(max-width: 1024px)')
@@ -84,6 +111,7 @@ export class Shell implements OnInit {
       .subscribe(({ matches }) => {
         this.isMobile.set(matches);
         this.sidenavMinimized.set(matches);
+        this.openMobileSubmenuRoute.set(null);
       });
 
     this.dailyDataApi.loadTracks().subscribe({

@@ -1,6 +1,5 @@
 import { DecimalPipe, DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
@@ -21,7 +20,7 @@ type SortDirection = 'ascending' | 'descending';
 
 @Component({
   selector: 'lib-tracks',
-  imports: [RouterLink, ScrollingModule, PercentWithSignPipe, FormatCompactPipe, DecimalPipe, NgOptimizedImage, FontAwesomeModule],
+  imports: [RouterLink, PercentWithSignPipe, FormatCompactPipe, DecimalPipe, NgOptimizedImage, FontAwesomeModule],
   templateUrl: './tracks.html',
   styleUrl: './tracks.scss',
 })
@@ -39,7 +38,6 @@ export class Tracks implements OnInit {
   readonly sortDirection = signal<SortDirection>('descending');
   readonly sortAscendingIcon = faSortUp;
   readonly sortDescendingIcon = faSortDown;
-  readonly desktopRowHeight = 64;
   readonly showScrollToTop = signal(false);
   readonly allTimeRecordMap = signal<Record<string, RecordEntry> | null>(null);
   readonly yearRecordMap = signal<Record<string, RecordEntry> | null>(null);
@@ -125,10 +123,6 @@ export class Tracks implements OnInit {
     const lastUpdatedDay = lastUpdated?.match(/^(\d{4}-\d{2}-\d{2})/)?.[1] ?? '';
 
     return rec.date === lastUpdatedDay;
-  }
-
-  trackByUid(_index: number, track: TrackItem): string {
-    return track.uid;
   }
 
   sortBy(column: TrackSortKey): void {

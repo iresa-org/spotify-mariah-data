@@ -1,0 +1,12 @@
+<section class="ytd-page" aria-label="Year to date top tracks">
+  <lib-ytd-header title="Top Tracks" periodId="ytd-tracks-period" [selectedPeriod]="selectedPeriod()"
+    [periodOptions]="periodOptions()" (periodChange)="selectPeriod($event)"></lib-ytd-header>
+
+  @if (loading()) {
+  <section class="panel panel--loading" aria-live="polite">
+    <p>Loading year-to-date streaming data&hellip;</p>
+  </section>
+  } @else {
+  <lib-ytd-top-tracks [tracks]="topTracks()" [isYtdPeriod]="isYtdPeriod()" [periodLabel]="periodLabel()"></lib-ytd-top-tracks>
+  }
+</section>

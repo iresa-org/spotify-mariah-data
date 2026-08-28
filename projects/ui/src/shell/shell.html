@@ -6,67 +6,101 @@
       <fa-icon [icon]="sidenavMinimized() ? expandIcon : minimizeIcon" aria-hidden="true" />
     </button>
 
-    <div class="sidebar-header">
-      <div class="brand">
-        @if (artistImage()) {
-        <img class="brand__avatar" [src]="artistImage()" alt="Mariah Carey" width="44" height="44" />
-        } @else {
-        <div class="brand__badge" aria-hidden="true">MC</div>
-        }
-        <div class="brand__meta">
-          <h1 class="brand__title">Mariah Carey</h1>
-          @if (worldRank() > 0) {
-          <p class="brand__eyebrow">World Rank <span class="brand__rank-chip">#{{ worldRank() }}</span></p>
+    <div class="dashboard__sidebar-scroll">
+      <div class="sidebar-header">
+        <div class="brand">
+          @if (artistImage()) {
+          <img class="brand__avatar" [src]="artistImage()" alt="Mariah Carey" width="44" height="44" />
+          } @else {
+          <div class="brand__badge" aria-hidden="true">MC</div>
           }
+          <div class="brand__meta">
+            <h1 class="brand__title">Mariah Carey</h1>
+            @if (worldRank() > 0) {
+            <p class="brand__eyebrow">World Rank <span class="brand__rank-chip">#{{ worldRank() }}</span></p>
+            }
+          </div>
         </div>
       </div>
-    </div>
 
-    <nav class="nav" aria-label="Main navigation">
-      <a class="nav__link" routerLink="overview" routerLinkActive="nav__link--active" aria-label="Overview"
-        title="Overview">
-        <fa-icon class="nav__icon" [icon]="overviewIcon" aria-hidden="true" />
-        <span class="nav__label">Overview</span>
-      </a>
-      <a class="nav__link" routerLink="tracks" routerLinkActive="nav__link--active" aria-label="Tracks" title="Tracks">
-        <fa-icon class="nav__icon" [icon]="tracksIcon" aria-hidden="true" />
-        <span class="nav__label">Tracks</span>
-      </a>
-      <a class="nav__link" routerLink="albums" routerLinkActive="nav__link--active" aria-label="Albums" title="Albums">
-        <fa-icon class="nav__icon" [icon]="albumsIcon" aria-hidden="true" />
-        <span class="nav__label">Albums</span>
-      </a>
-      <a class="nav__link" routerLink="ytd" routerLinkActive="nav__link--active" aria-label="Year to date" title="YTD">
-        <fa-icon class="nav__icon" [icon]="ytdIcon" aria-hidden="true" />
-        <span class="nav__label">YTD</span>
-      </a>
-    </nav>
+      <nav class="nav" aria-label="Main navigation">
+        @for (item of navItems; track item.route) {
+        <div class="nav__item" [class.nav__item--submenu-open]="openMobileSubmenuRoute() === item.route">
+          @if (item.children.length) {
+          <button type="button" class="nav__link nav__button" (click)="toggleSubmenu(item.route)"
+            [attr.aria-expanded]="openMobileSubmenuRoute() === item.route" [attr.aria-controls]="'submenu-' + item.route"
+            [attr.aria-label]="(openMobileSubmenuRoute() === item.route ? 'Close ' : 'Open ') + item.label + ' submenu'"
+            [title]="item.label">
+            <fa-icon class="nav__icon" [icon]="item.icon" aria-hidden="true" />
+            <span class="nav__label">{{ item.label }}</span>
+            <fa-icon class="nav__expand-icon" [icon]="openMobileSubmenuRoute() === item.route ? submenuCollapseIcon : submenuExpandIcon"
+              aria-hidden="true" />
+          </button>
+          } @else {
+          <a class="nav__link" [routerLink]="item.route" routerLinkActive="nav__link--active"
+            [routerLinkActiveOptions]="{ exact: true }" [attr.aria-label]="item.label" [title]="item.label">
+            <fa-icon class="nav__icon" [icon]="item.icon" aria-hidden="true" />
+            <span class="nav__label">{{ item.label }}</span>
+          </a>
+          }
+          @if (item.children.length && !isMobile()) {
+          <div class="nav__submenu" [id]="'submenu-' + item.route" [attr.aria-label]="item.label + ' navigation'">
+            @for (child of item.children; track child.route) {
+            <a class="nav__sublink" [routerLink]="child.route" routerLinkActive="nav__sublink--active"
+              [routerLinkActiveOptions]="{ exact: true }">{{ child.label }}</a>
+            }
+          </div>
+          }
+        </div>
+        }
+      </nav>
 
-    @if (externalLinks().length > 0) {
-    <nav class="external-links" aria-label="Artist social links">
-      @for (link of externalLinks(); track link.name) {
-      <a class="external-link" [href]="link.url" target="_blank" rel="noopener noreferrer" [attr.aria-label]="link.name"
-        [title]="link.name">
-        <fa-icon [icon]="link.icon" aria-hidden="true" />
-      </a>
+      @if (externalLinks().length > 0) {
+      <nav class="external-links" aria-label="Artist social links">
+        @for (link of externalLinks(); track link.name) {
+        <a class="external-link" [href]="link.url" target="_blank" rel="noopener noreferrer" [attr.aria-label]="link.name"
+          [title]="link.name">
+          <fa-icon [icon]="link.icon" aria-hidden="true" />
+        </a>
+        }
+      </nav>
       }
-    </nav>
-    }
 
-    @if (lastUpdated()) {
-    <dl class="sidebar-stats" [attr.aria-hidden]="sidenavMinimized()">
-      <div>
-        <dt>Last Updated</dt>
-        <dd>{{ lastUpdated() }}</dd>
-      </div>
-    </dl>
-    }
+      @if (lastUpdated()) {
+      <dl class="sidebar-stats" [attr.aria-hidden]="sidenavMinimized()">
+        <div>
+          <dt>Last Updated</dt>
+          <dd>{{ lastUpdated() }}</dd>
+        </div>
+      </dl>
+      }
+    </div>
   </aside>
 
   <main class="dashboard__content">
     <router-outlet />
   </main>
   <lib-ad-banner [ads]="ads"></lib-ad-banner>
+
+  @if (isMobile() && openMobileSubmenu(); as submenu) {
+  <div class="submenu-overlay" role="presentation" (click)="closeMobileSubmenu()">
+    <section class="submenu-overlay__panel" role="dialog" aria-modal="true" [attr.aria-label]="submenu.label + ' navigation'"
+      (click)="$event.stopPropagation()" (keydown.escape)="closeMobileSubmenu()">
+      <div class="submenu-overlay__header">
+        <h2 class="submenu-overlay__title">{{ submenu.label }}</h2>
+        <button type="button" class="submenu-overlay__close" (click)="closeMobileSubmenu()" aria-label="Close submenu">
+          <fa-icon [icon]="closeIcon" aria-hidden="true" />
+        </button>
+      </div>
+      <nav class="submenu-overlay__nav" [attr.aria-label]="submenu.label + ' links'">
+        @for (child of submenu.children; track child.route) {
+        <a class="submenu-overlay__link" [routerLink]="child.route" routerLinkActive="submenu-overlay__link--active"
+          [routerLinkActiveOptions]="{ exact: true }" (click)="closeMobileSubmenu()">{{ child.label }}</a>
+        }
+      </nav>
+    </section>
+  </div>
+  }
 </div>
 } @else {
 <div class="loading" aria-live="polite" aria-busy="true">

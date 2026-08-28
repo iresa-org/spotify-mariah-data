@@ -1,6 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 import { Component, computed, inject, input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
@@ -9,7 +8,7 @@ import { YtdTrack } from '../ytd.types';
 
 @Component({
   selector: 'lib-ytd-top-tracks',
-  imports: [FormatCompactPipe, ScrollingModule, NgOptimizedImage],
+  imports: [FormatCompactPipe, NgOptimizedImage],
   templateUrl: './top-tracks.html',
   styleUrl: './top-tracks.scss',
 })
