@@ -1,6 +1,6 @@
 import { DecimalPipe, DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, ElementRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -30,6 +30,7 @@ export class Tracks implements OnInit {
   private historicDataApi = inject(HistoricDataApi);
   private breakpointObserver = inject(BreakpointObserver);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly elementRef = inject(ElementRef<HTMLElement>);
 
   readonly filterTabs = TRACK_CATEGORIES;
   readonly activeFilter = signal<FilterType>('T');
@@ -77,18 +78,18 @@ export class Tracks implements OnInit {
   });
 
   ngOnInit(): void {
-    const scrollTarget = this.document.defaultView;
-    if (!scrollTarget) return;
-
-    fromEvent(scrollTarget, 'scroll')
-      .pipe(
-        startWith(null),
-        map(() => scrollTarget.scrollY > 280),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe((shouldShow) => {
-        this.showScrollToTop.set(shouldShow);
-      });
+    const scrollTarget = this.document.defaultView ?? this.document;
+    if (scrollTarget) {
+      fromEvent(scrollTarget, 'scroll', { capture: true })
+        .pipe(
+          startWith(null),
+          map(() => this.getCurrentScrollTop() > 280),
+          takeUntilDestroyed(this.destroyRef)
+        )
+        .subscribe((shouldShow) => {
+          this.showScrollToTop.set(shouldShow);
+        });
+    }
 
     this.historicDataApi
       .loadAllTimeRecords()
@@ -151,7 +152,34 @@ export class Tracks implements OnInit {
     return track.album?.coverArt?.sources?.[0]?.url ?? '';
   }
 
+  private getScrollContainer(): HTMLElement | null {
+    const host = this.elementRef.nativeElement;
+    let current: HTMLElement | null = host.parentElement;
+    while (current) {
+      const style = getComputedStyle(current);
+      if (
+        (style.overflowY === 'auto' || style.overflowY === 'scroll') &&
+        current.scrollHeight > current.clientHeight
+      ) {
+        return current;
+      }
+      current = current.parentElement;
+    }
+    return null;
+  }
+
+  private getCurrentScrollTop(): number {
+    const container = this.getScrollContainer();
+    const containerScroll = container ? container.scrollTop : 0;
+    const windowScroll = this.document.defaultView?.scrollY ?? this.document.documentElement?.scrollTop ?? 0;
+    return Math.max(containerScroll, windowScroll);
+  }
+
   scrollToTop(): void {
+    const container = this.getScrollContainer();
+    if (container) {
+      container.scrollTo({ top: 0, behavior: 'smooth' });
+    }
     this.document.defaultView?.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

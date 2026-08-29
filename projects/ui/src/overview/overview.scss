@@ -132,10 +132,35 @@
   margin: 0;
 }
 
+.panel__heading {
+  align-items: flex-start;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
 .panel__heading p {
   color: theme.$theme-muted;
   font-size: 0.85rem;
   margin: 4px 0 0;
+}
+
+.chart-total {
+  color: theme.$theme-text !important;
+  flex-shrink: 0;
+  font-size: 1rem !important;
+  font-weight: 700;
+  margin: 0 !important;
+  text-align: right;
+}
+
+.chart-total span {
+  color: theme.$theme-muted;
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .chart-wrap {
@@ -474,6 +499,10 @@
 
   .panel__heading p {
     font-size: 0.8rem;
+  }
+
+  .chart-total {
+    font-size: 0.9rem !important;
   }
 
   .chart-wrap {

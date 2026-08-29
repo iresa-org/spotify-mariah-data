@@ -37,8 +37,10 @@
               aria-hidden="true" />
           </button>
           } @else {
-          <a class="nav__link" [routerLink]="item.route" routerLinkActive="nav__link--active"
-            [routerLinkActiveOptions]="{ exact: true }" [attr.aria-label]="item.label" [title]="item.label">
+          <a class="nav__link" [routerLink]="item.route" routerLinkActive #activeLink="routerLinkActive"
+            [class.nav__link--active]="activeLink.isActive && !openMobileSubmenuRoute()"
+            [routerLinkActiveOptions]="{ exact: true }" [attr.aria-label]="item.label" [title]="item.label"
+            (click)="closeMobileSubmenu()">
             <fa-icon class="nav__icon" [icon]="item.icon" aria-hidden="true" />
             <span class="nav__label">{{ item.label }}</span>
           </a>

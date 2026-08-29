@@ -109,8 +109,11 @@
     @if (monthlyChart().length > 0) {
     <section class="panel" aria-label="Monthly streams chart">
       <div class="panel__heading">
-        <h3>Monthly Streams (YTD)</h3>
-        <p>Total streams per month this year</p>
+        <div>
+          <h3>Monthly Streams (YTD)</h3>
+          <p>Total streams per month this year</p>
+        </div>
+        <p class="chart-total"><span>Total YTD</span>{{ totalYtdStreams() | formatCompact }}</p>
       </div>
       <div class="chart-wrap" role="img" aria-label="Bar chart showing monthly stream totals">
         <ngx-charts-bar-vertical [view]="barChartView()" [results]="monthlyChart()" [scheme]="barColorScheme"

@@ -9,4 +9,15 @@
   } @else {
   <lib-ytd-top-albums [albums]="albumTotals()" [isYtdPeriod]="isYtdPeriod()" [periodLabel]="periodLabel()"></lib-ytd-top-albums>
   }
+
+  @if (showScrollToTop()) {
+    <button
+      type="button"
+      class="scroll-top-btn"
+      aria-label="Scroll back to top"
+      (click)="scrollToTop()"
+    >
+      Back to top
+    </button>
+  }
 </section>

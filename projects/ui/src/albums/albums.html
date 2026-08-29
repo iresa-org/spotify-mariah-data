@@ -18,11 +18,11 @@
           <ngx-charts-bar-horizontal
             [results]="chartData()"
             [scheme]="colorScheme"
-            [xAxis]="true"
+            [xAxis]="false"
             [yAxis]="true"
             [showDataLabel]="true"
             [xAxisTickFormatting]="axisTickFormat"
-            [dataLabelFormatting]="axisTickFormat"
+            [dataLabelFormatting]="dataLabelFormat"
             [roundEdges]="true"
           />
         } @else {
@@ -34,7 +34,7 @@
           [barPadding]="verticalBarPadding()"
           [showDataLabel]="true"
           [yAxisTickFormatting]="axisTickFormat"
-          [dataLabelFormatting]="axisTickFormat"
+          [dataLabelFormatting]="dataLabelFormat"
           [roundEdges]="true"
         />
         }
@@ -43,4 +43,15 @@
   }
 
   <lib-album-ranking></lib-album-ranking>
+
+  @if (showScrollToTop()) {
+    <button
+      type="button"
+      class="scroll-top-btn"
+      aria-label="Scroll back to top"
+      (click)="scrollToTop()"
+    >
+      Back to top
+    </button>
+  }
 </section>

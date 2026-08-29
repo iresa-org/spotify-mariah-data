@@ -1,4 +1,4 @@
-import { afterNextRender, Component, ElementRef, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { afterNextRender, Component, computed, ElementRef, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowDown, faArrowUp, faMinus } from '@fortawesome/free-solid-svg-icons';
@@ -34,6 +34,7 @@ export class Overview implements OnInit, OnDestroy {
   readonly headerImage = signal<string | null>(null);
   readonly playCounts = signal<Record<string, { count: string; change: string; percentChange: string }> | null>(null);
   readonly monthlyChart = signal<ChartItem[]>([]);
+  readonly totalYtdStreams = computed(() => this.monthlyChart().reduce((total, month) => total + month.value, 0));
   readonly categoryChart = signal<ChartItem[]>([]);
   readonly topTracks = signal<{ name: string; playcount: number; diff: string }[]>([]);
   readonly listenersChart = signal<ChartSeries[]>([]);

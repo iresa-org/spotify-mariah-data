@@ -1,8 +1,9 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { DOCUMENT } from '@angular/common';
+import { Component, computed, DestroyRef, ElementRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
-import { map } from 'rxjs';
+import { fromEvent, map, startWith } from 'rxjs';
 import { AlbumRanking } from './album-ranking/album-ranking';
 import { AlbumRecord } from './album.config';
 import { DailyDataApi, formatCompact, toNumber } from 'ui-shared';
@@ -13,10 +14,14 @@ import { DailyDataApi, formatCompact, toNumber } from 'ui-shared';
   templateUrl: './albums.html',
   styleUrl: './albums.scss',
 })
-export class Albums {
+export class Albums implements OnInit {
+  private readonly document = inject(DOCUMENT);
   private dailyDataApi = inject(DailyDataApi);
-
   private readonly breakpointObserver = inject(BreakpointObserver);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly elementRef = inject(ElementRef<HTMLElement>);
+
+  readonly showScrollToTop = signal(false);
 
   readonly albums = signal(
     (this.dailyDataApi.getAlbums() as AlbumRecord[]).sort(
@@ -49,4 +54,52 @@ export class Albums {
   });
 
   axisTickFormat = (val: number) => formatCompact(val);
+
+  dataLabelFormat = (val: number) => (val === 0 ? '' : formatCompact(val));
+
+  ngOnInit(): void {
+    const scrollTarget = this.document.defaultView ?? this.document;
+    if (scrollTarget) {
+      fromEvent(scrollTarget, 'scroll', { capture: true })
+        .pipe(
+          startWith(null),
+          map(() => this.getCurrentScrollTop() > 280),
+          takeUntilDestroyed(this.destroyRef)
+        )
+        .subscribe((shouldShow) => {
+          this.showScrollToTop.set(shouldShow);
+        });
+    }
+  }
+
+  private getScrollContainer(): HTMLElement | null {
+    const host = this.elementRef.nativeElement;
+    let current: HTMLElement | null = host.parentElement;
+    while (current) {
+      const style = getComputedStyle(current);
+      if (
+        (style.overflowY === 'auto' || style.overflowY === 'scroll') &&
+        current.scrollHeight > current.clientHeight
+      ) {
+        return current;
+      }
+      current = current.parentElement;
+    }
+    return null;
+  }
+
+  private getCurrentScrollTop(): number {
+    const container = this.getScrollContainer();
+    const containerScroll = container ? container.scrollTop : 0;
+    const windowScroll = this.document.defaultView?.scrollY ?? this.document.documentElement?.scrollTop ?? 0;
+    return Math.max(containerScroll, windowScroll);
+  }
+
+  scrollToTop(): void {
+    const container = this.getScrollContainer();
+    if (container) {
+      container.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    this.document.defaultView?.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }

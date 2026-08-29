@@ -1,5 +1,7 @@
-import { computed, Directive, inject, OnInit, signal } from '@angular/core';
-import { forkJoin } from 'rxjs';
+import { DOCUMENT } from '@angular/common';
+import { computed, DestroyRef, Directive, ElementRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { forkJoin, fromEvent, map, startWith } from 'rxjs';
 import { DailyDataApi, HistoricDataApi, YtdData } from 'ui-shared';
 import { AlbumYtd, PeriodOption, YtdTrack } from './ytd.types';
 
@@ -22,8 +24,13 @@ const MONTH_NAMES = [
 
 @Directive()
 export abstract class YtdPage implements OnInit {
+  private readonly document = inject(DOCUMENT);
   private readonly dailyDataApi = inject(DailyDataApi);
   private readonly historicDataApi = inject(HistoricDataApi);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly elementRef = inject(ElementRef<HTMLElement>);
+
+  readonly showScrollToTop = signal(false);
 
   private readonly ytdData = signal<YtdData | null>(null);
   private readonly trackMeta = signal(new Map<string, YtdTrack>());
@@ -90,6 +97,19 @@ export abstract class YtdPage implements OnInit {
   readonly trackCount = computed(() => this.topTracks().length);
 
   ngOnInit(): void {
+    const scrollTarget = this.document.defaultView ?? this.document;
+    if (scrollTarget) {
+      fromEvent(scrollTarget, 'scroll', { capture: true })
+        .pipe(
+          startWith(null),
+          map(() => this.getCurrentScrollTop() > 280),
+          takeUntilDestroyed(this.destroyRef)
+        )
+        .subscribe((shouldShow) => {
+          this.showScrollToTop.set(shouldShow);
+        });
+    }
+
     forkJoin({
       tracksLoaded: this.dailyDataApi.loadTracks(),
       ytd: this.historicDataApi.loadYtd(),
@@ -128,5 +148,36 @@ export abstract class YtdPage implements OnInit {
 
   selectPeriod(value: string): void {
     this.selectedPeriod.set(value);
+  }
+
+  private getScrollContainer(): HTMLElement | null {
+    const host = this.elementRef.nativeElement;
+    let current: HTMLElement | null = host.parentElement;
+    while (current) {
+      const style = getComputedStyle(current);
+      if (
+        (style.overflowY === 'auto' || style.overflowY === 'scroll') &&
+        current.scrollHeight > current.clientHeight
+      ) {
+        return current;
+      }
+      current = current.parentElement;
+    }
+    return null;
+  }
+
+  private getCurrentScrollTop(): number {
+    const container = this.getScrollContainer();
+    const containerScroll = container ? container.scrollTop : 0;
+    const windowScroll = this.document.defaultView?.scrollY ?? this.document.documentElement?.scrollTop ?? 0;
+    return Math.max(containerScroll, windowScroll);
+  }
+
+  scrollToTop(): void {
+    const container = this.getScrollContainer();
+    if (container) {
+      container.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    this.document.defaultView?.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
