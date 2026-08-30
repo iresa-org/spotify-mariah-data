@@ -288,6 +288,12 @@ thead th {
   color: #C0C0C0;
 }
 
+.anniversary-icon {
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  color: #FF6F91;
+}
+
 .track-artists {
   color: theme.$theme-muted;
   font-size: 0.72rem;

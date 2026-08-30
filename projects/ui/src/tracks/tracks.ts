@@ -5,7 +5,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
+import { faBirthdayCake, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
 import { fromEvent, map, startWith } from 'rxjs';
 import { DailyDataApi, FormatCompactPipe, HistoricDataApi, PercentWithSignPipe } from 'ui-shared';
 import { TRACK_CATEGORIES, FilterType, TrackItem } from './tracks.config';
@@ -39,6 +39,7 @@ export class Tracks implements OnInit {
   readonly sortDirection = signal<SortDirection>('descending');
   readonly sortAscendingIcon = faSortUp;
   readonly sortDescendingIcon = faSortDown;
+  readonly anniversaryIcon = faBirthdayCake;
   readonly showScrollToTop = signal(false);
   readonly allTimeRecordMap = signal<Record<string, RecordEntry> | null>(null);
   readonly yearRecordMap = signal<Record<string, RecordEntry> | null>(null);
@@ -150,6 +151,17 @@ export class Tracks implements OnInit {
 
   getAlbumArt(track: TrackItem): string {
     return track.album?.coverArt?.sources?.[0]?.url ?? '';
+  }
+
+  isAnniversary(track: TrackItem): boolean {
+    const isoDate = track.firstPublishedAt;
+    if (!isoDate) return false;
+
+    const published = new Date(isoDate);
+    if (Number.isNaN(published.getTime())) return false;
+
+    const today = new Date();
+    return published.getMonth() === today.getMonth() && published.getDate() === today.getDate();
   }
 
   private getScrollContainer(): HTMLElement | null {

@@ -24,4 +24,5 @@ export interface TrackItem {
     name?: string;
     coverArt?: { sources?: { url: string }[] };
   };
+  firstPublishedAt?: string;
 }

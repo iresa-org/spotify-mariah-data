@@ -47,7 +47,7 @@ export class DailyDataApi {
 
     resp['tracks'].forEach((item: any) => {
       const { trackDetails, dailyChanges, categories, countMerged } = item;
-      const { uid, itemV2 } = trackDetails;
+      const { uid, itemV2, itemV3 } = trackDetails;
       if (uid && !this.currMap.has(uid)) {
         this.currMap.set(uid, {
           uid,
@@ -60,6 +60,7 @@ export class DailyDataApi {
           discNumber: itemV2?.data?.discNumber,
           trackNumber: itemV2?.data?.trackNumber,
           associationsV3: itemV2?.data?.associationsV3,
+          firstPublishedAt: itemV3?.data?.identityTrait?.contentHierarchyParent?.publishingMetadataTrait?.firstPublishedAt?.isoString,
           isVideo: categories.includes('V'),
           categories,
           countMerged

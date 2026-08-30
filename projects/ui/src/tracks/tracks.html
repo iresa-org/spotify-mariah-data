@@ -83,6 +83,14 @@
                         [routerLink]="['/ui/tracks', track.uid]"
                         [attr.aria-label]="'View detail for ' + track.name"
                       >{{ track.name }}</a>
+                      @if (isAnniversary(track)) {
+                        <fa-icon
+                          class="anniversary-icon"
+                          [icon]="anniversaryIcon"
+                          title="Release anniversary"
+                          aria-label="Release anniversary"
+                        />
+                      }
                       @if (recordMapLoaded()) {
                         @if (hasRecord(track.uid, 'allTime')) {
                           <span
@@ -197,6 +205,14 @@
                         [routerLink]="['/ui/tracks', track.uid]"
                         [attr.aria-label]="'View detail for ' + track.name"
                       >{{ track.name }}</a>
+                      @if (isAnniversary(track)) {
+                        <fa-icon
+                          class="anniversary-icon"
+                          [icon]="anniversaryIcon"
+                          title="Release anniversary"
+                          aria-label="Release anniversary"
+                        />
+                      }
                       @if (recordMapLoaded()) {
                         @if (hasRecord(track.uid, 'allTime')) {
                           <span
