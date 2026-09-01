@@ -9,30 +9,17 @@
 
   <div role="tablist" aria-label="Track category filter" class="filters">
     @for (tab of filterTabs; track tab.value) {
-      <button
-        role="tab"
-        type="button"
-        class="filter-btn"
-        [class.filter-btn--active]="activeFilter() === tab.value"
-        [attr.aria-selected]="activeFilter() === tab.value"
-        (click)="activeFilter.set(tab.value)"
-      >
-        {{ tab.label }}
-      </button>
+    <button role="tab" type="button" class="filter-btn" [class.filter-btn--active]="activeFilter() === tab.value"
+      [attr.aria-selected]="activeFilter() === tab.value" (click)="activeFilter.set(tab.value)">
+      {{ tab.label }}
+    </button>
     }
   </div>
 
   <div class="search-bar">
     <label for="track-search" class="sr-only">Search by track or album name</label>
-    <input
-      id="track-search"
-      type="search"
-      class="search-input"
-      placeholder="Search by track or album name&hellip;"
-      [value]="searchQuery()"
-      (input)="searchQuery.set($any($event.target).value)"
-      autocomplete="off"
-    />
+    <input id="track-search" type="search" class="search-input" placeholder="Search by track or album name&hellip;"
+      [value]="searchQuery()" (input)="searchQuery.set($any($event.target).value)" autocomplete="off" />
   </div>
 
   <section class="panel" aria-label="Tracks list">
@@ -43,227 +30,176 @@
 
     <div class="table-wrap">
       @if (isMobile()) {
-        <table class="tracks-table tracks-table--mobile">
-          <caption class="sr-only">Tracks sorted by daily streams</caption>
-          <colgroup>
-            <col class="col-rank" />
-            <col class="col-track" />
-            <col class="col-metric" />
-            <col class="col-metric" />
-            <col class="col-metric" />
-          </colgroup>
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Track</th>
-              <th scope="col" class="metric-header">Total</th>
-              <th scope="col" class="metric-header">Daily</th>
-              <th scope="col" class="metric-header">Change</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (track of list(); track track.uid; let i = $index) {
-              <tr>
-                <td class="rank" data-label="Rank">{{ i + 1 }}</td>
-                <th scope="row" class="track-cell">
-                  @if (getAlbumArt(track)) {
-                    <img
-                      class="track-art"
-                      [ngSrc]="getAlbumArt(track)"
-                      [alt]="track.album?.name + ' album art'"
-                      loading="lazy"
-                      width="40"
-                      height="40"
-                    />
+      <table class="tracks-table tracks-table--mobile">
+        <caption class="sr-only">Tracks sorted by daily streams</caption>
+        <colgroup>
+          <col class="col-rank" />
+          <col class="col-track" />
+          <col class="col-metric" />
+          <col class="col-metric" />
+          <col class="col-metric" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Track</th>
+            <th scope="col" class="metric-header">Total</th>
+            <th scope="col" class="metric-header">Daily</th>
+            <th scope="col" class="metric-header">Change</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (track of list(); track track.uid; let i = $index) {
+          <tr>
+            <td class="rank" data-label="Rank">{{ i + 1 }}</td>
+            <th scope="row" class="track-cell">
+              @if (getAlbumArt(track)) {
+              <img class="track-art" [ngSrc]="getAlbumArt(track)" [alt]="track.album?.name + ' album art'"
+                loading="lazy" width="40" height="40" />
+              }
+              <div class="track-info">
+                <div class="track-title-row">
+                  <a class="track-name track-link" [routerLink]="['/ui/tracks', track.uid]"
+                    [attr.aria-label]="'View detail for ' + track.name">{{ track.name }}</a>
+                  @if (recordMapLoaded()) {
+                  @if (isAnniversary(track)) {
+                  <fa-icon class="anniversary-icon" [icon]="anniversaryIcon" title="Release anniversary"
+                    aria-label="Release anniversary" />
                   }
-                  <div class="track-info">
-                    <div class="track-title-row">
-                      <a
-                        class="track-name track-link"
-                        [routerLink]="['/ui/tracks', track.uid]"
-                        [attr.aria-label]="'View detail for ' + track.name"
-                      >{{ track.name }}</a>
-                      @if (isAnniversary(track)) {
-                        <fa-icon
-                          class="anniversary-icon"
-                          [icon]="anniversaryIcon"
-                          title="Release anniversary"
-                          aria-label="Release anniversary"
-                        />
-                      }
-                      @if (recordMapLoaded()) {
-                        @if (hasRecord(track.uid, 'allTime')) {
-                          <span
-                            class="record-star record-star--gold"
-                            title="Biggest streaming day ever"
-                            aria-label="Biggest streaming day ever"
-                          >★</span>
-                        }
-                        @if (hasRecord(track.uid, 'ytd')) {
-                          <span
-                            class="record-star record-star--silver"
-                            title="Biggest streaming day of the year"
-                            aria-label="Biggest streaming day of the year"
-                          >★</span>
-                        }
-                      }
-                    </div>
-                    <span class="track-artists">
-                      @for (artist of track.artists; track artist.uri; let last = $last) {
-                        {{ artist.profile?.name }}{{ last ? '' : ', ' }}
-                      }
-                    </span>
-                  </div>
-                </th>
-                <td class="metric" data-label="Total">
-                  <span class="metric__value">{{ track.playcount | formatCompact}}</span>
-                  <span class="metric__label">Total</span>
-                </td>
-                <td class="metric" data-label="Daily">
-                  <span class="metric__value">{{ track.change | formatCompact }}</span>
-                  <span class="metric__label">Daily</span>
-                </td>
-                <td
-                  class="metric"
-                  data-label="Change"
-                  [class.delta-positive]="+track.percent >= 0"
-                  [class.delta-negative]="+track.percent < 0"
-                >
-                  <span class="metric__value">{{ track.percent | percentWithSign}}</span>
-                  <span class="metric__label">Change</span>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
+                  @if (hasRecord(track.uid, 'allTime')) {
+                  <span class="record-star record-star--gold" title="Biggest streaming day ever"
+                    aria-label="Biggest streaming day ever">★</span>
+                  }
+                  @if (hasRecord(track.uid, 'ytd')) {
+                  <span class="record-star record-star--silver" title="Biggest streaming day of the year"
+                    aria-label="Biggest streaming day of the year">★</span>
+                  }
+                  }
+                </div>
+                <span class="track-artists">
+                  @for (artist of track.artists; track artist.uri; let last = $last) {
+                  {{ artist.profile?.name }}{{ last ? '' : ', ' }}
+                  }
+                </span>
+              </div>
+            </th>
+            <td class="metric" data-label="Total">
+              <span class="metric__value">{{ track.playcount | formatCompact}}</span>
+              <span class="metric__label">Total</span>
+            </td>
+            <td class="metric" data-label="Daily">
+              <span class="metric__value">{{ track.change | formatCompact }}</span>
+              <span class="metric__label">Daily</span>
+            </td>
+            <td class="metric" data-label="Change" [class.delta-positive]="+track.percent >= 0"
+              [class.delta-negative]="+track.percent < 0">
+              <span class="metric__value">{{ track.percent | percentWithSign}}</span>
+              <span class="metric__label">Change</span>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
       } @else {
-        <table class="tracks-table tracks-table--head">
-          <caption class="sr-only">Tracks sorted by daily streams</caption>
-          <colgroup>
-            <col class="col-rank" />
-            <col class="col-track" />
-            <col class="col-metric" />
-            <col class="col-metric" />
-            <col class="col-metric" />
-          </colgroup>
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col" [attr.aria-sort]="getAriaSort('name')">
-                <button type="button" class="sort-btn" (click)="sortBy('name')">
-                  Track
-                  @if (isSortedColumn('name')) {
-                    <fa-icon [icon]="getSortIcon('name')" aria-hidden="true" />
+      <table class="tracks-table tracks-table--head">
+        <caption class="sr-only">Tracks sorted by daily streams</caption>
+        <colgroup>
+          <col class="col-rank" />
+          <col class="col-track" />
+          <col class="col-metric" />
+          <col class="col-metric" />
+          <col class="col-metric" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col" [attr.aria-sort]="getAriaSort('name')">
+              <button type="button" class="sort-btn" (click)="sortBy('name')">
+                Track
+                @if (isSortedColumn('name')) {
+                <fa-icon [icon]="getSortIcon('name')" aria-hidden="true" />
+                }
+              </button>
+            </th>
+            <th scope="col" class="metric-header" [attr.aria-sort]="getAriaSort('playcount')">
+              <button type="button" class="sort-btn" (click)="sortBy('playcount')">
+                Total
+                @if (isSortedColumn('playcount')) {
+                <fa-icon [icon]="getSortIcon('playcount')" aria-hidden="true" />
+                }
+              </button>
+            </th>
+            <th scope="col" class="metric-header" [attr.aria-sort]="getAriaSort('change')">
+              <button type="button" class="sort-btn" (click)="sortBy('change')">
+                Daily
+                @if (isSortedColumn('change')) {
+                <fa-icon [icon]="getSortIcon('change')" aria-hidden="true" />
+                }
+              </button>
+            </th>
+            <th scope="col" class="metric-header" [attr.aria-sort]="getAriaSort('percent')">
+              <button type="button" class="sort-btn" (click)="sortBy('percent')">
+                Change
+                @if (isSortedColumn('percent')) {
+                <fa-icon [icon]="getSortIcon('percent')" aria-hidden="true" />
+                }
+              </button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (track of list(); track track.uid; let i = $index) {
+          <tr>
+            <td class="rank" data-label="Rank">{{ i + 1 }}</td>
+            <th scope="row" class="track-cell">
+              @if (getAlbumArt(track)) {
+              <img class="track-art" [ngSrc]="getAlbumArt(track)" [alt]="track.album?.name + ' album art'"
+                loading="lazy" width="40" height="40" />
+              }
+              <div class="track-info">
+                <div class="track-title-row">
+                  <a class="track-name track-link" [routerLink]="['/ui/tracks', track.uid]"
+                    [attr.aria-label]="'View detail for ' + track.name">{{ track.name }}</a>
+                  @if (recordMapLoaded()) {
+                  @if (isAnniversary(track)) {
+                  <fa-icon class="anniversary-icon" [icon]="anniversaryIcon" title="Release anniversary"
+                    aria-label="Release anniversary" />
                   }
-                </button>
-              </th>
-              <th scope="col" class="metric-header" [attr.aria-sort]="getAriaSort('playcount')">
-                <button type="button" class="sort-btn" (click)="sortBy('playcount')">
-                  Total
-                  @if (isSortedColumn('playcount')) {
-                    <fa-icon [icon]="getSortIcon('playcount')" aria-hidden="true" />
+                  @if (hasRecord(track.uid, 'allTime')) {
+                  <span class="record-star record-star--gold" title="Biggest streaming day EVER"
+                    aria-label="Biggest streaming day ever">★</span>
                   }
-                </button>
-              </th>
-              <th scope="col" class="metric-header" [attr.aria-sort]="getAriaSort('change')">
-                <button type="button" class="sort-btn" (click)="sortBy('change')">
-                  Daily
-                  @if (isSortedColumn('change')) {
-                    <fa-icon [icon]="getSortIcon('change')" aria-hidden="true" />
+                  @if (hasRecord(track.uid, 'ytd')) {
+                  <span class="record-star record-star--silver" title="Biggest streaming day of the year"
+                    aria-label="Biggest streaming day of the year">★</span>
                   }
-                </button>
-              </th>
-              <th scope="col" class="metric-header" [attr.aria-sort]="getAriaSort('percent')">
-                <button type="button" class="sort-btn" (click)="sortBy('percent')">
-                  Change
-                  @if (isSortedColumn('percent')) {
-                    <fa-icon [icon]="getSortIcon('percent')" aria-hidden="true" />
                   }
-                </button>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (track of list(); track track.uid; let i = $index) {
-              <tr>
-                <td class="rank" data-label="Rank">{{ i + 1 }}</td>
-                <th scope="row" class="track-cell">
-                  @if (getAlbumArt(track)) {
-                    <img
-                      class="track-art"
-                      [ngSrc]="getAlbumArt(track)"
-                      [alt]="track.album?.name + ' album art'"
-                      loading="lazy"
-                      width="40"
-                      height="40"
-                    />
+                </div>
+                <span class="track-artists">
+                  @for (artist of track.artists; track artist.uri; let last = $last) {
+                  {{ artist.profile?.name }}{{ last ? '' : ', ' }}
                   }
-                  <div class="track-info">
-                    <div class="track-title-row">
-                      <a
-                        class="track-name track-link"
-                        [routerLink]="['/ui/tracks', track.uid]"
-                        [attr.aria-label]="'View detail for ' + track.name"
-                      >{{ track.name }}</a>
-                      @if (isAnniversary(track)) {
-                        <fa-icon
-                          class="anniversary-icon"
-                          [icon]="anniversaryIcon"
-                          title="Release anniversary"
-                          aria-label="Release anniversary"
-                        />
-                      }
-                      @if (recordMapLoaded()) {
-                        @if (hasRecord(track.uid, 'allTime')) {
-                          <span
-                            class="record-star record-star--gold"
-                            title="Biggest streaming day EVER"
-                            aria-label="Biggest streaming day ever"
-                          >★</span>
-                        }
-                        @if (hasRecord(track.uid, 'ytd')) {
-                          <span
-                            class="record-star record-star--silver"
-                            title="Biggest streaming day of the year"
-                            aria-label="Biggest streaming day of the year"
-                          >★</span>
-                        }
-                      }
-                    </div>
-                    <span class="track-artists">
-                      @for (artist of track.artists; track artist.uri; let last = $last) {
-                        {{ artist.profile?.name }}{{ last ? '' : ', ' }}
-                      }
-                    </span>
-                  </div>
-                </th>
-                <td class="metric" data-label="Total">{{ track.playcount | number}}</td>
-                <td class="metric" data-label="Daily">{{ track.change | number}}</td>
-                <td
-                  class="metric"
-                  data-label="Change"
-                  [class.delta-positive]="+track.percent >= 0"
-                  [class.delta-negative]="+track.percent < 0"
-                >
-                  {{ track.percent | percentWithSign }}
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
+                </span>
+              </div>
+            </th>
+            <td class="metric" data-label="Total">{{ track.playcount | number}}</td>
+            <td class="metric" data-label="Daily">{{ track.change | number}}</td>
+            <td class="metric" data-label="Change" [class.delta-positive]="+track.percent >= 0"
+              [class.delta-negative]="+track.percent < 0">
+              {{ track.percent | percentWithSign }}
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
       }
     </div>
   </section>
 
   @if (showScrollToTop()) {
-    <button
-      type="button"
-      class="scroll-top-btn"
-      aria-label="Scroll back to top"
-      (click)="scrollToTop()"
-    >
-      Back to top
-    </button>
+  <button type="button" class="scroll-top-btn" aria-label="Scroll back to top" (click)="scrollToTop()">
+    Back to top
+  </button>
   }
 
 </section>

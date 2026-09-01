@@ -123,6 +123,12 @@
   color: #C0C0C0;
 }
 
+.anniversary-icon {
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  color: #FF6F91;
+}
+
 .album-card__stats {
   display: grid;
   gap: 4px;

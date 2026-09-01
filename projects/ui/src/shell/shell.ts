@@ -94,6 +94,7 @@ export class Shell implements OnInit {
 
   toggleSidenav(): void {
     this.sidenavMinimized.update((isMinimized) => !isMinimized);
+    this.openMobileSubmenuRoute.set(null);
   }
 
   toggleSubmenu(route: string): void {
@@ -102,6 +103,12 @@ export class Shell implements OnInit {
 
   closeMobileSubmenu(): void {
     this.openMobileSubmenuRoute.set(null);
+  }
+
+  closeMinimizedSubmenu(): void {
+    if (this.sidenavMinimized()) {
+      this.openMobileSubmenuRoute.set(null);
+    }
   }
 
   ngOnInit(): void {

@@ -2,12 +2,14 @@ import { Component, computed, effect, inject, OnInit, output, signal } from '@an
 import { AlbumRecord } from '../album.config';
 import { DailyDataApi, FormatCompactPipe, FormatSignedCompactPipe, HistoricDataApi, PercentWithSignPipe, toNumber } from 'ui-shared';
 import { NgOptimizedImage } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faBirthdayCake } from '@fortawesome/free-solid-svg-icons';
 
 type RecordEntry = Record<string, { change: string; date: string }>;
 
 @Component({
   selector: 'lib-album-list',
-  imports: [FormatCompactPipe, FormatSignedCompactPipe, PercentWithSignPipe, NgOptimizedImage],
+  imports: [FormatCompactPipe, FormatSignedCompactPipe, PercentWithSignPipe, NgOptimizedImage, FontAwesomeModule],
   templateUrl: './album-list.html',
   styleUrl: './album-list.scss',
 })
@@ -17,6 +19,7 @@ export class AlbumList implements OnInit {
 
   protected readonly albumSelected = output<AlbumRecord | null>();
 
+  readonly anniversaryIcon = faBirthdayCake;
   readonly allTimeRecordMap = signal<RecordEntry | null>(null);
   readonly yearRecordMap = signal<RecordEntry | null>(null);
   readonly recordMapLoaded = computed(() => this.allTimeRecordMap() !== null && this.yearRecordMap() !== null);
@@ -61,6 +64,17 @@ export class AlbumList implements OnInit {
     const lastUpdatedDay = lastUpdated?.match(/^(\d{4}-\d{2}-\d{2})/)?.[1] ?? '';
 
     return rec.date === lastUpdatedDay;
+  }
+
+  isAnniversary(album: AlbumRecord): boolean {
+    const isoDate = album.albumDetails?.date?.isoString;
+    if (!isoDate) return false;
+
+    const released = new Date(isoDate);
+    if (Number.isNaN(released.getTime())) return false;
+
+    const today = new Date();
+    return released.getUTCMonth() === today.getMonth() && released.getUTCDate() === today.getDate();
   }
 
   getCoverArt(album: AlbumRecord): string {

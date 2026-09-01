@@ -49,7 +49,7 @@
           <div class="nav__submenu" [id]="'submenu-' + item.route" [attr.aria-label]="item.label + ' navigation'">
             @for (child of item.children; track child.route) {
             <a class="nav__sublink" [routerLink]="child.route" routerLinkActive="nav__sublink--active"
-              [routerLinkActiveOptions]="{ exact: true }">{{ child.label }}</a>
+              [routerLinkActiveOptions]="{ exact: true }" (click)="closeMinimizedSubmenu()">{{ child.label }}</a>
             }
           </div>
           }

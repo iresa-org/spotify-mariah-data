@@ -24,6 +24,7 @@ export interface AlbumRecord {
     uri: string;
     coverArt?: { sources?: CoverSource[] };
     tracks: AlbumTrack[];
+    date?: { isoString?: string };
   };
   dailyChanges: {
     count: NumericLike;
