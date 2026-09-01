@@ -1,8 +1,8 @@
 import { DecimalPipe, DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { Component, computed, DestroyRef, ElementRef, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, ElementRef, inject, OnInit, AfterViewInit, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faBirthdayCake, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
@@ -24,13 +24,16 @@ type SortDirection = 'ascending' | 'descending';
   templateUrl: './tracks.html',
   styleUrl: './tracks.scss',
 })
-export class Tracks implements OnInit {
+export class Tracks implements OnInit, AfterViewInit {
   private readonly document = inject(DOCUMENT);
   private dailyDataApi = inject(DailyDataApi);
   private historicDataApi = inject(HistoricDataApi);
   private breakpointObserver = inject(BreakpointObserver);
   private readonly destroyRef = inject(DestroyRef);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
+  private readonly router = inject(Router);
+
+  private readonly SCROLL_POSITION_KEY = 'tracks-scroll-position';
 
   readonly filterTabs = TRACK_CATEGORIES;
   readonly activeFilter = signal<FilterType>('T');
@@ -90,6 +93,12 @@ export class Tracks implements OnInit {
         .subscribe((shouldShow) => {
           this.showScrollToTop.set(shouldShow);
         });
+
+      fromEvent(scrollTarget, 'scroll', { capture: true })
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(() => {
+          this.saveScrollPosition();
+        });
     }
 
     this.historicDataApi
@@ -113,6 +122,16 @@ export class Tracks implements OnInit {
           // Ignore fetch errors silently
         },
       });
+  }
+
+  ngAfterViewInit(): void {
+    // Wait for the list to be rendered in the DOM before restoring scroll position
+    // Use requestAnimationFrame twice to ensure layout is complete
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        this.restoreScrollPosition();
+      });
+    });
   }
 
   hasRecord(uid: string, type: 'allTime' | 'ytd' = 'allTime'): boolean {
@@ -193,5 +212,30 @@ export class Tracks implements OnInit {
       container.scrollTo({ top: 0, behavior: 'smooth' });
     }
     this.document.defaultView?.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  private saveScrollPosition(): void {
+    const scrollTop = this.getCurrentScrollTop();
+    sessionStorage.setItem(this.SCROLL_POSITION_KEY, scrollTop.toString());
+  }
+
+  private restoreScrollPosition(): void {
+    const savedPosition = sessionStorage.getItem(this.SCROLL_POSITION_KEY);
+    if (savedPosition) {
+      const scrollTop = parseInt(savedPosition, 10);
+      const container = this.getScrollContainer();
+      
+      if (container) {
+        container.scrollTop = scrollTop;
+      } else {
+        const window = this.document.defaultView;
+        if (window) {
+          window.scrollTo(0, scrollTop);
+        }
+      }
+      
+      // Clear the saved position after restoring
+      sessionStorage.removeItem(this.SCROLL_POSITION_KEY);
+    }
   }
 }
