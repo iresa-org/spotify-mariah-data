@@ -2,6 +2,8 @@ import { appendFile, readFile } from 'fs/promises';
 import { getLatestFile } from './utils/file.utils.ts';
 import { fetchMonthlyListeners } from './utils/monthly-listeners.utils.ts';
 
+const CHECK_INTERVAL_MS = 5 * 60 * 1000;
+
 async function getLatestRecordedListeners(): Promise<number> {
   const dailyPath = await getLatestFile('./daily', ['.json']);
   if (!dailyPath) {
@@ -33,9 +35,16 @@ async function main() {
   const previousListeners = await getLatestRecordedListeners();
 
   try {
-    const changed = await checkOnce(previousListeners);
-    if (changed && process.env.GITHUB_OUTPUT) {
-      await appendFile(process.env.GITHUB_OUTPUT, 'changed=true\n');
+    while (true) {
+      if (await checkOnce(previousListeners)) {
+        if (process.env.GITHUB_OUTPUT) {
+          await appendFile(process.env.GITHUB_OUTPUT, 'changed=true\n');
+        }
+        return;
+      }
+
+      console.log(`Next monthly listener check in ${CHECK_INTERVAL_MS / 60000} minutes.`);
+      await new Promise((resolve) => setTimeout(resolve, CHECK_INTERVAL_MS));
     }
   } catch (error) {
     console.error('Monthly listener check failed:', error);
