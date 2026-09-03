@@ -59,7 +59,7 @@
               }
               <div class="track-info">
                 <div class="track-title-row">
-                  <a class="track-name track-link" [routerLink]="['/tracks', track.uid]"
+                  <a class="track-name track-link" [routerLink]="['/tracks', track.uid]" (click)="rememberScrollPosition()"
                     [attr.aria-label]="'View detail for ' + track.name">{{ track.name }}</a>
                   @if (recordMapLoaded()) {
                   @if (isAnniversary(track)) {
@@ -158,7 +158,7 @@
               }
               <div class="track-info">
                 <div class="track-title-row">
-                  <a class="track-name track-link" [routerLink]="['/tracks', track.uid]"
+                  <a class="track-name track-link" [routerLink]="['/tracks', track.uid]" (click)="rememberScrollPosition()"
                     [attr.aria-label]="'View detail for ' + track.name">{{ track.name }}</a>
                   @if (recordMapLoaded()) {
                   @if (isAnniversary(track)) {

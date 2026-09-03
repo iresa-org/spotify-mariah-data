@@ -2,7 +2,7 @@ import { DecimalPipe, DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Component, computed, DestroyRef, ElementRef, inject, OnInit, AfterViewInit, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faBirthdayCake, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
@@ -31,7 +31,6 @@ export class Tracks implements OnInit, AfterViewInit {
   private breakpointObserver = inject(BreakpointObserver);
   private readonly destroyRef = inject(DestroyRef);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
-  private readonly router = inject(Router);
 
   private readonly SCROLL_POSITION_KEY = 'tracks-scroll-position';
 
@@ -94,11 +93,6 @@ export class Tracks implements OnInit, AfterViewInit {
           this.showScrollToTop.set(shouldShow);
         });
 
-      fromEvent(scrollTarget, 'scroll', { capture: true })
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => {
-          this.saveScrollPosition();
-        });
     }
 
     this.historicDataApi
@@ -214,7 +208,7 @@ export class Tracks implements OnInit, AfterViewInit {
     this.document.defaultView?.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  private saveScrollPosition(): void {
+  rememberScrollPosition(): void {
     const scrollTop = this.getCurrentScrollTop();
     sessionStorage.setItem(this.SCROLL_POSITION_KEY, scrollTop.toString());
   }
@@ -224,7 +218,7 @@ export class Tracks implements OnInit, AfterViewInit {
     if (savedPosition) {
       const scrollTop = parseInt(savedPosition, 10);
       const container = this.getScrollContainer();
-      
+
       if (container) {
         container.scrollTop = scrollTop;
       } else {
@@ -233,7 +227,6 @@ export class Tracks implements OnInit, AfterViewInit {
           window.scrollTo(0, scrollTop);
         }
       }
-      
       // Clear the saved position after restoring
       sessionStorage.removeItem(this.SCROLL_POSITION_KEY);
     }
