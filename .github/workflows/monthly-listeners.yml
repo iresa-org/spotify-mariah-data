@@ -29,15 +29,3 @@ jobs:
       - name: Monitor monthly listeners
         id: monitor
         run: node scripts/check_monthly_listeners.ts
-
-      - name: Disable monthly listener monitor
-        if: steps.monitor.outputs.changed == 'true'
-        uses: actions/github-script@v8
-        with:
-          script: |
-            await github.rest.actions.disableWorkflow({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'monthly-listeners.yml'
-            });
-            console.log('Monthly listener monitor disabled after detecting a change.');
