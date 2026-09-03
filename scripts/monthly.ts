@@ -66,8 +66,10 @@ async function calculateMonthlySum(map: Map<string, string[]>): Promise<Map<stri
 
     const latestDay = fileContents.get(sortedDays.at(-1)!);
     const firstTotal = firstDay?.playCounts.total.count ?? '0';
+    const firstChange = firstDay?.playCounts.total.change ?? '0';
     const latestTotal = latestDay?.playCounts.total.count ?? '0';
-    groups.set(key, String(subtractNumbers(firstTotal, latestTotal)));
+    const previousTotal = String(BigInt(firstTotal) - BigInt(firstChange));
+    groups.set(key, String(subtractNumbers(previousTotal, latestTotal)));
   }
   return groups;
 }
