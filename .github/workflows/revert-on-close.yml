@@ -1,12 +1,7 @@
 name: Revert branch to data on unmerged PR close
 
-# Triggers when a PR is closed without being merged, then resets the PR's
-# head branch back to match the latest `data` branch, discarding the
-# unmerged changes.
 on:
-  pull_request:
-    types: [closed]
-    branches: [test_data]
+  workflow_dispatch:
 
 jobs:
   revert-to-data:
