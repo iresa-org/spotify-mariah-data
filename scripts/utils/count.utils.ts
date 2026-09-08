@@ -105,7 +105,9 @@ export function getTrackCategories(item: TrackContentItem): TrackCategory[] {
 }
 
 export function calcPercentChange(prevChange: BigInt, newChange: BigInt): number {
-  return Number(prevChange) ? (Number(newChange) - Number(prevChange)) / Number(prevChange) : 0
+  const prev = Number(prevChange);
+  // Use absolute value of the base so a negative previous value doesn't flip the sign of a genuine gain
+  return prev ? (Number(newChange) - prev) / Math.abs(prev) : 0
 
 }
 

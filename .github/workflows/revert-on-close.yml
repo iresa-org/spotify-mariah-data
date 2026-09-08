@@ -5,17 +5,16 @@ on:
 
 jobs:
   revert-to-data:
-    if: github.event.pull_request.merged == false
     runs-on: ubuntu-latest
 
     permissions:
       contents: write
 
     steps:
-    - name: Checkout PR head branch
+    - name: Checkout current branch
       uses: actions/checkout@v6
       with:
-        ref: ${{ github.event.pull_request.head.ref }}
+        ref: ${{ github.head_ref || github.ref_name }}
         fetch-depth: 0
         persist-credentials: true
 
@@ -31,4 +30,4 @@ jobs:
       run: git reset --hard origin/data
 
     - name: Push reset branch
-      run: git push --force origin "${{ github.event.pull_request.head.ref }}"
+      run: git push --force origin "${{ github.head_ref || github.ref_name }}"
