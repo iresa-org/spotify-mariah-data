@@ -297,6 +297,53 @@
   margin: 3px 0 0;
 }
 
+.coffee-support {
+  margin-top: 20px;
+}
+
+.coffee-support a,
+.coffee-support picture,
+.coffee-support img {
+  display: block;
+}
+
+.coffee-support img {
+  height: auto;
+  max-width: 100%;
+  width: 217px;
+}
+
+.coffee-support source {
+  display: none;
+}
+
+.coffee-support--mobile {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .coffee-support img {
+    height: 48px;
+    width: 48px;
+  }
+
+  .coffee-support {
+    display: none;
+  }
+
+  .coffee-support--mobile {
+    display: inline-flex;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  .coffee-support--mobile img {
+    display: block;
+    height: 32px;
+    width: 32px;
+  }
+}
+
 @media (min-width: 1025px) {
   .dashboard--sidebar-minimized {
     grid-template-columns: 96px minmax(0, 1fr);
@@ -324,8 +371,20 @@
   .dashboard--sidebar-minimized .brand__meta,
   .dashboard--sidebar-minimized .nav__label,
   .dashboard--sidebar-minimized .nav__expand-icon,
-  .dashboard--sidebar-minimized .sidebar-stats {
+  .dashboard--sidebar-minimized .sidebar-stats,
+  .dashboard--sidebar-minimized .coffee-support {
     display: none;
+  }
+
+  .dashboard--sidebar-minimized .coffee-support--mobile {
+    display: inline-flex;
+    margin-left: 0;
+  }
+
+  .dashboard--sidebar-minimized .coffee-support--mobile img {
+    display: block;
+    height: 32px;
+    width: 32px;
   }
 
   .dashboard--sidebar-minimized .external-links {

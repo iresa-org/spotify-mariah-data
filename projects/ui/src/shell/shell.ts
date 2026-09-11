@@ -1,4 +1,5 @@
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -11,7 +12,7 @@ import { AdConfig } from '../../../ui-shared/src/lib/ui/ad-banner/ad-banner';
 
 @Component({
   selector: 'lib-shell',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, FontAwesomeModule, AdBannerComponent],
+  imports: [NgOptimizedImage, RouterOutlet, RouterLink, RouterLinkActive, FontAwesomeModule, AdBannerComponent],
   templateUrl: './shell.html',
   styleUrl: './shell.scss',
 })
