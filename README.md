@@ -1,4 +1,11 @@
 # Mariah Carey on Spotify - Last Updated: 2026-09-16
+
+## Spotify Charts login
+
+Run `npm run auth` to open Spotify Charts and complete manual login. The persistent browser profile is stored in `auth/spotify-charts/` for later runs. After login, run `npm run charts` to scrape the charts.
+
+For CI, export the logged-in session with `npm run auth:export`. Copy the contents of the generated `spotify-charts-auth.txt` file into a GitHub Actions secret named `SPOTIFY_CHARTS_STORAGE_STATE`. The `Run Spotify charts` workflow restores that secret and runs `npm run charts`.
+
 Monthly Listeners: 35,452,035 (+61,557)<br>
 Followers: 13,303,742 (+2,529)
 
