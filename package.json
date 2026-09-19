@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "auth": "node scripts/auth.ts",
+    "auth:export": "node scripts/export_auth.ts",
+    "charts": "node scripts/charts.ts"
   },
   "repository": {
     "type": "git",

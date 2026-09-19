@@ -44,3 +44,5 @@ __screenshots__/
 Thumbs.db
 
 /raw
+/auth/
+/spotify-charts-auth.txt
