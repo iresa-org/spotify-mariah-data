@@ -13,18 +13,18 @@ const AUTH_VERIFY_TIMEOUT_MS = Number(process.env.SPOTIFY_CHARTS_AUTH_VERIFY_TIM
 const HEADLESS = process.env.SPOTIFY_CHARTS_HEADLESS
   ? process.env.SPOTIFY_CHARTS_HEADLESS !== 'false'
   : process.env.CI === 'true';
+type SpotifyChartsStorageState = Awaited<ReturnType<BrowserContext['storageState']>>;
 
 export async function launchSpotifyChartsContext(): Promise<BrowserContext> {
   await mkdir(AUTH_DIR, { recursive: true });
 
-  let storageState: string | undefined = STORAGE_STATE_PATH;
+  let storageState: string | SpotifyChartsStorageState | undefined = STORAGE_STATE_PATH;
   if (STORAGE_STATE?.trim()) {
     try {
-      JSON.parse(STORAGE_STATE);
+      storageState = JSON.parse(STORAGE_STATE) as SpotifyChartsStorageState;
     } catch {
       throw new Error('SPOTIFY_CHARTS_STORAGE_STATE must contain valid JSON.');
     }
-    storageState = STORAGE_STATE;
   }
 
   return chromium.launchPersistentContext(AUTH_DIR, {
