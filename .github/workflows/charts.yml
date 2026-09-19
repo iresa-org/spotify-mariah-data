@@ -25,10 +25,11 @@ jobs:
       - name: Run charts
         env:
           SPOTIFY_CHARTS_STORAGE_STATE: ${{ secrets.SPOTIFY_CHARTS_STORAGE_STATE }}
+          SPOTIFY_CHARTS_HEADLESS: false
           CI: true
         run: |
           test -n "$SPOTIFY_CHARTS_STORAGE_STATE"
-          npm run charts
+          xvfb-run -a npm run charts
 
       - name: Commit chart data
         uses: stefanzweifel/git-auto-commit-action@v7
