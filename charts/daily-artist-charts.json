@@ -1,50 +1,50 @@
 {
-  "updatedDate": "2026-09-17",
+  "updatedDate": "2026-09-18",
   "countries": {
     "AU": {
       "entries": [
         {
-          "rank": 192,
+          "rank": 187,
           "name": "Mariah Carey",
           "uri": "spotify:artist:4iHNK0tOyZPYnBU7nGAgpQ",
           "imageUri": "https://i.scdn.co/image/ab6761610000517421453384a10b1f8e18877f63",
-          "previousRank": -1,
+          "previousRank": 192,
           "peakRank": 2,
-          "appearancesOnChart": 1064,
-          "consecutiveAppearancesOnChart": 1
+          "appearancesOnChart": 1065,
+          "consecutiveAppearancesOnChart": 2
         }
       ],
-      "updatedDate": "2026-09-17"
+      "updatedDate": "2026-09-18"
     },
     "NZ": {
       "entries": [
         {
-          "rank": 116,
+          "rank": 119,
           "name": "Mariah Carey",
           "uri": "spotify:artist:4iHNK0tOyZPYnBU7nGAgpQ",
           "imageUri": "https://i.scdn.co/image/ab6761610000517421453384a10b1f8e18877f63",
           "previousRank": 116,
           "peakRank": 2,
-          "appearancesOnChart": 1793,
-          "consecutiveAppearancesOnChart": 1793
+          "appearancesOnChart": 1794,
+          "consecutiveAppearancesOnChart": 1794
         }
       ],
-      "updatedDate": "2026-09-17"
+      "updatedDate": "2026-09-18"
     },
     "PH": {
       "entries": [
         {
-          "rank": 68,
+          "rank": 67,
           "name": "Mariah Carey",
           "uri": "spotify:artist:4iHNK0tOyZPYnBU7nGAgpQ",
           "imageUri": "https://i.scdn.co/image/ab6761610000517421453384a10b1f8e18877f63",
           "previousRank": 68,
           "peakRank": 5,
-          "appearancesOnChart": 1793,
-          "consecutiveAppearancesOnChart": 1793
+          "appearancesOnChart": 1794,
+          "consecutiveAppearancesOnChart": 1794
         }
       ],
-      "updatedDate": "2026-09-17"
+      "updatedDate": "2026-09-18"
     },
     "SG": {
       "entries": [
@@ -53,43 +53,43 @@
           "name": "Mariah Carey",
           "uri": "spotify:artist:4iHNK0tOyZPYnBU7nGAgpQ",
           "imageUri": "https://i.scdn.co/image/ab6761610000517421453384a10b1f8e18877f63",
-          "previousRank": 192,
+          "previousRank": 187,
           "peakRank": 7,
-          "appearancesOnChart": 1213,
-          "consecutiveAppearancesOnChart": 2
+          "appearancesOnChart": 1214,
+          "consecutiveAppearancesOnChart": 3
         }
       ],
-      "updatedDate": "2026-09-17"
+      "updatedDate": "2026-09-18"
     },
     "ZA": {
       "entries": [
         {
-          "rank": 78,
+          "rank": 79,
           "name": "Mariah Carey",
           "uri": "spotify:artist:4iHNK0tOyZPYnBU7nGAgpQ",
           "imageUri": "https://i.scdn.co/image/ab6761610000517421453384a10b1f8e18877f63",
           "previousRank": 78,
           "peakRank": 5,
-          "appearancesOnChart": 1793,
-          "consecutiveAppearancesOnChart": 1793
+          "appearancesOnChart": 1794,
+          "consecutiveAppearancesOnChart": 1794
         }
       ],
-      "updatedDate": "2026-09-17"
+      "updatedDate": "2026-09-18"
     },
     "AE": {
       "entries": [
         {
-          "rank": 157,
+          "rank": 158,
           "name": "Mariah Carey",
           "uri": "spotify:artist:4iHNK0tOyZPYnBU7nGAgpQ",
           "imageUri": "https://i.scdn.co/image/ab6761610000517421453384a10b1f8e18877f63",
-          "previousRank": 159,
+          "previousRank": 157,
           "peakRank": 4,
-          "appearancesOnChart": 1764,
-          "consecutiveAppearancesOnChart": 88
+          "appearancesOnChart": 1765,
+          "consecutiveAppearancesOnChart": 89
         }
       ],
-      "updatedDate": "2026-09-17"
+      "updatedDate": "2026-09-18"
     }
   }
 }
