@@ -6,6 +6,7 @@ import { chromium, type BrowserContext, type Page } from 'playwright';
 const CHARTS_URL = 'https://charts.spotify.com/charts/view/regional-global-daily/latest';
 const CHART_REQUEST_URL = 'https://charts-spotify-com-service.spotify.com/auth/v0/charts/regional-global-daily/latest';
 const AUTH_DIR = process.env.SPOTIFY_CHARTS_AUTH_DIR ?? path.join(process.cwd(), 'auth', 'spotify-charts');
+const STORAGE_STATE = process.env.SPOTIFY_CHARTS_STORAGE_STATE;
 const STORAGE_STATE_PATH = process.env.SPOTIFY_CHARTS_STORAGE_STATE_PATH;
 const LOGIN_TIMEOUT_MS = Number(process.env.SPOTIFY_CHARTS_LOGIN_TIMEOUT_MS ?? '120000');
 const AUTH_VERIFY_TIMEOUT_MS = Number(process.env.SPOTIFY_CHARTS_AUTH_VERIFY_TIMEOUT_MS ?? '30000');
@@ -16,11 +17,21 @@ const HEADLESS = process.env.SPOTIFY_CHARTS_HEADLESS
 export async function launchSpotifyChartsContext(): Promise<BrowserContext> {
   await mkdir(AUTH_DIR, { recursive: true });
 
+  let storageState: string | undefined = STORAGE_STATE_PATH;
+  if (STORAGE_STATE?.trim()) {
+    try {
+      JSON.parse(STORAGE_STATE);
+    } catch {
+      throw new Error('SPOTIFY_CHARTS_STORAGE_STATE must contain valid JSON.');
+    }
+    storageState = STORAGE_STATE;
+  }
+
   return chromium.launchPersistentContext(AUTH_DIR, {
     headless: HEADLESS,
     viewport: { width: 1440, height: 1000 },
     args: process.env.CI === 'true' ? ['--no-sandbox', '--disable-setuid-sandbox'] : [],
-    ...(STORAGE_STATE_PATH ? { storageState: STORAGE_STATE_PATH } : {})
+    ...(storageState ? { storageState } : {})
   });
 }
 
