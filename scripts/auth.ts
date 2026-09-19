@@ -9,7 +9,9 @@ const AUTH_DIR = process.env.SPOTIFY_CHARTS_AUTH_DIR ?? path.join(process.cwd(),
 const STORAGE_STATE_PATH = process.env.SPOTIFY_CHARTS_STORAGE_STATE_PATH;
 const LOGIN_TIMEOUT_MS = Number(process.env.SPOTIFY_CHARTS_LOGIN_TIMEOUT_MS ?? '120000');
 const AUTH_VERIFY_TIMEOUT_MS = Number(process.env.SPOTIFY_CHARTS_AUTH_VERIFY_TIMEOUT_MS ?? '30000');
-const HEADLESS = process.env.SPOTIFY_CHARTS_HEADLESS === 'true';
+const HEADLESS = process.env.SPOTIFY_CHARTS_HEADLESS
+  ? process.env.SPOTIFY_CHARTS_HEADLESS !== 'false'
+  : process.env.CI === 'true';
 
 export async function launchSpotifyChartsContext(): Promise<BrowserContext> {
   await mkdir(AUTH_DIR, { recursive: true });
