@@ -1,0 +1,83 @@
+<section class="charts-page" aria-label="Mariah Carey Spotify charts">
+  <header class="page-header page-header--standalone">
+    <div>
+      <p class="page-header__eyebrow">Spotify Performance</p>
+      <h2 class="page-header__title">{{ title() }}</h2>
+    </div>
+    @if (payload(); as chart) {
+    <time class="updated" [attr.datetime]="chart.updatedDate">Updated {{ chart.updatedDate }}</time>
+    }
+  </header>
+
+  @if (loading()) {
+  <section class="status" aria-live="polite">Loading chart data...</section>
+  } @else if (error()) {
+  <section class="status status--error" role="alert">The chart data could not be loaded. Please try again later.</section>
+  } @else {
+  <section class="panel" aria-labelledby="map-heading">
+    <div class="panel__heading">
+      <div>
+        <p class="panel__eyebrow">Global footprint</p>
+        <h3 id="map-heading">Charting across {{ countries() }} countries</h3>
+        <p>{{ subtitle() }}</p>
+      </div>
+      <div class="legend"><span class="legend__swatch" aria-hidden="true"></span> Charted today</div>
+    </div>
+    <div class="map-wrap">
+      <svg class="world-map" viewBox="0 0 960 480" role="img" aria-labelledby="map-title map-description">
+        <title id="map-title">Global map of Mariah Carey Spotify chart appearances</title>
+        <desc id="map-description">Countries with a current chart entry are highlighted in magenta.</desc>
+        <rect class="map-ocean" width="960" height="480" />
+        @for (feature of mapFeatures(); track feature.code) {
+        <path [attr.d]="feature.path" [class.country--charted]="feature.charted" [attr.aria-label]="feature.name + (feature.charted ? ', charted' : '')" />
+        }
+      </svg>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="data-heading">
+    <div class="panel__heading">
+      <div>
+        <p class="panel__eyebrow">Daily positions</p>
+        <h3 id="data-heading">Every chart appearance</h3>
+      </div>
+      <span class="row-count">{{ rows().length }} entries</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <caption class="sr-only">{{ title() }} by country and position</caption>
+        <thead>
+          <tr>
+            <th scope="col">Country</th>
+            <th scope="col">Rank</th>
+            <th scope="col">{{ isSongs() ? 'Song' : 'Artist' }}</th>
+            @if (isSongs()) {
+            <th scope="col" class="number">Streams</th>
+            } @else {
+            <th scope="col" class="number">Previous</th>
+            <th scope="col" class="number">Peak</th>
+            <th scope="col" class="number">Days</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.countryCode + row.rank + row.name) {
+          <tr>
+            <th scope="row"><span class="country-code">{{ row.countryCode }}</span>{{ row.countryName }}</th>
+            <td class="rank">{{ row.rank }}</td>
+            <td><strong>{{ row.name }}</strong>@if (row.artists) { <span class="muted">{{ row.artists }}</span> }</td>
+            @if (isSongs()) {
+            <td class="number">{{ formatNumber(row.streams) }}</td>
+            } @else {
+            <td class="number">{{ formatNumber(row.previousRank) }}</td>
+            <td class="number">{{ formatNumber(row.peakRank) }}</td>
+            <td class="number">{{ formatNumber(row.appearancesOnChart) }}</td>
+            }
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+  }
+</section>

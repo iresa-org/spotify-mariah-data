@@ -190,6 +190,11 @@
   transition: transform 160ms ease;
 }
 
+.nav__lock-icon {
+  color: theme.$theme-accent;
+  font-size: 0.78rem;
+}
+
 .nav__link:hover,
 .nav__link:focus-visible {
   background: color-mix(in srgb, theme.$theme-surface 10%, transparent);
@@ -639,7 +644,7 @@ thead th {
   .dashboard {
     display: flex;
     flex-direction: column;
-    overflow: auto;
+    overflow: visible !important;
   }
 
   .dashboard__sidebar {

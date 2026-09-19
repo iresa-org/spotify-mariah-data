@@ -40,13 +40,16 @@
       <nav class="nav" aria-label="Main navigation">
         @for (item of navItems; track item.route) {
         <div class="nav__item" [class.nav__item--submenu-open]="openMobileSubmenuRoute() === item.route">
-          @if (item.children.length) {
+          @if (item.children?.length) {
           <button type="button" class="nav__link nav__button" (click)="toggleSubmenu(item.route)"
             [attr.aria-expanded]="openMobileSubmenuRoute() === item.route" [attr.aria-controls]="'submenu-' + item.route"
             [attr.aria-label]="(openMobileSubmenuRoute() === item.route ? 'Close ' : 'Open ') + item.label + ' submenu'"
             [title]="item.label">
             <fa-icon class="nav__icon" [icon]="item.icon" aria-hidden="true" />
             <span class="nav__label">{{ item.label }}</span>
+            @if (item.locked) {
+            <fa-icon class="nav__lock-icon" [icon]="chartsLockIcon" aria-hidden="true" />
+            }
             <fa-icon class="nav__expand-icon" [icon]="openMobileSubmenuRoute() === item.route ? submenuCollapseIcon : submenuExpandIcon"
               aria-hidden="true" />
           </button>
@@ -57,11 +60,14 @@
             (click)="closeMobileSubmenu()">
             <fa-icon class="nav__icon" [icon]="item.icon" aria-hidden="true" />
             <span class="nav__label">{{ item.label }}</span>
+            @if (item.locked) {
+            <fa-icon class="nav__lock-icon" [icon]="chartsLockIcon" aria-hidden="true" />
+            }
           </a>
           }
-          @if (item.children.length && !isMobile()) {
+          @if (item.children?.length && !isMobile()) {
           <div class="nav__submenu" [id]="'submenu-' + item.route" [attr.aria-label]="item.label + ' navigation'">
-            @for (child of item.children; track child.route) {
+            @for (child of item.children ?? []; track child.route) {
             <a class="nav__sublink" [routerLink]="child.route" routerLinkActive="nav__sublink--active"
               [routerLinkActiveOptions]="{ exact: true }" (click)="closeMinimizedSubmenu()">{{ child.label }}</a>
             }

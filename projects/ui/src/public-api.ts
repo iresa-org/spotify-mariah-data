@@ -14,3 +14,5 @@ export { YtdTracks } from './ytd/ytd-tracks';
 export { YtdAlbums } from './ytd/ytd-albums';
 
 export { TrackDetail } from './tracks/track-detail/track-detail';
+
+export { SpotifyCharts } from './spotify-charts/spotify-charts';

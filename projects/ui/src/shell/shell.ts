@@ -3,7 +3,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faAnglesLeft, faAnglesRight, faCalendarDays, faChartLine, faChevronDown, faChevronUp, faCompactDisc, faMusic, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faAnglesLeft, faAnglesRight, faCalendarDays, faChartLine, faChartSimple, faChevronDown, faChevronUp, faCompactDisc, faLock, faMusic, faRecordVinyl, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { faFacebook, faInstagram, faTiktok, faXTwitter } from '@fortawesome/free-brands-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
@@ -34,16 +34,30 @@ export class Shell implements OnInit {
   readonly minimizeIcon = faAnglesLeft;
   readonly expandIcon = faAnglesRight;
   readonly overviewIcon = faChartLine;
+  readonly chartsIcon = faChartSimple;
+  readonly chartsLockIcon = faLock;
   readonly tracksIcon = faMusic;
   readonly albumsIcon = faCompactDisc;
+  readonly epsIcon = faRecordVinyl;
   readonly ytdIcon = faCalendarDays;
   readonly closeIcon = faXmark;
   readonly submenuExpandIcon = faChevronDown;
   readonly submenuCollapseIcon = faChevronUp;
-  readonly navItems = [
+  readonly navItems: { route: string; label: string; icon: IconDefinition; locked?: boolean; children?: { label: string; route: string }[] }[] = [
     { route: 'overview', label: 'Overview', icon: this.overviewIcon, children: [] },
+    {
+      route: 'charts',
+      label: 'Charts',
+      icon: this.chartsIcon,
+      locked: true,
+      children: [
+        // { label: 'Daily Songs', route: 'charts/songs' },
+        // { label: 'Daily Artists', route: 'charts/artists' },
+      ],
+    },
     { route: 'tracks', label: 'Tracks', icon: this.tracksIcon, children: [] },
     { route: 'albums', label: 'Albums', icon: this.albumsIcon, children: [] },
+    { route: 'eps', label: 'EPs', icon: this.epsIcon, children: [], locked: true },
     {
       route: 'ytd',
       label: 'YTD',

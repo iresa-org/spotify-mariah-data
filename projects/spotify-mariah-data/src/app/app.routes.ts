@@ -27,6 +27,23 @@ export const routes: Routes = [
                 loadComponent: () => import('ui').then((c) => c.Overview),
                 title: 'Overview – Mariah Carey Streams',
             },
+            // {
+            //     path: 'charts',
+            //     children: [
+            //         {
+            //             path: 'songs',
+            //             loadComponent: () => import('ui').then((c) => c.SpotifyCharts),
+            //             data: { chartType: 'songs' },
+            //             title: 'Song Charts – Mariah Carey',
+            //         },
+            //         {
+            //             path: 'artists',
+            //             loadComponent: () => import('ui').then((c) => c.SpotifyCharts),
+            //             data: { chartType: 'artists' },
+            //             title: 'Artist Charts – Mariah Carey',
+            //         },
+            //     ],
+            // },
             {
                 path: 'tracks',
                 loadComponent: () => import('ui').then((c) => c.Tracks),
