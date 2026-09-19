@@ -194,6 +194,9 @@ async function loadChartPage(page: Page, url: string, countryCode: string, captu
 
   if (response?.status() !== 200) {
     console.warn(`${countryCode} chart request returned HTTP ${response?.status() ?? 'no response'}.`);
+    if (response && response.status() === 401) {
+      console.warn(`Spotify returned: ${(await response.text()).slice(0, 200)}`);
+    }
   }
 }
 

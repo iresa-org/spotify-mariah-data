@@ -27,12 +27,21 @@ export async function launchSpotifyChartsContext(): Promise<BrowserContext> {
     }
   }
 
-  return chromium.launchPersistentContext(AUTH_DIR, {
+  const context = await chromium.launchPersistentContext(AUTH_DIR, {
     headless: HEADLESS,
     viewport: { width: 1440, height: 1000 },
     args: process.env.CI === 'true' ? ['--no-sandbox', '--disable-setuid-sandbox'] : [],
     ...(storageState ? { storageState } : {})
   });
+
+  if (process.env.CI === 'true') {
+    const cookieNames = (await context.cookies('https://charts.spotify.com'))
+      .map((cookie) => cookie.name)
+      .filter((name) => ['sp_dc', 'sp_key', 'sp_t'].includes(name));
+    console.log(`Loaded Spotify auth cookies in CI: ${cookieNames.join(', ') || 'none'}`);
+  }
+
+  return context;
 }
 
 export async function waitForManualSpotifyLogin(page: Page): Promise<void> {
