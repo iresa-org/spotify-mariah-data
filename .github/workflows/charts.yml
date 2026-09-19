@@ -22,14 +22,18 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Run charts
+      - name: Restore Spotify Charts auth
         env:
           SPOTIFY_CHARTS_STORAGE_STATE: ${{ secrets.SPOTIFY_CHARTS_STORAGE_STATE }}
-          SPOTIFY_CHARTS_HEADLESS: false
-          CI: true
         run: |
           test -n "$SPOTIFY_CHARTS_STORAGE_STATE"
-          xvfb-run -a npm run charts
+          printf '%s' "$SPOTIFY_CHARTS_STORAGE_STATE" > spotify-charts-auth.txt
+
+      - name: Run charts
+        env:
+          SPOTIFY_CHARTS_STORAGE_STATE_PATH: ${{ github.workspace }}/spotify-charts-auth.txt
+          CI: true
+        run: npm run charts
 
       - name: Commit chart data
         uses: stefanzweifel/git-auto-commit-action@v7
