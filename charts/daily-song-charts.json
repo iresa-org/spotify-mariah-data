@@ -10,7 +10,15 @@
             "Mariah Carey"
           ],
           "streams": 21502,
-          "uri": "spotify:track:4EI8VuxUuIHKfafU72emqz"
+          "uri": "spotify:track:4EI8VuxUuIHKfafU72emqz",
+          "previousRank": 70,
+          "peakRank": 20,
+          "appearancesOnChart": 1681,
+          "consecutiveAppearancesOnChart": 261,
+          "entryStatus": "MOVED_DOWN",
+          "peakDate": "2024-08-18",
+          "entryRank": 190,
+          "entryDate": "2020-05-17"
         }
       ],
       "updatedDate": "2026-09-18"
