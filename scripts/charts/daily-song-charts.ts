@@ -20,6 +20,14 @@ export interface DailySongChartEntry {
   artists?: string[];
   streams?: number;
   uri?: string;
+  previousRank?: number;
+  peakRank?: number;
+  appearancesOnChart?: number;
+  consecutiveAppearancesOnChart?: number;
+  entryStatus?: string;
+  peakDate?: string;
+  entryRank?: number;
+  entryDate?: string;
 }
 
 export interface DailySongCharts {
@@ -132,13 +140,30 @@ function extractEntries(body: unknown): DailySongChartEntry[] {
     const rankingMetric = isRecord(chartData.rankingMetric) ? chartData.rankingMetric : chartData;
     const streams = findNumber(rankingMetric, ['value', 'streams', 'streamCount', 'playCount']);
     const uri = findString(metadata, ['trackUri', 'uri']);
-    return [{
+    const entry: DailySongChartEntry = {
       rank: findNumber(chartData, ['currentRank', 'rank', 'position', 'chartRank']) ?? index + 1,
       name,
       artists: getArtists(metadata),
       ...(streams === undefined ? {} : { streams }),
       ...(uri === undefined ? {} : { uri })
-    }];
+    };
+    const previousRank = findNumber(chartData, ['previousRank']);
+    const peakRank = findNumber(chartData, ['peakRank']);
+    const appearancesOnChart = findNumber(chartData, ['appearancesOnChart']);
+    const consecutiveAppearancesOnChart = findNumber(chartData, ['consecutiveAppearancesOnChart']);
+    const entryStatus = findString(chartData, ['entryStatus']);
+    const peakDate = findString(chartData, ['peakDate']);
+    const entryRank = findNumber(chartData, ['entryRank']);
+    const entryDate = findString(chartData, ['entryDate']);
+    if (previousRank !== undefined) entry.previousRank = previousRank;
+    if (peakRank !== undefined) entry.peakRank = peakRank;
+    if (appearancesOnChart !== undefined) entry.appearancesOnChart = appearancesOnChart;
+    if (consecutiveAppearancesOnChart !== undefined) entry.consecutiveAppearancesOnChart = consecutiveAppearancesOnChart;
+    if (entryStatus !== undefined) entry.entryStatus = entryStatus;
+    if (peakDate !== undefined) entry.peakDate = peakDate;
+    if (entryRank !== undefined) entry.entryRank = entryRank;
+    if (entryDate !== undefined) entry.entryDate = entryDate;
+    return [entry];
   }).slice(0, 200);
 }
 
