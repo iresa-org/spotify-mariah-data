@@ -1,27 +1,27 @@
 {
-  "updatedDate": "2026-09-18",
+  "updatedDate": "2026-09-19",
   "countries": {
     "ZA": {
       "entries": [
         {
-          "rank": 85,
+          "rank": 106,
           "name": "We Belong Together",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 21502,
+          "streams": 23662,
           "uri": "spotify:track:4EI8VuxUuIHKfafU72emqz",
-          "previousRank": 70,
+          "previousRank": 85,
           "peakRank": 20,
-          "appearancesOnChart": 1681,
-          "consecutiveAppearancesOnChart": 261,
+          "appearancesOnChart": 1682,
+          "consecutiveAppearancesOnChart": 262,
           "entryStatus": "MOVED_DOWN",
           "peakDate": "2024-08-18",
           "entryRank": 190,
           "entryDate": "2020-05-17"
         }
       ],
-      "updatedDate": "2026-09-18"
+      "updatedDate": "2026-09-19"
     }
   }
 }
