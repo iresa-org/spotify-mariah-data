@@ -86,17 +86,17 @@
               </div>
             </th>
             <td class="metric" data-label="Total">
+              <span class="mobile-cell-label">Total</span>
               <span class="metric__value">{{ track.playcount | formatCompact}}</span>
-              <span class="metric__label">Total</span>
             </td>
             <td class="metric" data-label="Daily">
+              <span class="mobile-cell-label">Daily</span>
               <span class="metric__value">{{ track.change | formatCompact }}</span>
-              <span class="metric__label">Daily</span>
             </td>
             <td class="metric" data-label="Change" [class.delta-positive]="+track.percent >= 0"
               [class.delta-negative]="+track.percent < 0">
+              <span class="mobile-cell-label">Change</span>
               <span class="metric__value">{{ track.percent | percentWithSign}}</span>
-              <span class="metric__label">Change</span>
             </td>
           </tr>
           }

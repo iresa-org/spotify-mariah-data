@@ -327,6 +327,10 @@ thead th {
   display: none;
 }
 
+.mobile-cell-label {
+  display: none;
+}
+
 .tracks-page--detail-open {
   .tracks-table--head {
     display: block;
@@ -522,6 +526,21 @@ thead th {
     font-weight: 600;
     text-align: left;
     white-space: nowrap;
+  }
+
+  .mobile-cell-label {
+    color: theme.$theme-muted;
+    display: inline;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .rank .mobile-cell-label,
+  .track-cell .mobile-cell-label {
+    margin-right: 6px;
   }
 
   .metric__value {
