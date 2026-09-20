@@ -21,14 +21,26 @@
 }
 
 .master {
+    display: flex;
+    flex-direction: column;
     min-height: 0;
-    overflow: auto;
+    overflow: hidden;
 }
 
 .detail {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    scroll-margin-top: 16px;
+}
+
+.master__scroll,
+.detail__scroll {
+    flex: 1;
     min-height: 0;
     overflow: auto;
-    scroll-margin-top: 16px;
+    scrollbar-gutter: stable;
 }
 
 .detail__close {
@@ -67,6 +79,6 @@
     }
 
     .master {
-        overflow: auto;
+        overflow: hidden;
     }
 }

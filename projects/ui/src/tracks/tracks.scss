@@ -16,10 +16,12 @@
 }
 
 lib-master-detail {
+  box-sizing: border-box;
   display: block;
   height: 100%;
   min-height: 0;
   overflow: hidden;
+  padding: 4px;
 }
 
 .page-header {

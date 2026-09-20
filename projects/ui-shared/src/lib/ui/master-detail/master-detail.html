@@ -1,7 +1,9 @@
 <section class="master-detail" [class.master-detail--single]="!selectedItem()" aria-label="Master detail layout">
 
     <section class="panel master" aria-label="Master">
-        <ng-content select="lib-master-content"></ng-content>
+        <div class="master__scroll">
+            <ng-content select="lib-master-content"></ng-content>
+        </div>
     </section>
 
     @if (selectedItem()) {
@@ -11,7 +13,9 @@
                 Close
             </button>
         </div>
-        <ng-content select="lib-detail-content"></ng-content>
+        <div class="detail__scroll">
+            <ng-content select="lib-detail-content"></ng-content>
+        </div>
     </section>
     }
 </section>
