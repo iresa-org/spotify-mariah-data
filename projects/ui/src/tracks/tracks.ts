@@ -1,14 +1,24 @@
 import { DecimalPipe, DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { Component, computed, DestroyRef, ElementRef, inject, OnInit, AfterViewInit, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
+import { Component, computed, DestroyRef, effect, ElementRef, inject, OnInit, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faBirthdayCake, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
-import { fromEvent, map, startWith } from 'rxjs';
-import { DailyDataApi, FormatCompactPipe, HistoricDataApi, PercentWithSignPipe } from 'ui-shared';
+import { map } from 'rxjs';
+import { Dialog, DialogRef } from '@angular/cdk/dialog';
+import {
+  DailyDataApi,
+  DetailContent,
+  FormatCompactPipe,
+  HistoricDataApi,
+  MasterContent,
+  MasterDetail,
+  PercentWithSignPipe,
+} from 'ui-shared';
 import { TRACK_CATEGORIES, FilterType, TrackItem } from './tracks.config';
+import { TrackDetail } from './track-detail/track-detail';
+import { TrackDetailDialog } from './track-detail/track-detail-dialog';
 
 type RecordEntry = {
   change: string;
@@ -20,19 +30,30 @@ type SortDirection = 'ascending' | 'descending';
 
 @Component({
   selector: 'lib-tracks',
-  imports: [RouterLink, PercentWithSignPipe, FormatCompactPipe, DecimalPipe, NgOptimizedImage, FontAwesomeModule],
+  imports: [
+    MasterDetail,
+    MasterContent,
+    DetailContent,
+    TrackDetail,
+    PercentWithSignPipe,
+    FormatCompactPipe,
+    DecimalPipe,
+    NgOptimizedImage,
+    FontAwesomeModule,
+  ],
   templateUrl: './tracks.html',
   styleUrl: './tracks.scss',
 })
-export class Tracks implements OnInit, AfterViewInit {
+export class Tracks implements OnInit {
   private readonly document = inject(DOCUMENT);
   private dailyDataApi = inject(DailyDataApi);
   private historicDataApi = inject(HistoricDataApi);
   private breakpointObserver = inject(BreakpointObserver);
   private readonly destroyRef = inject(DestroyRef);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
+  private readonly dialog = inject(Dialog);
 
-  private readonly SCROLL_POSITION_KEY = 'tracks-scroll-position';
+  private dialogRef: DialogRef<unknown, TrackDetailDialog> | null = null;
 
   readonly filterTabs = TRACK_CATEGORIES;
   readonly activeFilter = signal<FilterType>('T');
@@ -43,6 +64,7 @@ export class Tracks implements OnInit, AfterViewInit {
   readonly sortDescendingIcon = faSortDown;
   readonly anniversaryIcon = faBirthdayCake;
   readonly showScrollToTop = signal(false);
+  readonly selectedTrack = signal<TrackItem | null>(null);
   readonly allTimeRecordMap = signal<Record<string, RecordEntry> | null>(null);
   readonly yearRecordMap = signal<Record<string, RecordEntry> | null>(null);
   readonly recordMapLoaded = computed(() => this.allTimeRecordMap() !== null && this.yearRecordMap() !== null);
@@ -80,20 +102,20 @@ export class Tracks implements OnInit, AfterViewInit {
     });
   });
 
-  ngOnInit(): void {
-    const scrollTarget = this.document.defaultView ?? this.document;
-    if (scrollTarget) {
-      fromEvent(scrollTarget, 'scroll', { capture: true })
-        .pipe(
-          startWith(null),
-          map(() => this.getCurrentScrollTop() > 280),
-          takeUntilDestroyed(this.destroyRef)
-        )
-        .subscribe((shouldShow) => {
-          this.showScrollToTop.set(shouldShow);
-        });
+  constructor() {
+    effect(() => {
+      if (!this.isMobile()) {
+        this.closeDialog();
+      }
+    });
+  }
 
-    }
+  ngOnInit(): void {
+    this.document.defaultView?.addEventListener('scroll', this.updateScrollTopVisibility, { capture: true });
+    this.destroyRef.onDestroy(() => {
+      this.document.defaultView?.removeEventListener('scroll', this.updateScrollTopVisibility, { capture: true });
+    });
+    this.updateScrollTopVisibility();
 
     this.historicDataApi
       .loadAllTimeRecords()
@@ -118,14 +140,26 @@ export class Tracks implements OnInit, AfterViewInit {
       });
   }
 
-  ngAfterViewInit(): void {
-    // Wait for the list to be rendered in the DOM before restoring scroll position
-    // Use requestAnimationFrame twice to ensure layout is complete
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        this.restoreScrollPosition();
+  onTrackSelected(track: TrackItem): void {
+    this.closeDialog();
+    this.selectedTrack.set(track);
+    if (this.isMobile()) {
+      this.dialogRef = this.dialog.open(TrackDetailDialog, {
+        ariaLabel: track.name ? `${track.name} details` : 'Track details',
+        data: { uid: track.uid },
+        maxWidth: '96vw',
+        width: 'min(960px, 96vw)',
       });
-    });
+      this.dialogRef.closed.subscribe(() => {
+        this.dialogRef = null;
+        this.selectedTrack.set(null);
+      });
+    }
+  }
+
+  closeClicked(): void {
+    this.closeDialog();
+    this.selectedTrack.set(null);
   }
 
   hasRecord(uid: string, type: 'allTime' | 'ytd' = 'allTime'): boolean {
@@ -208,27 +242,12 @@ export class Tracks implements OnInit, AfterViewInit {
     this.document.defaultView?.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  rememberScrollPosition(): void {
-    const scrollTop = this.getCurrentScrollTop();
-    sessionStorage.setItem(this.SCROLL_POSITION_KEY, scrollTop.toString());
+  private closeDialog(): void {
+    this.dialogRef?.close();
+    this.dialogRef = null;
   }
 
-  private restoreScrollPosition(): void {
-    const savedPosition = sessionStorage.getItem(this.SCROLL_POSITION_KEY);
-    if (savedPosition) {
-      const scrollTop = parseInt(savedPosition, 10);
-      const container = this.getScrollContainer();
-
-      if (container) {
-        container.scrollTop = scrollTop;
-      } else {
-        const window = this.document.defaultView;
-        if (window) {
-          window.scrollTo(0, scrollTop);
-        }
-      }
-      // Clear the saved position after restoring
-      sessionStorage.removeItem(this.SCROLL_POSITION_KEY);
-    }
+  private updateScrollTopVisibility = (): void => {
+    this.showScrollToTop.set(this.getCurrentScrollTop() > 280);
   }
 }

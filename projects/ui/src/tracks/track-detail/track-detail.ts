@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
@@ -34,6 +34,7 @@ export class TrackDetail implements OnInit {
   private dailyDataApi = inject(DailyDataApi);
   private historicDataApi = inject(HistoricDataApi);
 
+  readonly trackUid = input<string | null>(null);
   readonly uid = signal('');
   readonly track = computed(() => this.dailyDataApi.getTrackByUid(this.uid()));
   readonly loading = signal(true);
@@ -62,10 +63,26 @@ export class TrackDetail implements OnInit {
     domain: ['#d72652'],
   };
 
+  constructor() {
+    effect(() => {
+      const inputUid = this.trackUid();
+      if (inputUid !== null && inputUid !== this.uid()) {
+        this.uid.set(inputUid);
+        this.loadData(inputUid);
+      }
+    });
+  }
+
   ngOnInit(): void {
+    if (this.trackUid() !== null) return;
+
     const uid = this.route.snapshot.paramMap.get('uid') ?? '';
     this.uid.set(uid);
+    this.loadData(uid);
+  }
 
+  private loadData(uid: string): void {
+    this.loading.set(true);
     forkJoin({
       allTime: this.historicDataApi.loadAllTimeRecords(),
       ytdRec: this.historicDataApi.loadYtdRecords(),

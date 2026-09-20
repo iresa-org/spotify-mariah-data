@@ -2,11 +2,24 @@
 
 :host {
   display: block;
+  height: 100%;
+  min-height: 0;
 }
 
 .tracks-page {
   display: grid;
   gap: 20px;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+lib-master-detail {
+  display: block;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .page-header {
@@ -262,7 +275,13 @@ thead th {
 }
 
 .track-link {
+  background: transparent;
+  border: 0;
   color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  text-align: left;
   text-decoration: none;
 
   &:hover,
@@ -300,6 +319,92 @@ thead th {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.metric__label {
+  display: none;
+}
+
+.tracks-page--detail-open {
+  .tracks-table--head {
+    display: block;
+  }
+
+  .tracks-table--head thead {
+    display: none;
+  }
+
+  .tracks-table--head tbody {
+    display: grid;
+    gap: 10px;
+  }
+
+  .tracks-table--head tr {
+    background: theme.$theme-surface;
+    border: 1px solid theme.$theme-border;
+    border-radius: 12px;
+    display: grid;
+    gap: 6px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: 7px;
+  }
+
+  .tracks-table--head th,
+  .tracks-table--head td {
+    border: 0;
+    display: flex;
+    min-width: 0;
+    padding: 4px 0;
+  }
+
+  .tracks-table--head .rank {
+    grid-column: 1 / -1;
+    padding: 0;
+  }
+
+  .tracks-table--head .track-cell {
+    align-items: center;
+    grid-column: 1 / -1;
+    min-width: 0;
+    padding: 0;
+  }
+
+  .tracks-table--head .track-art {
+    height: 56px;
+    width: 56px;
+  }
+
+  .tracks-table--head .track-name,
+  .tracks-table--head .track-artists {
+    overflow: visible;
+    text-overflow: unset;
+    white-space: normal;
+  }
+
+  .tracks-table--head .metric {
+    align-items: flex-start;
+    flex-direction: column;
+    font-size: 0.74rem;
+    gap: 2px;
+    justify-content: flex-start;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .tracks-table--head .metric__value {
+    font-size: 0.78rem;
+    line-height: 1.1;
+  }
+
+  .tracks-table--head .metric__label {
+    color: theme.$theme-muted;
+    display: inline;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
 }
 
 .delta-positive {

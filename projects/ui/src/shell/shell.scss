@@ -146,6 +146,16 @@
   margin-top: 24px;
 }
 
+.mobile-nav__label {
+  display: none;
+}
+
+.mobile-nav__control {
+  align-items: center;
+  display: flex;
+  position: relative;
+}
+
 .nav__item {
   align-items: center;
   display: flex;
@@ -653,6 +663,10 @@ thead th {
     height: auto;
   }
 
+  .dashboard__sidebar-scroll {
+    overflow: visible;
+  }
+
   .dashboard__content {
     flex: 1 0 auto;
     overflow: visible;
@@ -663,30 +677,84 @@ thead th {
   }
 
   .nav {
-    flex-direction: row;
-    justify-content: center;
-    gap: 1rem;
+    margin-top: 16px;
   }
 
-  .nav__item {
+  .mobile-nav__label {
+    color: color-mix(in srgb, theme.$theme-surface 72%, theme.$theme-muted 28%);
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .mobile-nav__select {
+    align-items: center;
+    background: theme.$theme-alt-bg;
+    border: 1px solid color-mix(in srgb, theme.$theme-surface 24%, transparent);
+    box-sizing: border-box;
+    border-radius: 8px;
+    color: theme.$theme-surface;
+    cursor: pointer;
     display: flex;
+    justify-content: space-between;
+    font: inherit;
+    min-height: 44px;
+    outline: 0;
+    padding: 0 12px;
+    width: 100%;
   }
 
-  .nav__link {
-    justify-content: center;
-    padding: 10px;
+  .mobile-nav__select:focus,
+  .mobile-nav__select:focus-visible {
+    border-color: theme.$theme-accent;
+    box-shadow: 0 0 0 2px color-mix(in srgb, theme.$theme-accent 28%, transparent);
+    outline: 0;
   }
 
-  .nav__button {
-    justify-content: flex-start;
+  .mobile-nav__options {
+    background: theme.$theme-alt-bg;
+    border: 1px solid color-mix(in srgb, theme.$theme-surface 24%, transparent);
+    border-radius: 8px;
+    box-shadow: 0 12px 28px color-mix(in srgb, theme.$theme-text 28%, transparent);
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 4px);
+    z-index: 5;
   }
 
-  .nav__icon {
-    display: inline-block;
+  .mobile-nav__option {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    color: theme.$theme-surface;
+    cursor: pointer;
+    display: flex;
+    font: inherit;
+    gap: 10px;
+    min-height: 42px;
+    padding: 8px 12px;
+    text-align: left;
+    width: 100%;
   }
 
-  .nav__label {
-    display: none;
+  .mobile-nav__option:hover,
+  .mobile-nav__option:focus-visible {
+    background: color-mix(in srgb, theme.$theme-surface 12%, transparent);
+    outline: 0;
+  }
+
+  .mobile-nav__option--child {
+    padding-left: 42px;
+  }
+
+  .mobile-nav__option-lock {
+    color: theme.$theme-accent;
+    margin-left: auto;
   }
 
   .dashboard--sidebar-minimized .dashboard__sidebar {

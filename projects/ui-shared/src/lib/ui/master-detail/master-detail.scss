@@ -4,6 +4,8 @@
     display: grid;
     gap: 16px;
     grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+    height: 100%;
+    min-height: 0;
 }
 
 .master-detail--single {
@@ -14,16 +16,18 @@
     background: theme.$theme-surface;
     border: 1px solid theme.$theme-border;
     border-radius: 14px;
+    min-height: 0;
     padding: 16px;
 }
 
 .master {
-    // max-height: calc(100vh - 180px);
+    min-height: 0;
     overflow: auto;
 }
 
 .detail {
-    min-height: 420px;
+    min-height: 0;
+    overflow: auto;
     scroll-margin-top: 16px;
 }
 
@@ -63,7 +67,6 @@
     }
 
     .master {
-        max-height: none;
-        overflow: visible;
+        overflow: auto;
     }
 }

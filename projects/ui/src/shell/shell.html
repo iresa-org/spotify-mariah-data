@@ -38,6 +38,36 @@
       </div>
 
       <nav class="nav" aria-label="Main navigation">
+        @if (isMobile()) {
+        <label class="mobile-nav__label" for="mobile-nav-select">Menu</label>
+        <div class="mobile-nav__control">
+          <button id="mobile-nav-select" type="button" class="mobile-nav__select"
+            [attr.aria-expanded]="mobileMenuOpen()" aria-haspopup="listbox" aria-label="Choose a dashboard section"
+            (click)="toggleMobileMenu()">
+            <span>{{ selectedMobileMenuLabel() }}</span>
+            <fa-icon [icon]="submenuExpandIcon" aria-hidden="true" />
+          </button>
+          @if (mobileMenuOpen()) {
+          <div class="mobile-nav__options" role="listbox" aria-label="Dashboard sections">
+            @for (item of navItems; track item.route) {
+            <button type="button" class="mobile-nav__option" role="option" (click)="navigateFromMobileMenu(item.route)">
+              <fa-icon [icon]="item.icon" aria-hidden="true" />
+              <span>{{ item.label }}</span>
+              @if (item.locked) {
+              <fa-icon class="mobile-nav__option-lock" [icon]="chartsLockIcon" aria-label="Locked" />
+              }
+            </button>
+            @for (child of item.children ?? []; track child.route) {
+            <button type="button" class="mobile-nav__option mobile-nav__option--child" role="option"
+              (click)="navigateFromMobileMenu(child.route)">
+              <span>{{ child.label }}</span>
+            </button>
+            }
+            }
+          </div>
+          }
+        </div>
+        } @else {
         @for (item of navItems; track item.route) {
         <div class="nav__item" [class.nav__item--submenu-open]="openMobileSubmenuRoute() === item.route">
           @if (item.children?.length) {
@@ -74,6 +104,7 @@
           </div>
           }
         </div>
+        }
         }
       </nav>
 

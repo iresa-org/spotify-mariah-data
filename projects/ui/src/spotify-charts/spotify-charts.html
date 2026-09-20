@@ -53,6 +53,10 @@
             <th scope="col">{{ isSongs() ? 'Song' : 'Artist' }}</th>
             @if (isSongs()) {
             <th scope="col" class="number">Streams</th>
+            <th scope="col" class="number">Previous</th>
+            <th scope="col" class="number">Peak</th>
+            <th scope="col" class="number">Days</th>
+            <th scope="col" class="number">Streak</th>
             } @else {
             <th scope="col" class="number">Previous</th>
             <th scope="col" class="number">Peak</th>
@@ -63,11 +67,27 @@
         <tbody>
           @for (row of rows(); track row.countryCode + row.rank + row.name) {
           <tr>
-            <th scope="row"><span class="country-code">{{ row.countryCode }}</span>{{ row.countryName }}</th>
-            <td class="rank">{{ row.rank }}</td>
-            <td><strong>{{ row.name }}</strong>@if (row.artists) { <span class="muted">{{ row.artists }}</span> }</td>
+            <th scope="row">{{ row.countryName }}</th>
+            <td class="rank" [attr.aria-label]="rankMovementLabel(row.rank, row.entryStatus)">
+              {{ row.rank }}
+              <span class="rank__movement rank__movement--{{ rankMovement(row.entryStatus) }}" aria-hidden="true">
+                {{ rankMovement(row.entryStatus) === 'up' ? '↑' : rankMovement(row.entryStatus) === 'down' ? '↓' : '=' }}
+              </span>
+            </td>
+            <td>
+              @if (spotifyUrl(row.uri); as url) {
+              <a [href]="url" target="_blank" rel="noopener noreferrer"><strong>{{ row.name }}</strong></a>
+              } @else {
+              <strong>{{ row.name }}</strong>
+              }
+              @if (row.artists) { <span class="muted">{{ row.artists }}</span> }
+            </td>
             @if (isSongs()) {
             <td class="number">{{ formatNumber(row.streams) }}</td>
+            <td class="number">{{ formatNumber(row.previousRank) }}</td>
+            <td class="number">{{ formatNumber(row.peakRank) }}</td>
+            <td class="number">{{ formatNumber(row.appearancesOnChart) }}</td>
+            <td class="number">{{ formatNumber(row.consecutiveAppearancesOnChart) }}</td>
             } @else {
             <td class="number">{{ formatNumber(row.previousRank) }}</td>
             <td class="number">{{ formatNumber(row.peakRank) }}</td>

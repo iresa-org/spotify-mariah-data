@@ -3,6 +3,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 type ChartType = 'songs' | 'artists';
+type RankMovement = 'up' | 'down' | 'tie';
 type Position = [number, number];
 type Ring = Position[];
 type Polygon = Ring[];
@@ -13,6 +14,14 @@ interface SongEntry {
   artists: string[];
   streams: number;
   uri: string;
+  previousRank: number;
+  peakRank: number;
+  appearancesOnChart: number;
+  consecutiveAppearancesOnChart: number;
+  entryStatus: string;
+  peakDate: string;
+  entryRank: number;
+  entryDate: string;
 }
 
 interface ArtistEntry {
@@ -60,10 +69,16 @@ interface ChartRow {
   rank: number;
   name: string;
   artists: string;
+  uri?: string;
   streams?: number;
   previousRank?: number;
   peakRank?: number;
   appearancesOnChart?: number;
+  consecutiveAppearancesOnChart?: number;
+  entryStatus?: string;
+  peakDate?: string;
+  entryRank?: number;
+  entryDate?: string;
 }
 
 const SONGS_URL = 'https://raw.githubusercontent.com/iresa-org/spotify-mariah-data/refs/heads/test_data/charts/daily-song-charts.json';
@@ -105,10 +120,16 @@ export class SpotifyCharts implements OnInit {
         rank: entry.rank,
         name: entry.name,
         artists: song.artists?.join(', ') ?? '',
+        uri: song.uri,
         streams: song.streams,
         previousRank: artist.previousRank,
         peakRank: artist.peakRank,
         appearancesOnChart: artist.appearancesOnChart,
+        consecutiveAppearancesOnChart: song.consecutiveAppearancesOnChart,
+        entryStatus: song.entryStatus,
+        peakDate: song.peakDate,
+        entryRank: song.entryRank,
+        entryDate: song.entryDate,
       };
     })).sort((a, b) => a.countryName.localeCompare(b.countryName) || a.rank - b.rank);
   });
@@ -144,6 +165,31 @@ export class SpotifyCharts implements OnInit {
 
   formatNumber(value: number | undefined): string {
     return value === undefined ? '-' : new Intl.NumberFormat('en-US').format(value);
+  }
+
+  rankMovement(status: string | undefined): RankMovement {
+    if (status === 'MOVED_UP') return 'up';
+    if (status === 'MOVED_DOWN') return 'down';
+    return 'tie';
+  }
+
+  rankMovementLabel(rank: number, status: string | undefined): string {
+    const movement = this.rankMovement(status);
+    const label = movement === 'up' ? 'moved up' : movement === 'down' ? 'moved down' : 'no change';
+    return `Rank ${rank}, ${label}`;
+  }
+
+  formatDate(value: string | undefined): string {
+    return value ? new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(`${value}T00:00:00`)) : '-';
+  }
+
+  formatStatus(value: string | undefined): string {
+    return value ? value.replaceAll('_', ' ').toLowerCase().replace(/(^| )\w/g, (letter) => letter.toUpperCase()) : '-';
+  }
+
+  spotifyUrl(uri: string | undefined): string | null {
+    const trackId = uri?.replace('spotify:track:', '');
+    return trackId ? `https://open.spotify.com/track/${trackId}` : null;
   }
 
   private createMapFeatures(geoJson: GeoJsonFeatureCollection, countries: Record<string, CountryChart<SongEntry | ArtistEntry>>): MapFeature[] {

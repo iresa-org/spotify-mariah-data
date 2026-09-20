@@ -6,7 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faAnglesLeft, faAnglesRight, faCalendarDays, faChartLine, faChartSimple, faChevronDown, faChevronUp, faCompactDisc, faLock, faMusic, faRecordVinyl, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { faFacebook, faInstagram, faTiktok, faXTwitter } from '@fortawesome/free-brands-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AdBannerComponent, DailyDataApi } from 'ui-shared';
 import { AdConfig } from '../../../ui-shared/src/lib/ui/ad-banner/ad-banner';
 
@@ -20,13 +20,22 @@ export class Shell implements OnInit {
   private dailyDataApi = inject(DailyDataApi);
   private breakpointObserver = inject(BreakpointObserver);
   private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
 
   readonly loaded = signal(false);
   readonly lastUpdated = signal('');
   readonly isMobile = signal(false);
   readonly sidenavMinimized = signal(false);
+  readonly mobileMenuOpen = signal(false);
+  readonly selectedMobileMenuRoute = signal('');
   readonly openMobileSubmenuRoute = signal<string | null>(null);
   readonly openMobileSubmenu = computed(() => this.navItems.find((item) => item.route === this.openMobileSubmenuRoute()));
+  readonly selectedMobileMenuLabel = computed(() => {
+    const route = this.selectedMobileMenuRoute();
+    const item = this.navItems.find((navItem) => navItem.route === route);
+    const child = this.navItems.flatMap((navItem) => navItem.children ?? []).find((navChild) => navChild.route === route);
+    return item?.label ?? child?.label ?? 'Choose a section';
+  });
   readonly externalLinks = signal<{ name: string; url: string; icon: IconDefinition }[]>([]);
   readonly artistImage = signal<string | null>(null);
   readonly worldRank = signal<number>(0);
@@ -110,6 +119,7 @@ export class Shell implements OnInit {
   toggleSidenav(): void {
     this.sidenavMinimized.update((isMinimized) => !isMinimized);
     this.openMobileSubmenuRoute.set(null);
+    this.mobileMenuOpen.set(false);
   }
 
   toggleSubmenu(route: string): void {
@@ -120,10 +130,24 @@ export class Shell implements OnInit {
     this.openMobileSubmenuRoute.set(null);
   }
 
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen.update((isOpen) => !isOpen);
+  }
+
+  closeMobileMenu(): void {
+    this.mobileMenuOpen.set(false);
+  }
+
   closeMinimizedSubmenu(): void {
     if (this.sidenavMinimized()) {
       this.openMobileSubmenuRoute.set(null);
     }
+  }
+
+  navigateFromMobileMenu(route: string): void {
+    this.selectedMobileMenuRoute.set(route);
+    this.closeMobileMenu();
+    this.router.navigate(route.split('/'));
   }
 
   ngOnInit(): void {
@@ -134,6 +158,7 @@ export class Shell implements OnInit {
         this.isMobile.set(matches);
         this.sidenavMinimized.set(matches);
         this.openMobileSubmenuRoute.set(null);
+        this.mobileMenuOpen.set(false);
       });
 
     this.dailyDataApi.loadTracks().subscribe({

@@ -168,7 +168,28 @@ tbody th {
   color: theme.$theme-muted;
   font-size: 0.85rem;
   font-weight: 600;
+  white-space: nowrap;
   width: 70px;
+}
+
+.rank__movement {
+  display: inline-block;
+  font-size: 1rem;
+  margin-right: 5px;
+  text-align: center;
+  width: 14px;
+}
+
+.rank__movement--up {
+  color: theme.$theme-positive;
+}
+
+.rank__movement--down {
+  color: theme.$theme-negative;
+}
+
+.rank__movement--tie {
+  color: theme.$theme-muted;
 }
 
 .number {
@@ -179,6 +200,22 @@ tbody th {
 td strong {
   display: block;
   font-weight: 600;
+}
+
+td a {
+  color: inherit;
+  text-decoration-color: theme.$theme-accent;
+  text-underline-offset: 3px;
+}
+
+.date,
+.status-tag {
+  white-space: nowrap;
+}
+
+.status-tag {
+  color: theme.$theme-muted;
+  font-size: 0.75rem;
 }
 
 .muted {
