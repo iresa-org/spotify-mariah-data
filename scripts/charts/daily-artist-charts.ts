@@ -23,6 +23,7 @@ export interface DailyArtistChartEntry {
   peakRank?: number;
   appearancesOnChart?: number;
   consecutiveAppearancesOnChart?: number;
+  entryStatus?: string;
 }
 
 export interface DailyArtistCharts {
@@ -132,12 +133,14 @@ function extractEntries(body: unknown): DailyArtistChartEntry[] {
     const peakRank = findNumber(chartData, ['peakRank']);
     const appearancesOnChart = findNumber(chartData, ['appearancesOnChart']);
     const consecutiveAppearancesOnChart = findNumber(chartData, ['consecutiveAppearancesOnChart']);
+    const entryStatus = findString(chartData, ['entryStatus']);
     if (uri !== undefined) entry.uri = uri;
     if (imageUri !== undefined) entry.imageUri = imageUri;
     if (previousRank !== undefined) entry.previousRank = previousRank;
     if (peakRank !== undefined) entry.peakRank = peakRank;
     if (appearancesOnChart !== undefined) entry.appearancesOnChart = appearancesOnChart;
     if (consecutiveAppearancesOnChart !== undefined) entry.consecutiveAppearancesOnChart = consecutiveAppearancesOnChart;
+    if (entryStatus !== undefined) entry.entryStatus = entryStatus;
     return [entry];
   }).slice(0, 200);
 }
