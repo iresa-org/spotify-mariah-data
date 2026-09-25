@@ -1,66 +1,66 @@
-# Mariah Carey on Spotify - Last Updated: 2026-09-23
-Monthly Listeners: 35,958,531 (+62,647)<br>
-Followers: 13,323,418 (+2,764)
+# Mariah Carey on Spotify - Last Updated: 2026-09-24
+Monthly Listeners: 35,978,485 (+19,954)<br>
+Followers: 13,326,307 (+2,889)
 
 ## Streams Overview
 | Metric | Total Streams | Daily Change | % Change |
 |--------|---------|--------------|----------|
-| Total Streams | 14,056,618,587 | 5,299,285 | +2.18% |
-| Lead Streams | 12,773,198,563 | 4,684,591 | +2.99% |
-| Solo Streams | 10,784,078,610 | 4,072,458 | +3.21% |
-| Featured Streams | 1,282,517,844 | 614,662 | -3.60% |
-| Video Streams | 1,304,852 | 4,463 | +0.22% |
+| Total Streams | 14,062,009,068 | 5,390,481 | +1.72% |
+| Lead Streams | 12,777,969,007 | 4,770,444 | +1.83% |
+| Solo Streams | 10,788,225,447 | 4,146,837 | +1.83% |
+| Featured Streams | 1,283,137,837 | 619,993 | +0.87% |
+| Video Streams | 1,309,675 | 4,823 | +8.07% |
 
 ## Top 25 Daily Streamed Songs
 | Rank | Song | Total Streams | Change | % Change |
 |------|------|---------------|--------|----------|
-| 1 | Obsessed | 965,345,568 | 867,273 | +11.56% |
-| 2 | We Belong Together | 977,340,399 | 496,120 | +10.96% |
-| 3 | I Know What You Want | 511,652,403 | 392,250 | -3.75% |
-| 4 | Fantasy | 643,920,537 | 371,170 | -1.94% |
-| 5 | My All | 312,456,694 | 241,095 | +0.80% |
-| 6 | All I Want for Christmas Is You | 2,529,500,464 | 237,856 | +4.31% |
-| 7 | Touch My Body | 390,080,334 | 237,394 | -4.34% |
-| 8 | Always Be My Baby | 542,214,364 | 190,365 | -2.16% |
-| 9 | Without You | 373,593,996 | 160,305 | +4.10% |
-| 10 | Hero | 371,264,174 | 119,118 | -9.64% |
-| 11 | One Sweet Day | 272,212,766 | 97,935 | +0.02% |
-| 12 | It's A Wrap | 99,915,533 | 86,232 | -8.10% |
-| 13 | Shake It Off - Radio Mix | 179,749,733 | 82,608 | -5.21% |
-| 14 | Bye Bye | 131,210,112 | 73,141 | -4.18% |
-| 15 | When You Believe (from The Prince Of Egypt ) | 213,675,770 | 72,834 | +5.63% |
-| 16 | It's Like That - Main Mix | 131,944,550 | 72,153 | +12.95% |
-| 17 | Emotions | 139,333,498 | 53,879 | -2.33% |
-| 18 | Endless Love (with Mariah Carey) | 150,803,686 | 52,044 | -3.90% |
-| 19 | Heartbreaker (feat. JAŸ-Z) | 162,674,049 | 50,037 | +9.21% |
-| 20 | Honey | 119,158,598 | 49,497 | +0.68% |
-| 21 | Fantasy (feat. O.D.B.) | 122,331,672 | 48,629 | -11.21% |
-| 22 | I Know What You Want (feat. Flipmode Squad) | 60,679,112 | 48,526 | -3.26% |
-| 23 | Against All Odds (Take A Look at Me Now) (feat. Westlife) | 108,036,099 | 44,059 | -1.94% |
-| 24 | Don't Forget About Us | 78,308,018 | 35,815 | +9.14% |
-| 25 | #Beautiful | 147,186,719 | 34,364 | +5.94% |
+| 1 | Obsessed | 966,228,953 | 883,385 | +1.86% |
+| 2 | We Belong Together | 977,845,367 | 504,968 | +1.78% |
+| 3 | I Know What You Want | 512,050,799 | 398,396 | +1.57% |
+| 4 | Fantasy | 644,306,752 | 386,215 | +4.05% |
+| 5 | All I Want for Christmas Is You | 2,529,742,005 | 241,541 | +1.55% |
+| 6 | My All | 312,698,225 | 241,531 | +0.18% |
+| 7 | Touch My Body | 390,319,009 | 238,675 | +0.54% |
+| 8 | Always Be My Baby | 542,410,663 | 196,299 | +3.12% |
+| 9 | Without You | 373,755,435 | 161,439 | +0.71% |
+| 10 | Hero | 371,381,113 | 116,939 | -1.83% |
+| 11 | One Sweet Day | 272,312,010 | 99,244 | +1.34% |
+| 12 | Shake It Off - Radio Mix | 179,837,015 | 87,282 | +5.66% |
+| 13 | It's A Wrap | 99,999,831 | 84,298 | -2.24% |
+| 14 | When You Believe (from The Prince Of Egypt ) | 213,751,570 | 75,800 | +4.07% |
+| 15 | It's Like That - Main Mix | 132,019,846 | 75,296 | +4.36% |
+| 16 | Bye Bye | 131,283,400 | 73,288 | +0.20% |
+| 17 | Emotions | 139,388,093 | 54,595 | +1.33% |
+| 18 | Endless Love (with Mariah Carey) | 150,855,158 | 51,472 | -1.10% |
+| 19 | Heartbreaker (feat. JAŸ-Z) | 162,725,279 | 51,230 | +2.38% |
+| 20 | Honey | 119,207,861 | 49,263 | -0.47% |
+| 21 | Fantasy (feat. O.D.B.) | 122,380,720 | 49,048 | +0.86% |
+| 22 | I Know What You Want (feat. Flipmode Squad) | 60,725,883 | 46,771 | -3.62% |
+| 23 | Against All Odds (Take A Look at Me Now) (feat. Westlife) | 108,080,942 | 44,843 | +1.78% |
+| 24 | Don't Forget About Us | 78,348,919 | 40,901 | +14.20% |
+| 25 | #Beautiful | 147,221,236 | 34,517 | +0.45% |
 
 ## Album Streams
 | Album | Total Streams | Change | % Change |
 |-------|---------------|--------|----------|
-| Memoirs of an imperfect Angel | 1,227,351,160 | 1,013,730 | +8.46% |
-| Daydream (30th Anniversary Edition) | 1,743,852,378 | 808,922 | -2.05% |
-| The Emancipation Of Mimi (20th Anniversary Edition) | 1,538,289,185 | 746,124 | +8.58% |
-| Charmbracelet | 603,515,933 | 431,183 | -3.19% |
-| Music Box: 30th Anniversary Edition | 1,070,939,585 | 396,235 | -2.06% |
-| E=MC2 (Deluxe Version) | 651,493,252 | 361,051 | -2.69% |
-| Butterfly: 25th Anniversary Expanded Edition | 634,255,508 | 358,423 | +0.97% |
-| Merry Christmas (Japan Deluxe Anniversary Edition) | 3,594,490,781 | 301,154 | +4.01% |
-| Merry Christmas: 30th Anniversary Edition | 3,488,103,252 | 295,954 | +3.79% |
-| Rainbow: 25th Anniversary Expanded Edition | 437,863,355 | 147,682 | +4.58% |
-| The Remixes | 311,284,737 | 140,485 | -3.45% |
-| Emotions | 206,217,593 | 78,265 | -1.06% |
-| Mariah Carey | 217,828,962 | 75,616 | +2.37% |
-| Me. I Am Mariah…The Elusive Chanteuse (Deluxe) | 223,645,653 | 47,319 | +4.89% |
-| Here For It All | 54,255,430 | 29,314 | +3.96% |
-| MTV Unplugged EP | 79,742,066 | 24,293 | +2.13% |
-| Mariah Carey's Magical Christmas Special (Apple TV+ Original Soundtrack) | 161,513,559 | 16,614 | +9.74% |
-| The Rarities | 52,284,039 | 16,231 | -3.70% |
-| Caution (Japan Version) | 150,570,975 | 14,143 | +4.51% |
-| Glitter | 39,873,006 | 9,553 | -10.59% |
-| Merry Christmas II You | 145,712,667 | 9,521 | +15.45% |
+| Memoirs of an imperfect Angel | 1,228,379,001 | 1,027,841 | +1.39% |
+| Daydream (30th Anniversary Edition) | 1,744,685,407 | 833,029 | +2.98% |
+| The Emancipation Of Mimi (20th Anniversary Edition) | 1,539,058,948 | 769,763 | +3.17% |
+| Charmbracelet | 603,954,957 | 439,024 | +1.82% |
+| Music Box: 30th Anniversary Edition | 1,071,336,264 | 396,679 | +0.11% |
+| E=MC2 (Deluxe Version) | 651,858,202 | 364,950 | +1.08% |
+| Butterfly: 25th Anniversary Expanded Edition | 634,616,176 | 360,668 | +0.63% |
+| Merry Christmas (Japan Deluxe Anniversary Edition) | 3,594,797,238 | 306,457 | +1.76% |
+| Merry Christmas: 30th Anniversary Edition | 3,488,404,155 | 300,903 | +1.67% |
+| Rainbow: 25th Anniversary Expanded Edition | 438,013,112 | 149,757 | +1.41% |
+| The Remixes | 311,424,813 | 140,076 | -0.29% |
+| Emotions | 206,297,283 | 79,690 | +1.82% |
+| Mariah Carey | 217,906,130 | 77,168 | +2.05% |
+| Me. I Am Mariah…The Elusive Chanteuse (Deluxe) | 223,693,553 | 47,900 | +1.23% |
+| Here For It All | 54,285,066 | 29,636 | +1.10% |
+| MTV Unplugged EP | 79,766,962 | 24,896 | +2.48% |
+| The Rarities | 52,301,171 | 17,132 | +5.55% |
+| Mariah Carey's Magical Christmas Special (Apple TV+ Original Soundtrack) | 161,530,125 | 16,566 | -0.29% |
+| Caution (Japan Version) | 150,585,130 | 14,155 | +0.08% |
+| Merry Christmas II You | 145,723,061 | 10,394 | +9.17% |
+| Glitter | 39,880,917 | 7,911 | -17.19% |
