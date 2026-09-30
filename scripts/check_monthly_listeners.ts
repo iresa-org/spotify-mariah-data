@@ -3,6 +3,8 @@ import { getLatestFile } from './utils/file.utils.ts';
 import { fetchMonthlyListeners } from './utils/monthly-listeners.utils.ts';
 
 const CHECK_INTERVAL_MS = 5 * 60 * 1000;
+const MAX_FETCH_ATTEMPTS = 5;
+const FETCH_RETRY_DELAY_MS = 30 * 1000;
 
 async function getLatestRecordedListeners(): Promise<number> {
   const dailyPath = await getLatestFile('./daily', ['.json']);
@@ -18,8 +20,24 @@ async function getLatestRecordedListeners(): Promise<number> {
   return monthlyListeners;
 }
 
+async function fetchMonthlyListenersWithRetry(): Promise<number> {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= MAX_FETCH_ATTEMPTS; attempt++) {
+    try {
+      return await fetchMonthlyListeners();
+    } catch (error) {
+      lastError = error;
+      console.error(`Fetch attempt ${attempt}/${MAX_FETCH_ATTEMPTS} failed:`, error);
+      if (attempt < MAX_FETCH_ATTEMPTS) {
+        await new Promise((resolve) => setTimeout(resolve, FETCH_RETRY_DELAY_MS));
+      }
+    }
+  }
+  throw new Error(`Failed to fetch monthly listeners after ${MAX_FETCH_ATTEMPTS} attempts: ${lastError}`);
+}
+
 async function checkOnce(previousListeners: number): Promise<boolean> {
-  const currentListeners = await fetchMonthlyListeners();
+  const currentListeners = await fetchMonthlyListenersWithRetry();
 
   console.log(`Monthly listeners: ${currentListeners} (previously ${previousListeners})`);
   if (currentListeners === previousListeners) {
