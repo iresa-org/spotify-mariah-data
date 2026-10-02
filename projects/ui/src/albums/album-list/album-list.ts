@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, OnInit, output, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, OnInit, output, signal } from '@angular/core';
 import { AlbumRecord } from '../album.config';
 import { DailyDataApi, FormatCompactPipe, FormatSignedCompactPipe, HistoricDataApi, PercentWithSignPipe, toNumber } from 'ui-shared';
 import { NgOptimizedImage } from '@angular/common';
@@ -24,8 +24,12 @@ export class AlbumList implements OnInit {
   readonly yearRecordMap = signal<RecordEntry | null>(null);
   readonly recordMapLoaded = computed(() => this.allTimeRecordMap() !== null && this.yearRecordMap() !== null);
 
-  readonly albums = signal(
-    (this.dailyDataApi.getAlbums() as AlbumRecord[]).sort(
+  readonly records = input<AlbumRecord[]>([]);
+
+  readonly collectionLabel = input('Albums');
+
+  readonly albums = computed(() =>
+    this.records().slice().sort(
       (a, b) => toNumber(b.dailyChanges.change) - toNumber(a.dailyChanges.change)
     )
   );

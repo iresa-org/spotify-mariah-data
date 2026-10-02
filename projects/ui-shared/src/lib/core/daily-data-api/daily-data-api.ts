@@ -2,6 +2,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable, of, take, tap } from 'rxjs';
 
+interface AlbumDataRecord {
+  albumDetails: {
+    tracks: string[];
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+}
+
 export const DAILY_DATA_BRANCH = new InjectionToken<string>('DAILY_DATA_BRANCH', {
   providedIn: 'root',
   factory: () => 'data',
@@ -13,6 +21,10 @@ export const DAILY_DATA_BRANCH = new InjectionToken<string>('DAILY_DATA_BRANCH',
 export class DailyDataApi {
 
   private trackListResp: Record<string, any> | null = null
+
+  private albumsResp: AlbumDataRecord[] | null = null;
+
+  private epsResp: AlbumDataRecord[] | null = null;
 
   private currMap = new Map<string, any>;
 
@@ -40,6 +52,30 @@ export class DailyDataApi {
     return this.http.get(dataUrl, { params }).pipe(
       tap((data) => this.processTrackList(data))
     )
+  }
+
+  loadAlbums(): Observable<AlbumDataRecord[]> {
+    if (this.albumsResp) {
+      return of(this.albumsResp).pipe(take(1));
+    }
+
+    const params = new HttpParams().set('salt', Date.now().toString());
+    const albumsUrl = 'https://raw.githubusercontent.com/iresa-org/spotify-mariah-data/refs/heads/test_data/result/albums.json';
+    return this.http.get<AlbumDataRecord[]>(albumsUrl, { params }).pipe(
+      tap((albums) => this.albumsResp = albums)
+    );
+  }
+
+  loadEps(): Observable<AlbumDataRecord[]> {
+    if (this.epsResp) {
+      return of(this.epsResp).pipe(take(1));
+    }
+
+    const params = new HttpParams().set('salt', Date.now().toString());
+    const epsUrl = 'https://raw.githubusercontent.com/iresa-org/spotify-mariah-data/refs/heads/test_data/result/eps.json';
+    return this.http.get<AlbumDataRecord[]>(epsUrl, { params }).pipe(
+      tap((eps) => this.epsResp = eps)
+    );
   }
 
   processTrackList(resp: Record<string, any>) {
@@ -105,8 +141,13 @@ export class DailyDataApi {
   }
 
   getAlbums = () => {
-    const albums: any[] = this.trackListResp?.['albums'];
+    const albums: AlbumDataRecord[] = this.albumsResp ?? this.trackListResp?.['albums'] ?? [];
     return albums.map(album => ({ ...album, albumDetails: { ...album.albumDetails, tracks: album.albumDetails.tracks.map((track: string) => this.currMap.get(track)) } }))
+  }
+
+  getEps = () => {
+    const eps: AlbumDataRecord[] = this.epsResp ?? [];
+    return eps.map(ep => ({ ...ep, albumDetails: { ...ep.albumDetails, tracks: ep.albumDetails.tracks.map((track: string) => this.currMap.get(track)) } }))
   }
 
   getPlayCountsByAllType() {

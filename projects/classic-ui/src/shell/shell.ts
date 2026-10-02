@@ -1,4 +1,5 @@
 import { Component, ElementRef, HostListener, inject, OnInit, Renderer2, signal, viewChild } from '@angular/core';
+import { switchMap } from 'rxjs';
 import { DAILY_DATA_BRANCH, DailyDataApi, WINDOW } from 'ui-shared';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
@@ -20,6 +21,8 @@ export class Shell implements OnInit {
 
   loaded = signal<boolean>(false);
 
+  loadError = signal(false);
+
   window = inject(WINDOW)
 
   renderer = inject(Renderer2);
@@ -36,11 +39,14 @@ export class Shell implements OnInit {
   }
 
   loadTracks() {
-    this.dailyDataApi.loadTracks().subscribe({
+    this.dailyDataApi.loadTracks().pipe(
+      switchMap(() => this.dailyDataApi.loadAlbums())
+    ).subscribe({
       complete: () => {
         this.lastUpdated.set(this.dailyDataApi.getLastUpdated())
         this.loaded.set(true)
-      }
+      },
+      error: () => this.loadError.set(true),
     });
   }
 

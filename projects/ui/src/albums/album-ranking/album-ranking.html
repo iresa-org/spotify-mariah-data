@@ -1,6 +1,9 @@
 <lib-master-detail #masterDetail [selectedItem]="isMobile() ? null : selectedAlbum()" (closeClicked)="closeClicked()">
     <lib-master-content>
-        <lib-album-list (albumSelected)="onAlbumSelected($event)"></lib-album-list>
+        <lib-album-list
+            [records]="records()"
+            [collectionLabel]="collectionLabel()"
+            (albumSelected)="onAlbumSelected($event)"></lib-album-list>
     </lib-master-content>
 
     <lib-detail-content>

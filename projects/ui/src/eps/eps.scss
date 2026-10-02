@@ -1,0 +1,77 @@
+@use "theme.scss" as theme;
+
+:host {
+  display: block;
+}
+
+.albums-page {
+  display: grid;
+  gap: 20px;
+}
+
+.page-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.page-header__eyebrow {
+  color: theme.$theme-muted;
+  font-size: 0.75rem;
+  letter-spacing: 0.09em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.page-header__title {
+  font-size: 1.6rem;
+  margin: 6px 0 0;
+}
+
+.chart-wrap {
+  height: 280px;
+  margin-top: 12px;
+  width: 100%;
+
+  ngx-charts-bar-vertical,
+  ngx-charts-bar-horizontal {
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
+}
+
+.scroll-top-btn {
+  align-items: center;
+  background: theme.$theme-accent;
+  border: 0;
+  border-radius: 999px;
+  bottom: 20px;
+  box-shadow: 0 10px 24px color-mix(in srgb, theme.$theme-text 20%, transparent);
+  color: theme.$theme-accent-soft;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  gap: 8px;
+  justify-content: center;
+  padding: 10px 16px;
+  position: fixed;
+  right: 20px;
+  z-index: 20;
+
+  &:hover,
+  &:focus-visible {
+    filter: brightness(1.03);
+    outline: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .scroll-top-btn {
+    bottom: 16px;
+    right: 16px;
+    padding: 10px 14px;
+  }
+}

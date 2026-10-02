@@ -9,6 +9,7 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AdBannerComponent, DailyDataApi } from 'ui-shared';
 import { AdConfig } from '../../../ui-shared/src/lib/ui/ad-banner/ad-banner';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'lib-shell',
@@ -23,6 +24,7 @@ export class Shell implements OnInit {
   private router = inject(Router);
 
   readonly loaded = signal(false);
+  readonly loadError = signal(false);
   readonly lastUpdated = signal('');
   readonly isMobile = signal(false);
   readonly sidenavMinimized = signal(false);
@@ -66,7 +68,7 @@ export class Shell implements OnInit {
     },
     { route: 'tracks', label: 'Tracks', icon: this.tracksIcon, children: [] },
     { route: 'albums', label: 'Albums', icon: this.albumsIcon, children: [] },
-    { route: 'eps', label: 'EPs', icon: this.epsIcon, children: [], locked: true },
+    { route: 'eps', label: 'EPs', icon: this.epsIcon, children: [] },
     {
       route: 'ytd',
       label: 'YTD',
@@ -161,7 +163,10 @@ export class Shell implements OnInit {
         this.mobileMenuOpen.set(false);
       });
 
-    this.dailyDataApi.loadTracks().subscribe({
+    this.dailyDataApi.loadTracks().pipe(
+      switchMap(() => this.dailyDataApi.loadAlbums()),
+      switchMap(() => this.dailyDataApi.loadEps())
+    ).subscribe({
       complete: () => {
         this.lastUpdated.set(this.dailyDataApi.getLastUpdated() ?? '');
         this.artistImage.set(this.dailyDataApi.getAvatarImage());
@@ -172,6 +177,7 @@ export class Shell implements OnInit {
         this.worldRank.set(this.dailyDataApi.getWorldRank());
         this.loaded.set(true);
       },
+      error: () => this.loadError.set(true),
     });
   }
 }

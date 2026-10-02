@@ -60,6 +60,11 @@ export const routes: Routes = [
                 title: 'Albums – Mariah Carey Streams',
             },
             {
+                path: 'eps',
+                loadComponent: () => import('ui').then((c) => c.Eps),
+                title: 'EPs – Mariah Carey Streams',
+            },
+            {
                 path: 'ytd',
                 loadComponent: () => import('ui').then((c) => c.Ytd),
                 children: [
@@ -82,4 +87,3 @@ export const routes: Routes = [
     { path: '', redirectTo: '', pathMatch: 'full' },
     { path: '**', redirectTo: '' },
 ];
-

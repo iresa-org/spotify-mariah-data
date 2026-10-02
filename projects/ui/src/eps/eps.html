@@ -1,19 +1,18 @@
-<section class="albums-page" aria-label="Albums">
-
+<section class="albums-page" aria-label="EPs">
   <header class="page-header">
     <div>
       <p class="page-header__eyebrow">Spotify Streams</p>
-      <h2 class="page-header__title">Albums</h2>
+      <h2 class="page-header__title">EPs</h2>
     </div>
   </header>
 
   @if (chartData().length > 0) {
-    <section class="panel" aria-label="Albums daily streams chart">
+    <section class="panel" aria-label="EPs daily streams chart">
       <div class="panel__heading">
-        <h3>Top Albums by Daily Streams</h3>
-        <p>Albums with the most streams today</p>
+        <h3>Top EPs by Daily Streams</h3>
+        <p>EPs with the most streams today</p>
       </div>
-      <div class="chart-wrap" role="img" aria-label="Bar chart of top albums by daily streams">
+      <div class="chart-wrap" role="img" aria-label="Bar chart of top EPs by daily streams">
         @if (isMobile()) {
           <ngx-charts-bar-horizontal
             [results]="chartData()"
@@ -26,23 +25,23 @@
             [roundEdges]="true"
           />
         } @else {
-        <ngx-charts-bar-vertical
-          [results]="chartData()"
-          [scheme]="colorScheme"
-          [xAxis]="true"
-          [yAxis]="true"
-          [barPadding]="verticalBarPadding()"
-          [showDataLabel]="true"
-          [yAxisTickFormatting]="axisTickFormat"
-          [dataLabelFormatting]="dataLabelFormat"
-          [roundEdges]="true"
-        />
+          <ngx-charts-bar-vertical
+            [results]="chartData()"
+            [scheme]="colorScheme"
+            [xAxis]="true"
+            [yAxis]="true"
+            [barPadding]="verticalBarPadding()"
+            [showDataLabel]="true"
+            [yAxisTickFormatting]="axisTickFormat"
+            [dataLabelFormatting]="dataLabelFormat"
+            [roundEdges]="true"
+          />
         }
       </div>
     </section>
   }
 
-  <lib-album-ranking [records]="albums()" collectionLabel="Albums"></lib-album-ranking>
+  <lib-album-ranking [records]="eps()" collectionLabel="EPs"></lib-album-ranking>
 
   @if (showScrollToTop()) {
     <button

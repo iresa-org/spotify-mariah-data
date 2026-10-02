@@ -2,12 +2,16 @@
 <div class="pagetitle">Mariah Carey - Spotify Top Songs | Last Updated: {{lastUpdated()}}</div>
 <div class="menu">
     <ul>
-        <li><a [routerLink]="['/classic/tracks']">Tracks</a></li>
-        <li><a [routerLink]="['/classic/albums']">Albums</a></li>
+        <li><a [routerLink]="['/test/tracks']">Tracks</a></li>
+        <li><a [routerLink]="['/test/albums']">Albums</a></li>
     </ul>
 </div>
 <router-outlet></router-outlet>
 <button (click)="scrollToTop()" class="scroll-top-btn" title="Go to top" #scrollTop>Top</button>
 } @else {
+@if (loadError()) {
+<div role="alert">Unable to load Mariah Carey data. Please try again later.</div>
+} @else {
 <div>Loading...</div>
+}
 }

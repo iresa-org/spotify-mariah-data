@@ -9,6 +9,7 @@ export { Overview } from './overview/overview';
 export { Tracks } from './tracks/tracks';
 
 export { Albums } from './albums/albums';
+export { Eps } from './eps/eps';
 export { Ytd } from './ytd/ytd';
 export { YtdTracks } from './ytd/ytd-tracks';
 export { YtdAlbums } from './ytd/ytd-albums';

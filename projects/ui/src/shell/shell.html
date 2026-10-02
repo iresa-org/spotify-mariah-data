@@ -155,8 +155,12 @@
   }
 </div>
 } @else {
+@if (loadError()) {
+<div class="loading" role="alert">Unable to load Mariah Carey data. Please try again later.</div>
+} @else {
 <div class="loading" aria-live="polite" aria-busy="true">
   <span class="loading__spinner" aria-hidden="true"></span>
   <p>Loading Mariah Carey data&hellip;</p>
 </div>
+}
 }

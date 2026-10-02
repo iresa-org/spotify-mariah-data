@@ -1,4 +1,4 @@
-import { Component, ElementRef, effect, inject, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, effect, inject, input, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -32,6 +32,10 @@ export class AlbumRanking {
   );
 
   readonly selectedAlbum = signal<AlbumRecord | null>(null);
+
+  readonly records = input<AlbumRecord[]>([]);
+
+  readonly collectionLabel = input('Albums');
 
   constructor() {
     effect(() => {

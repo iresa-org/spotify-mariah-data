@@ -1,9 +1,9 @@
 <div class="panel__heading panel__heading--sticky">
-    <h3>All Albums</h3>
-    <p>Select an album to view tracks</p>
+    <h3>All {{ collectionLabel() }}</h3>
+    <p>Select an item to view tracks</p>
 </div>
 
-<div class="album-grid" role="listbox" aria-label="Albums" [attr.aria-activedescendant]="selectedAlbumUri()">
+<div class="album-grid" role="listbox" [attr.aria-label]="collectionLabel()" [attr.aria-activedescendant]="selectedAlbumUri()">
     @for (album of albums(); track album.albumDetails.uri) {
     <button [id]="album.albumDetails.uri" role="option" type="button" class="album-card"
         [class.album-card--selected]="selectedAlbumUri() === album.albumDetails.uri"
@@ -38,7 +38,7 @@
                     }
                 </span>
             </p>
-            <dl class="album-card__stats" aria-label="Album stream stats">
+            <dl class="album-card__stats" [attr.aria-label]="collectionLabel() + ' stream stats'">
                 <div>
                     <dt>Total</dt>
                     <dd>{{ album.dailyChanges.count | formatCompact}}</dd>
