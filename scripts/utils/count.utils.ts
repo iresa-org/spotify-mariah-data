@@ -1,4 +1,5 @@
 import { SELECTED_ALBUMS } from "../config/album-list.ts";
+import { SELECTED_EPS } from "../config/ep-list.ts";
 import type { AlbumData } from "../config/album.config.ts";
 import type { TrackContentItem, TrackArtists } from "../config/source.config.ts";
 import type { BaseDailyChange, TrackCategory, TrackDailyChange, TrackData } from "../config/track.config.ts";
@@ -47,10 +48,10 @@ export function getDuplicateIds(list: TrackData[]) {
   return getDuplicates(countIdMap);
 }
 
-export function getTotalStreams(list: TrackData[]): BaseDailyChange {
-  const prevChange = list.reduce((total, item) => total + BigInt(item.dailyChanges.prevChange ?? 0), BigInt(0));
+export function getTotalStreams(list: TrackData[], previousTotal?: BaseDailyChange): BaseDailyChange {
   const newSum = list.reduce((total, item) => total + BigInt(item.dailyChanges.count), BigInt(0));
-  const newChange = list.reduce((total, item) => total + BigInt(item.dailyChanges.change), BigInt(0));
+  const newChange = previousTotal ? newSum - BigInt(previousTotal.count) : BigInt(0);
+  const prevChange = BigInt(previousTotal?.change ?? 0);
 
   return {
     count: String(newSum),
@@ -140,14 +141,28 @@ export function convertToAlbumList(map: Map<string, TrackData[]>): AlbumData[] {
 export function filterAlbums(map: Map<string, any[]>): Map<string, any[]> {
   const albumMap = new Map<string, any[]>();
   const selectedSet = new Set(SELECTED_ALBUMS);
+  const selectedEpSet = new Set(SELECTED_EPS);
 
   for (let [key, value] of map) {
-    if (selectedSet.has(key)) {
-      albumMap.set(key, value)
+    if (selectedSet.has(key) && !selectedEpSet.has(key)) {
+      albumMap.set(key, value);
     }
   }
 
   return albumMap;
+}
+
+export function filterEps(map: Map<string, any[]>): Map<string, any[]> {
+  const epMap = new Map<string, any[]>();
+  const selectedSet = new Set(SELECTED_EPS);
+
+  for (let [key, value] of map) {
+    if (selectedSet.has(key)) {
+      epMap.set(key, value);
+    }
+  }
+
+  return epMap;
 }
 
 export function getAlbumsFromTracks(currTrackMap: Map<string, TrackData>): Map<string, TrackData[]> {

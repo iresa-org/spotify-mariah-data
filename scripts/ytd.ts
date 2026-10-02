@@ -6,6 +6,7 @@ import type { DailyCountOutput } from "./config/daily.config.ts";
 import type { AlbumData } from "./config/album.config.ts";
 import type { YTDSumModel } from "./config/ytd.config.ts";
 import { subtractNumbers } from "./utils/count.utils.ts";
+import { SELECTED_EPS } from "./config/ep-list.ts";
 import type { BaseDailyChange } from "./config/track.config.ts";
 import { convertMapToObject } from "./utils/map.utils.ts";
 
@@ -58,18 +59,33 @@ async function calcTrackYtd(latestDailyChanges: Map<string, BaseDailyChange>): P
   }
 }
 
-function calcAlbumSums(albums: AlbumData[], trackSums: Record<string, string>): Record<string, string> {
+function calcReleaseSums(releases: AlbumData[], trackSums: Record<string, string>): Record<string, string> {
 
-  const albumMap: YTDSumModel = new Map();
+  const releaseMap: YTDSumModel = new Map();
 
-  albums?.forEach(album => {
-    const total = album.albumDetails.tracks.reduce((acc, trackUid) => {
+  releases?.forEach(release => {
+    const total = release.albumDetails.tracks.reduce((acc, trackUid) => {
       const trackValue = trackSums[trackUid] ?? '0';
       return String(BigInt(acc) + BigInt(trackValue));
     }, '0');
-    albumMap.set(album.uri, total);
+    releaseMap.set(release.uri, total);
   });
-  return convertMapToObject(albumMap);
+  return convertMapToObject(releaseMap);
+}
+
+function separateReleaseData(dailyData: DailyCountOutput): { albums: AlbumData[]; eps: AlbumData[] } {
+  const epSet = new Set(SELECTED_EPS);
+  const albums = dailyData.albums ?? [];
+  const eps = dailyData.eps ?? [];
+  const explicitEpUris = new Set(eps.map(ep => ep.uri));
+
+  return {
+    albums: albums.filter(album => !epSet.has(album.uri)),
+    eps: [
+      ...albums.filter(album => epSet.has(album.uri) && !explicitEpUris.has(album.uri)),
+      ...eps
+    ]
+  };
 }
 
 function cleanMapInPlace(map: Map<any, any>): Map<any, any> {
@@ -126,9 +142,11 @@ function sumTrackChangesForMonth(fileContents: DailyCountOutput[]): Record<strin
   return convertMapToObject(result);
 }
 
-async function calcMonthly(): Promise<Record<string, { tracks: Record<string, string>, albums: Record<string, string> }>> {
+type MonthlyYtdData = { tracks: Record<string, string>, albums: Record<string, string>, eps: Record<string, string> };
+
+async function calcMonthly(): Promise<Record<string, MonthlyYtdData>> {
   const groups = await groupFilesByMonth('./daily');
-  const result: Record<string, { tracks: Record<string, string>, albums: Record<string, string> }> = {};
+  const result: Record<string, MonthlyYtdData> = {};
 
   for (const [month, files] of groups) {
     const sortedFiles = [...files].sort();
@@ -137,20 +155,36 @@ async function calcMonthly(): Promise<Record<string, { tracks: Record<string, st
     );
 
     const tracks = sumTrackChangesForMonth(contents);
-    // Use the latest day's albums list within the month for the album -> track mapping.
+    // Use the latest day's release mappings within the month.
     const latestContent = contents[contents.length - 1]!;
-    const albums = calcAlbumSums(latestContent.albums ?? [], tracks);
+    const releases = separateReleaseData(latestContent);
+    const albums = calcReleaseSums(releases.albums, tracks);
+    const eps = calcReleaseSums(releases.eps, tracks);
 
-    result[month] = { tracks, albums };
+    result[month] = { tracks, albums, eps };
   }
   return result;
 }
 
 // Reads the previously written ytd.json so months without /daily files anymore aren't lost.
-async function readExistingMonthly(): Promise<Record<string, { tracks: Record<string, string>, albums: Record<string, string> }>> {
+async function readExistingMonthly(): Promise<Record<string, MonthlyYtdData>> {
   try {
     const contents = await readFile('./ytd/ytd.json', 'utf-8');
-    return (JSON.parse(contents).monthly) ?? {};
+    const monthly = (JSON.parse(contents).monthly ?? {}) as Record<string, Partial<MonthlyYtdData>>;
+    const epSet = new Set(SELECTED_EPS);
+
+    for (const value of Object.values(monthly)) {
+      value.albums ??= {};
+      value.eps ??= {};
+      for (const uri of epSet) {
+        if (value.albums[uri] !== undefined) {
+          value.eps[uri] ??= value.albums[uri]!;
+          delete value.albums[uri];
+        }
+      }
+    }
+
+    return monthly as Record<string, MonthlyYtdData>;
   } catch {
     return {};
   }
@@ -173,12 +207,14 @@ async function main() {
 
     const tracks = await calcTrackYtd(latestDailyChanges);
     const latestDailyCountOutput = JSON.parse(latestDailyChangeContents) as DailyCountOutput;
-    const albums = calcAlbumSums(latestDailyCountOutput.albums ?? [], tracks);
+    const releases = separateReleaseData(latestDailyCountOutput);
+    const albums = calcReleaseSums(releases.albums, tracks);
+    const eps = calcReleaseSums(releases.eps, tracks);
 
     const existingMonthly = await readExistingMonthly();
     const monthly = { ...existingMonthly, ...await calcMonthly() };
 
-    writeToFile(`./ytd`, 'ytd.json', JSON.stringify({ ytd: { tracks, albums }, monthly }))
+    writeToFile(`./ytd`, 'ytd.json', JSON.stringify({ ytd: { tracks, albums, eps }, monthly }))
   } catch (error) {
     console.error('Error writing file:', error);
   }

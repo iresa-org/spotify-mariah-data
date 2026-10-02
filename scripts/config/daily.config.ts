@@ -14,6 +14,7 @@ export interface GetDailyResult {
   tracks: TrackData[];
   playCounts: PlayCountOutput,
   albums: AlbumData[];
+  eps: AlbumData[];
   lastUpdate: string;
   artist: ArtistContentItem | null,
   monthlyListeners: BaseDailyChange,
@@ -30,8 +31,13 @@ export interface DailyCountOutput {
   playCounts: PlayCountOutput,
   monthlyListeners: string,
   followers: string,
-  albums: AlbumData[];
+  albums: DailyAlbumOutput[];
+  eps: DailyAlbumOutput[];
   topTracks: {
     uid: string;
   }[]
 }
+
+export type DailyAlbumOutput = Pick<AlbumData, "dailyChanges" | "uri"> & {
+  albumDetails: Pick<AlbumData["albumDetails"], "tracks">;
+};

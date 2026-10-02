@@ -1,5 +1,6 @@
 import { readFile } from "fs/promises";
 import { writeToFile } from "./utils/file.utils.ts";
+import type { AlbumData } from "./config/album.config.ts";
 import type { GetDailyResult } from "./config/daily.config.ts";
 
 interface TrackWithDetails {
@@ -18,9 +19,19 @@ interface AlbumWithDetails {
   percentChange: string;
 }
 
-async function getCurrentData(): Promise<GetDailyResult> {
+async function getCurrentData(): Promise<Omit<GetDailyResult, "albums" | "eps">> {
   const content = await readFile('./result/current.json', 'utf-8');
-  return JSON.parse(content) as GetDailyResult;
+  return JSON.parse(content) as Omit<GetDailyResult, "albums" | "eps">;
+}
+
+async function getAlbumData(): Promise<AlbumData[]> {
+  const content = await readFile('./result/albums.json', 'utf-8');
+  return JSON.parse(content) as AlbumData[];
+}
+
+async function getEpData(): Promise<AlbumData[]> {
+  const content = await readFile('./result/eps.json', 'utf-8');
+  return JSON.parse(content) as AlbumData[];
 }
 
 function formatNumber(num: string): string {
@@ -53,8 +64,8 @@ function generateTrackTable(tracks: TrackWithDetails[]): string {
   return header + rows;
 }
 
-function generateAlbumTable(albums: AlbumWithDetails[]): string {
-  const header = '| Album | Total Streams | Change | % Change |\n' +
+function generateAlbumTable(albums: AlbumWithDetails[], releaseLabel = 'Album'): string {
+  const header = `| ${releaseLabel} | Total Streams | Change | % Change |\n` +
                 '|-------|---------------|--------|----------|\n';
 
   const rows = albums
@@ -73,6 +84,7 @@ interface GenerateReadmeContentParams {
   followers: GetDailyResult["followers"];
   tracks: TrackWithDetails[];
   albums: AlbumWithDetails[];
+  eps: AlbumWithDetails[];
 }
 
 function generateReadmeContent({
@@ -81,7 +93,8 @@ function generateReadmeContent({
   monthlyListeners,
   followers,
   tracks,
-  albums
+  albums,
+  eps
 }: GenerateReadmeContentParams): string {
   const content = `# Mariah Carey on Spotify - Last Updated: ${lastUpdate}
 Monthly Listeners: ${formatNumber(monthlyListeners.count)} (${formatChange(monthlyListeners.change)})<br>
@@ -101,6 +114,9 @@ ${generateTrackTable(tracks)}
 
 ## Album Streams
 ${generateAlbumTable(albums)}
+
+## EP Streams
+${generateAlbumTable(eps, 'EP')}
 `;
 
   return content;
@@ -110,7 +126,7 @@ async function main() {
   try {
     console.log('Updating README...');
 
-    const data = await getCurrentData();
+    const [data, albums, eps] = await Promise.all([getCurrentData(), getAlbumData(), getEpData()]);
 
     const tracksWithDetails: TrackWithDetails[] = data.tracks
       .filter(track => track.countMerged !== true)
@@ -129,9 +145,19 @@ async function main() {
     tracksWithDetails.sort((a, b) => Number(b.change) - Number(a.change));
 
     // Process albums with details
-    const albumsWithDetails: AlbumWithDetails[] = data.albums
+    const albumsWithDetails: AlbumWithDetails[] = albums
       .map(album => ({
         name: album.albumDetails.name || 'Unknown Album',
+        uri: album.uri,
+        count: album.dailyChanges.count,
+        change: album.dailyChanges.change,
+        percentChange: album.dailyChanges.percentChange || '0'
+      }))
+      .sort((a, b) => Number(b.change) - Number(a.change));
+
+    const epsWithDetails: AlbumWithDetails[] = eps
+      .map(album => ({
+        name: album.albumDetails.name || 'Unknown EP',
         uri: album.uri,
         count: album.dailyChanges.count,
         change: album.dailyChanges.change,
@@ -146,7 +172,8 @@ async function main() {
       monthlyListeners: data.monthlyListeners,
       followers: data.followers,
       tracks: tracksWithDetails,
-      albums: albumsWithDetails
+      albums: albumsWithDetails,
+      eps: epsWithDetails
     });
 
     // Write to README.md
