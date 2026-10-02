@@ -3,6 +3,7 @@ import { getLatestFile, writeToFile } from "./utils/file.utils.ts";
 import type { DailyCountOutput } from "./config/daily.config.ts";
 import type { RecordModel } from "./config/record.config.ts";
 import { isBiggerNumber } from "./utils/count.utils.ts";
+import { SELECTED_EPS } from "./config/ep-list.ts";
 import { extractDateFromPath } from "./utils/date.utils.ts";
 import type { BaseDailyChange } from "./config/track.config.ts";
 import { convertMapToObject, convertObjectToMap } from "./utils/map.utils.ts";
@@ -19,11 +20,11 @@ function processTrackDailyChange(dailyCountOutput: DailyCountOutput): Map<string
   return map;
 }
 
-function processAlbumDailyChange(dailyCountOutput: DailyCountOutput): Map<string, BaseDailyChange> {
+function processReleaseDailyChange(releases: DailyCountOutput["albums"]): Map<string, BaseDailyChange> {
 
   const map = new Map<string, BaseDailyChange>();
 
-  dailyCountOutput.albums?.forEach(element => {
+  releases?.forEach(element => {
     map.set(element.uri, { count: element.dailyChanges.count, change: element.dailyChanges.change })
   });
   return map;
@@ -45,9 +46,7 @@ function processTrackRecord(input: string, dailyChangeMap: Map<string, BaseDaily
   return convertMapToObject(recordMap);
 }
 
-function processAlbumRecord(input: string, dailyChangeMap: Map<string, BaseDailyChange>, lastUpdate: string) {
-
-  const recordMap: RecordMap = convertObjectToMap(JSON.parse(input).albums);
+function updateRecordMap(recordMap: RecordMap, dailyChangeMap: Map<string, BaseDailyChange>, lastUpdate: string): RecordMap {
   Array.from(dailyChangeMap.entries()).forEach(([uri, value]: [string, BaseDailyChange]) => {
     const { change: currChange } = value;
     const record = recordMap.get(uri);
@@ -57,25 +56,52 @@ function processAlbumRecord(input: string, dailyChangeMap: Map<string, BaseDaily
       recordMap.set(uri, { change: currChange, date: lastUpdate });
     }
   });
-  return convertMapToObject(recordMap);
+  return recordMap;
+}
+
+function processReleaseRecords(input: string, albumDailyChanges: Map<string, BaseDailyChange>, epDailyChanges: Map<string, BaseDailyChange>, lastUpdate: string) {
+  const previous = JSON.parse(input);
+  const epSet = new Set(SELECTED_EPS);
+  const albums: RecordMap = convertObjectToMap(previous.albums);
+  const eps: RecordMap = convertObjectToMap(previous.eps);
+
+  for (const [uri, record] of albums) {
+    if (epSet.has(uri)) {
+      eps.set(uri, record);
+      albums.delete(uri);
+    }
+  }
+
+  updateRecordMap(albums, albumDailyChanges, lastUpdate);
+  updateRecordMap(eps, epDailyChanges, lastUpdate);
+  return { albums: convertMapToObject(albums), eps: convertMapToObject(eps) };
 
 }
 
 async function updateRecords(fileName: string, dailyCountOutput: DailyCountOutput, lastestUpdateDayStr: string) {
   const trackDailyChanges = processTrackDailyChange(dailyCountOutput);
-  const albumDailyChanges = processAlbumDailyChange(dailyCountOutput);
+  const epSet = new Set(SELECTED_EPS);
+  const albums = dailyCountOutput.albums ?? [];
+  const eps = dailyCountOutput.eps ?? [];
+  const explicitEpUris = new Set(eps.map(ep => ep.uri));
+  const albumDailyChanges = processReleaseDailyChange(albums.filter(album => !epSet.has(album.uri)));
+  const epDailyChanges = processReleaseDailyChange([
+    ...albums.filter(album => epSet.has(album.uri) && !explicitEpUris.has(album.uri)),
+    ...eps
+  ]);
 
   const recFile = await getLatestFile('./records', [fileName]);
   if (recFile) {
     console.log(`Reading`, recFile);
     const allTimeRecContents = await readFile(recFile, 'utf-8');
     const tracks = processTrackRecord(allTimeRecContents, trackDailyChanges, lastestUpdateDayStr);
-    const albums = processAlbumRecord(allTimeRecContents, albumDailyChanges, lastestUpdateDayStr);
-    writeToFile(`./records`, fileName, JSON.stringify({ tracks, albums }));
+    const releases = processReleaseRecords(allTimeRecContents, albumDailyChanges, epDailyChanges, lastestUpdateDayStr);
+    writeToFile(`./records`, fileName, JSON.stringify({ tracks, ...releases }));
   } else {
     console.error(`Error reading ${fileName}. Initializing...`);
     const tracks = new Map<string, RecordModel>();
     const albums = new Map<string, RecordModel>();
+    const eps = new Map<string, RecordModel>();
     for (let [uid, value] of trackDailyChanges) {
       tracks.set(uid, {
         change: value.change,
@@ -88,7 +114,13 @@ async function updateRecords(fileName: string, dailyCountOutput: DailyCountOutpu
         date: lastestUpdateDayStr
       });
     }
-    writeToFile(`./records`, fileName, JSON.stringify({ tracks: convertMapToObject(tracks), albums: convertMapToObject(albums) }));
+    for (let [uri, value] of epDailyChanges) {
+      eps.set(uri, {
+        change: value.change,
+        date: lastestUpdateDayStr
+      });
+    }
+    writeToFile(`./records`, fileName, JSON.stringify({ tracks: convertMapToObject(tracks), albums: convertMapToObject(albums), eps: convertMapToObject(eps) }));
   }
 }
 

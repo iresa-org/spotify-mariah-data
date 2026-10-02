@@ -2,7 +2,7 @@ import { readFile } from "fs/promises";
 import { getLatestFile, writeToFile } from "./utils/file.utils.ts";
 import type { DailyCountOutput, GetDailyResult } from "./config/daily.config.ts";
 import { extractDateFromPath, formatDate, getTomorrowDate, getYesterdayDate, parseLocalDate } from "./utils/date.utils.ts";
-import { calcDailyChanges, calcPercentChange, convertToAlbumList, filterAlbums, getAlbumsFromTracks, getDuplicateIds, getTotalStreams, getTrackCategories, calcRankDiff, subtractNumbers } from "./utils/count.utils.ts";
+import { calcDailyChanges, calcPercentChange, convertToAlbumList, filterAlbums, filterEps, getAlbumsFromTracks, getDuplicateIds, getTotalStreams, getTrackCategories, calcRankDiff, subtractNumbers } from "./utils/count.utils.ts";
 import type { ArtistContentItem, SpotifyArtistData, SpotifyContentData, SpotifyTrackData } from "./config/source.config.ts";
 import type { BaseDailyChange, TrackDailyChange, TrackData } from "./config/track.config.ts";
 import { extractHarContent } from "./utils/har-reader.utils.ts";
@@ -23,6 +23,7 @@ function processTrackContent(el: SpotifyTrackData, prevMap: Map<string, TrackDai
 function processUploadContent(list: SpotifyContentData[], prevFileContents: string | null, prevDate: Date): GetDailyResult {
   const map = new Map<string, TrackData>();
   const prevMap = prevFileContents ? processPrevTracksChanges(prevFileContents) : new Map<string, TrackDailyChange>();
+  const prevPlayCounts = prevFileContents ? (JSON.parse(prevFileContents) as DailyCountOutput).playCounts : undefined;
 
   let artistData: SpotifyArtistData = {} as SpotifyArtistData;
 
@@ -42,19 +43,22 @@ function processUploadContent(list: SpotifyContentData[], prevFileContents: stri
   const soloList = leadList.filter(item => item.categories.includes('S'))
   const featuredList = listWoDupl.filter(item => item.categories.includes('F'))
   const videos = listWoDupl.filter(item => item.categories.includes('V'))
-  const albumMap = filterAlbums(getAlbumsFromTracks(map));
+  const tracksByRelease = getAlbumsFromTracks(map);
+  const albumMap = filterAlbums(tracksByRelease);
+  const epMap = filterEps(tracksByRelease);
   const artist = artistData ? artistData.data.artistUnion : null;
 
   return {
     tracks,
     playCounts: {
-      total: getTotalStreams(listWoDupl),
-      lead: getTotalStreams(leadList),
-      solo: getTotalStreams(soloList),
-      featured: getTotalStreams(featuredList),
-      videos: getTotalStreams(videos),
+      total: getTotalStreams(listWoDupl, prevPlayCounts?.total),
+      lead: getTotalStreams(leadList, prevPlayCounts?.lead),
+      solo: getTotalStreams(soloList, prevPlayCounts?.solo),
+      featured: getTotalStreams(featuredList, prevPlayCounts?.featured),
+      videos: getTotalStreams(videos, prevPlayCounts?.videos),
     },
     albums: convertToAlbumList(albumMap),
+    eps: convertToAlbumList(epMap),
     lastUpdate: formatDate(prevDate),
     artist,
     monthlyListeners: getMonthlyListeners(prevFileContents ?? '', artistData?.data.artistUnion?.stats.monthlyListeners),
@@ -137,8 +141,10 @@ async function main() {
     const resp = processUploadContent(extractHarContent(uploadFileContents), prevFileContents, prevDate)
 
     // Write to result
-    const result = JSON.stringify(resp);
-    writeToFile(`./result`, 'current.json', result)
+    const { albums, eps, ...currentData } = resp;
+    writeToFile(`./result`, 'current.json', JSON.stringify(currentData))
+    writeToFile(`./result`, 'albums.json', JSON.stringify(albums))
+    writeToFile(`./result`, 'eps.json', JSON.stringify(eps))
 
     // Write to daily
     const tracks = resp.tracks.map(track => ({ uid: track.trackDetails.uid, count: track.dailyChanges.count, change: track.dailyChanges.change }));
@@ -147,7 +153,16 @@ async function main() {
       playCounts: resp.playCounts,
       monthlyListeners: resp.monthlyListeners.count,
       followers: resp.followers.count,
-      albums: resp.albums,
+      albums: resp.albums.map(({ albumDetails, dailyChanges, uri }) => ({
+        albumDetails: { tracks: albumDetails.tracks },
+        dailyChanges,
+        uri
+      })),
+      eps: resp.eps.map(({ albumDetails, dailyChanges, uri }) => ({
+        albumDetails: { tracks: albumDetails.tracks },
+        dailyChanges,
+        uri
+      })),
       topTracks: resp.artist?.discography.topTracks.items.map(item => ({ uid: item.uid })) ?? [] as any[]
     }
     writeToFile(`./daily`, `${formatDate(prevDate)}.json`, JSON.stringify(dailyResult))
