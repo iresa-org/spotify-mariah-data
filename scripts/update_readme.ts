@@ -115,8 +115,8 @@ ${generateTrackTable(tracks)}
 ## Album Streams
 ${generateAlbumTable(albums)}
 
-## EP Streams
-${generateAlbumTable(eps, 'EP')}
+## Top 25 Daily Streamed EPs
+${generateAlbumTable(eps.slice(0, 25), 'EP')}
 `;
 
   return content;
