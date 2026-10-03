@@ -7,6 +7,7 @@ type RankMovement = 'up' | 'down' | 'tie';
 type Position = [number, number];
 type Ring = Position[];
 type Polygon = Ring[];
+type RankBand = 'rank-1' | 'top-10' | 'top-50' | 'top-100' | 'top-200';
 
 interface SongEntry {
   rank: number;
@@ -60,7 +61,7 @@ interface MapFeature {
   code: string;
   name: string;
   path: string;
-  charted: boolean;
+  rankBand: RankBand | null;
 }
 
 interface ChartRow {
@@ -68,7 +69,7 @@ interface ChartRow {
   countryName: string;
   rank: number;
   name: string;
-  artists: string;
+  artists?: string;
   uri?: string;
   streams?: number;
   previousRank?: number;
@@ -119,7 +120,7 @@ export class SpotifyCharts implements OnInit {
         countryName: this.countryName(countryCode),
         rank: entry.rank,
         name: entry.name,
-        artists: song.artists?.join(', ') ?? '',
+        artists: song.artists?.join(', '),
         uri: song.uri,
         streams: song.streams,
         previousRank: artist.previousRank,
@@ -198,13 +199,27 @@ export class SpotifyCharts implements OnInit {
       const properties = feature.properties;
       const code = (properties['ISO_A2'] ?? properties['ISO_A2_EH'] ?? properties['ISO3166-1-Alpha-2'] ?? '').toUpperCase();
       if (!code || code === '-99') return [];
+      const bestRank = countries[code]?.entries.reduce<number | null>(
+        (best, entry) => best === null || entry.rank < best ? entry.rank : best,
+        null,
+      ) ?? null;
       return [{
         code,
         name: this.countryName(code),
         path: this.geometryPath(feature.geometry),
-        charted: Boolean(countries[code]),
+        rankBand: bestRank === null ? null : this.rankBand(bestRank),
       }];
     });
+  }
+
+  private rankBand(rank: number): RankBand | null {
+    if (rank < 1 || rank > 200) return null;
+    if (rank === 1) return 'rank-1';
+    if (rank <= 10) return 'top-10';
+    if (rank <= 50) return 'top-50';
+    if (rank <= 100) return 'top-100';
+    if (rank <= 200) return 'top-200';
+    return null;
   }
 
   private geometryPath(geometry: GeoJsonFeature['geometry']): string {

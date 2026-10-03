@@ -52,6 +52,129 @@
   margin: 0;
 }
 
+.historical-panel {
+  background: theme.$theme-surface;
+  border: 1px solid theme.$theme-border;
+  border-radius: 14px;
+  margin-top: 18px;
+  padding: 16px;
+}
+
+.historical-panel__heading h4 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.historical-panel__subheading {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.historical-panel__subheading p {
+  color: theme.$theme-muted;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.historical-panel__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.range-chip {
+  background: transparent;
+  border: 1px solid theme.$theme-border;
+  border-radius: 999px;
+  color: theme.$theme-muted;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 5px 10px;
+  text-transform: uppercase;
+
+  &:hover,
+  &:focus-visible {
+    border-color: theme.$theme-accent;
+    color: theme.$theme-accent;
+    outline: none;
+  }
+}
+
+.range-chip--active {
+  background: theme.$theme-accent-soft;
+  border-color: theme.$theme-accent;
+  color: theme.$theme-accent;
+}
+
+.historical-chart {
+  height: 300px;
+  margin-top: 12px;
+
+  ngx-charts-line-chart {
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
+}
+
+.history-message {
+  color: theme.$theme-muted;
+  font-size: 0.9rem;
+  margin: 16px 0 4px;
+}
+
+.album-stats {
+  border-top: 1px solid theme.$theme-border;
+  margin-top: 18px;
+  padding-top: 14px;
+}
+
+.album-stats__title {
+  font-size: 0.95rem;
+  margin: 0 0 10px;
+}
+
+.album-stats__grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  margin: 0;
+}
+
+.album-stats__grid div {
+  background: color-mix(in srgb, theme.$theme-surface 86%, theme.$theme-accent-soft 14%);
+  border: 1px solid theme.$theme-border;
+  border-radius: 10px;
+  min-width: 0;
+  padding: 12px;
+}
+
+.album-stats__grid dt {
+  color: theme.$theme-muted;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.album-stats__grid dd {
+  display: grid;
+  font-size: 0.9rem;
+  font-weight: 600;
+  gap: 2px;
+  margin: 3px 0 0;
+}
+
+.album-stats__grid time {
+  color: theme.$theme-muted;
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
 .rank {
   color: theme.$theme-muted;
   font-size: 0.85rem;
@@ -107,5 +230,23 @@
 
   .album-tracks__meta {
     font-size: 0.8rem;
+  }
+
+  .historical-panel {
+    padding: 12px;
+  }
+
+  .historical-panel__subheading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .historical-panel__toolbar {
+    justify-content: flex-start;
+  }
+
+  .historical-chart {
+    height: 240px;
   }
 }

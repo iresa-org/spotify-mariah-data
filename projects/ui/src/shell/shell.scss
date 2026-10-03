@@ -3,6 +3,7 @@
 :host {
   display: block;
   height: 100vh;
+  overflow: hidden;
   color: theme.$theme-text;
   font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
 }
@@ -651,9 +652,17 @@ thead th {
 }
 
 @media (max-width: 1024px) {
+  :host {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
   .dashboard {
     display: flex;
     flex-direction: column;
+    height: auto;
+    min-height: 100%;
     overflow: visible !important;
   }
 

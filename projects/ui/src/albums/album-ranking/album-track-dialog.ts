@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Signal } from '@angular/core';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { AlbumRecord } from '../album.config';
+import { AlbumRecord, AlbumRecordStats } from '../album.config';
 import { AlbumTrackList } from '../album-track-list/album-track-list';
 
 type AlbumTrackDialogData = {
   album: AlbumRecord;
+  recordStats: Signal<AlbumRecordStats>;
 };
 
 @Component({
@@ -15,7 +16,7 @@ type AlbumTrackDialogData = {
       <div class="album-track-dialog__close">
         <button type="button" (click)="close()" aria-label="Close album tracks dialog">Close</button>
       </div>
-      <lib-album-track-list [selectedAlbum]="data.album"></lib-album-track-list>
+      <lib-album-track-list [selectedAlbum]="data.album" [recordStats]="data.recordStats()"></lib-album-track-list>
     </div>
   `,
   styles: [

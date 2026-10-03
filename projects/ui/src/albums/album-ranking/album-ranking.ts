@@ -4,7 +4,7 @@ import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { map } from 'rxjs';
 import { DetailContent, MasterContent, MasterDetail } from 'ui-shared';
-import { AlbumRecord } from '../album.config';
+import { AlbumRecord, AlbumRecordStats } from '../album.config';
 import { AlbumList } from '../album-list/album-list';
 import { AlbumTrackList } from '../album-track-list/album-track-list';
 import { AlbumTrackDialog } from './album-track-dialog';
@@ -32,6 +32,12 @@ export class AlbumRanking {
   );
 
   readonly selectedAlbum = signal<AlbumRecord | null>(null);
+  readonly selectedAlbumRecordStats = signal<AlbumRecordStats>({
+    allTime: null,
+    year: null,
+    allTimeStatus: 'loading',
+    yearStatus: 'loading',
+  });
 
   readonly records = input<AlbumRecord[]>([]);
 
@@ -79,7 +85,7 @@ export class AlbumRanking {
     this.closeDialog();
     this.dialogRef = this.dialog.open(AlbumTrackDialog, {
       ariaLabel: album.albumDetails.name + ' tracks',
-      data: { album },
+      data: { album, recordStats: this.selectedAlbumRecordStats.asReadonly() },
       maxWidth: '96vw',
       width: 'min(960px, 96vw)',
     });

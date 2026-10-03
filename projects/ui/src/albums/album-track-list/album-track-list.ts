@@ -1,18 +1,22 @@
-import { Component, computed, inject, input, output } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
+import { Component, computed, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
-import { AlbumRecord, DiscTrackGroup, OrderedAlbumTrack } from '../album.config';
+import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
+import { AlbumRecord, AlbumRecordStats, DiscTrackGroup, OrderedAlbumTrack } from '../album.config';
 import { AlbumLargeCoverArtPipe } from '../album-pipe';
 import {
   GroupedTableComponent,
   GroupedTableCellDirective,
   GroupedTableColumn,
   GroupedTableGroup,
+  HistoricDataApi,
+  HistoricalData,
   PercentWithSignPipe,
   toNumber,
   FormatCompactPipe,
+  formatCompact,
 } from 'ui-shared';
 
 interface AlbumTrackTableRow {
@@ -24,11 +28,25 @@ interface AlbumTrackTableRow {
   change: number;
 }
 
+interface SeriesPoint {
+  name: string;
+  value: number;
+}
+
+interface ChartSeries {
+  name: string;
+  series: SeriesPoint[];
+}
+
+type HistoryWindow = 7 | 30 | 60 | 90;
+
 @Component({
   selector: 'lib-album-track-list',
   imports: [
     AlbumLargeCoverArtPipe,
+    DatePipe,
     DecimalPipe,
+    NgxChartsModule,
     GroupedTableComponent,
     GroupedTableCellDirective,
     PercentWithSignPipe,
@@ -39,18 +57,98 @@ interface AlbumTrackTableRow {
 })
 export class AlbumTrackList {
   private readonly breakpointObserver = inject(BreakpointObserver);
+  private readonly historicDataApi = inject(HistoricDataApi);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly selectedAlbum = input<AlbumRecord | null>(null);
+  readonly recordStats = input<AlbumRecordStats>({
+    allTime: null,
+    year: null,
+    allTimeStatus: 'loading',
+    yearStatus: 'loading',
+  });
 
   readonly albumClosed = output<void>();
+  readonly historicalData = signal<HistoricalData | null>(null);
+  readonly historyStatus = signal<'idle' | 'loading' | 'loaded' | 'error'>('idle');
+  readonly historyWindowOptions: readonly HistoryWindow[] = [7, 30, 60, 90];
+  readonly selectedHistoryWindow = signal<HistoryWindow>(7);
+
+  readonly historicalSeries = computed<SeriesPoint[]>(() => {
+    const album = this.selectedAlbum();
+    const historical = this.historicalData();
+    if (!album || !historical) return [];
+
+    const dailyTotals = new Map<string, number>();
+    for (const track of album.albumDetails.tracks) {
+      const trackHistory = historical[track.uid];
+      if (!trackHistory) continue;
+
+      for (const [date, count] of Object.entries(trackHistory)) {
+        dailyTotals.set(date, (dailyTotals.get(date) ?? 0) + toNumber(count));
+      }
+    }
+
+    return Array.from(dailyTotals, ([name, value]) => ({ name, value }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  });
+
+  readonly historicalChart = computed<ChartSeries[]>(() => {
+    const series = this.historicalSeries();
+    if (series.length === 0) return [];
+
+    return [{
+      name: `Daily Streams (${this.selectedHistoryWindow()} Days)`,
+      series: series.slice(-this.selectedHistoryWindow()),
+    }];
+  });
+
+  readonly colorScheme: Color = {
+    name: 'mariah-line',
+    selectable: true,
+    group: ScaleType.Ordinal,
+    domain: ['#d72652'],
+  };
 
   readonly isMobile = toSignal(
     this.breakpointObserver.observe('(max-width: 600px)').pipe(map(result => result.matches)),
     { initialValue: false }
   );
 
+  constructor() {
+    effect(() => {
+      if (this.selectedAlbum() && this.historyStatus() === 'idle') {
+        this.loadHistoricalData();
+      }
+    });
+  }
+
   closeAlbum() {
     this.albumClosed.emit();
+  }
+
+  setHistoryWindow(days: HistoryWindow): void {
+    this.selectedHistoryWindow.set(days);
+  }
+
+  yAxisTickFormat = (value: number) => formatCompact(value);
+
+  xAxisTickFormat = (value: string) => {
+    if (!value || value.length < 7) return value;
+    return value.slice(5);
+  };
+
+  private loadHistoricalData(): void {
+    this.historyStatus.set('loading');
+    this.historicDataApi.loadHistorical()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: historical => {
+          this.historicalData.set(historical);
+          this.historyStatus.set('loaded');
+        },
+        error: () => this.historyStatus.set('error'),
+      });
   }
 
   readonly albumTrackGroups = computed<DiscTrackGroup[]>(() => {

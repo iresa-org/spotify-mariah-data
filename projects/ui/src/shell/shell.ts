@@ -60,10 +60,10 @@ export class Shell implements OnInit {
       route: 'charts',
       label: 'Charts',
       icon: this.chartsIcon,
-      locked: true,
+      //locked: true,
       children: [
-        // { label: 'Daily Songs', route: 'charts/songs' },
-        // { label: 'Daily Artists', route: 'charts/artists' },
+        { label: 'Daily Songs', route: 'charts/songs' },
+        { label: 'Daily Artists', route: 'charts/artists' },
       ],
     },
     { route: 'tracks', label: 'Tracks', icon: this.tracksIcon, children: [] },

@@ -50,5 +50,79 @@
             </span>
         </ng-template>
     </lib-grouped-table>
+
+    <section class="historical-panel" aria-label="Historical daily streams chart">
+        <div class="historical-panel__heading">
+            <h4>Historical Daily Streams</h4>
+        </div>
+        <div class="historical-panel__subheading">
+            <p>Combined daily streams for tracks on this album</p>
+            <div class="historical-panel__toolbar" role="group" aria-label="Historical stream range">
+                @for (days of historyWindowOptions; track days) {
+                <button type="button" class="range-chip"
+                    [class.range-chip--active]="selectedHistoryWindow() === days"
+                    [attr.aria-pressed]="selectedHistoryWindow() === days"
+                    (click)="setHistoryWindow(days)">
+                    {{ days }} Days
+                </button>
+                }
+            </div>
+        </div>
+        @if (historyStatus() === 'loading' || historyStatus() === 'idle') {
+        <p class="history-message" role="status">Loading historical streams...</p>
+        } @else if (historyStatus() === 'error') {
+        <p class="history-message" role="alert">Historical stream data is unavailable.</p>
+        } @else if (historicalChart().length > 0) {
+        <div class="historical-chart" role="img"
+            [attr.aria-label]="'Line chart of historical daily streams for ' + album.albumDetails.name">
+            <ngx-charts-line-chart [results]="historicalChart()" [scheme]="colorScheme"
+                [xAxis]="true" [yAxis]="true" [showGridLines]="true" [autoScale]="true"
+                [yAxisTickFormatting]="yAxisTickFormat" [xAxisTickFormatting]="xAxisTickFormat"
+                [gradient]="true" />
+        </div>
+        } @else {
+        <p class="history-message">No historical stream data available.</p>
+        }
+    </section>
+
+    <section class="album-stats" aria-label="Album statistics">
+        <h4 class="album-stats__title">Album Stats</h4>
+        <dl class="album-stats__grid">
+            <div>
+                <dt>All-time daily record</dt>
+                <dd>
+                    @if (recordStats().allTime; as record) {
+                    {{ record.change | formatCompact }} streams
+                    <time [attr.datetime]="record.date">{{ record.date | date:'mediumDate' }}</time>
+                    } @else {
+                    @if (recordStats().allTimeStatus === 'loading') {
+                    <span role="status">Loading...</span>
+                    } @else if (recordStats().allTimeStatus === 'error') {
+                    <span>Unavailable</span>
+                    } @else {
+                    <span>No record yet</span>
+                    }
+                    }
+                </dd>
+            </div>
+            <div>
+                <dt>Year-to-date daily record</dt>
+                <dd>
+                    @if (recordStats().year; as record) {
+                    {{ record.change | formatCompact }} streams
+                    <time [attr.datetime]="record.date">{{ record.date | date:'mediumDate' }}</time>
+                    } @else {
+                    @if (recordStats().yearStatus === 'loading') {
+                    <span role="status">Loading...</span>
+                    } @else if (recordStats().yearStatus === 'error') {
+                    <span>Unavailable</span>
+                    } @else {
+                    <span>No record yet</span>
+                    }
+                    }
+                </dd>
+            </div>
+        </dl>
+    </section>
 </div>
 }

@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, input, OnInit, output, signal } from '@angular/core';
-import { AlbumRecord } from '../album.config';
+import { AlbumRecord, AlbumRecordStats } from '../album.config';
 import { DailyDataApi, FormatCompactPipe, FormatSignedCompactPipe, HistoricDataApi, PercentWithSignPipe, toNumber } from 'ui-shared';
 import { NgOptimizedImage } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -18,10 +18,13 @@ export class AlbumList implements OnInit {
   private historicDataApi = inject(HistoricDataApi);
 
   protected readonly albumSelected = output<AlbumRecord | null>();
+  protected readonly recordStatsChanged = output<AlbumRecordStats>();
 
   readonly anniversaryIcon = faBirthdayCake;
   readonly allTimeRecordMap = signal<RecordEntry | null>(null);
   readonly yearRecordMap = signal<RecordEntry | null>(null);
+  readonly allTimeRecordError = signal(false);
+  readonly yearRecordError = signal(false);
   readonly recordMapLoaded = computed(() => this.allTimeRecordMap() !== null && this.yearRecordMap() !== null);
 
   readonly records = input<AlbumRecord[]>([]);
@@ -46,15 +49,33 @@ export class AlbumList implements OnInit {
     this.albumSelected.emit(this.selectedAlbum());
   });
 
+  readonly onRecordStatsChanged = effect(() => {
+    const album = this.selectedAlbum();
+    this.recordStatsChanged.emit({
+      allTime: album ? this.allTimeRecordMap()?.[album.albumDetails.uri] ?? null : null,
+      year: album ? this.yearRecordMap()?.[album.albumDetails.uri] ?? null : null,
+      allTimeStatus: this.allTimeRecordError()
+        ? 'error'
+        : this.allTimeRecordMap() === null
+          ? 'loading'
+          : 'loaded',
+      yearStatus: this.yearRecordError()
+        ? 'error'
+        : this.yearRecordMap() === null
+          ? 'loading'
+          : 'loaded',
+    });
+  });
+
   ngOnInit(): void {
     this.historicDataApi.loadAllTimeRecords().subscribe({
       next: ({ albums }) => this.allTimeRecordMap.set(albums),
-      error: () => {},
+      error: () => this.allTimeRecordError.set(true),
     });
 
     this.historicDataApi.loadYtdRecords().subscribe({
       next: ({ albums }) => this.yearRecordMap.set(albums),
-      error: () => {},
+      error: () => this.yearRecordError.set(true),
     });
   }
 

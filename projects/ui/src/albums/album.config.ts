@@ -33,6 +33,18 @@ export interface AlbumRecord {
   };
 }
 
+export interface AlbumDayRecord {
+  change: string;
+  date: string;
+}
+
+export interface AlbumRecordStats {
+  allTime: AlbumDayRecord | null;
+  year: AlbumDayRecord | null;
+  allTimeStatus: 'loading' | 'loaded' | 'error';
+  yearStatus: 'loading' | 'loaded' | 'error';
+}
+
 export interface OrderedAlbumTrack extends AlbumTrack {
   originalOrder: number;
   disc: number;

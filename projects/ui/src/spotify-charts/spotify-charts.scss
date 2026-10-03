@@ -77,18 +77,58 @@
   align-items: center;
   color: theme.$theme-muted;
   display: flex;
-  flex-shrink: 0;
+  flex-wrap: wrap;
   font-size: 0.78rem;
-  gap: 8px;
+  gap: 6px 10px;
+  list-style: none;
+  margin: 0;
   padding-top: 2px;
 }
 
+.legend li {
+  align-items: center;
+  display: flex;
+  gap: 5px;
+  white-space: nowrap;
+}
+
 .legend__swatch {
-  background: theme.$theme-accent;
+  border: 1px solid color-mix(in srgb, theme.$theme-text 16%, transparent);
   border-radius: 50%;
   display: inline-block;
   height: 10px;
+  flex: 0 0 10px;
   width: 10px;
+}
+
+.legend__swatch--rank-1,
+.world-map path.country--rank-1 {
+  background: theme.$theme-accent;
+  fill: theme.$theme-accent;
+}
+
+.legend__swatch--top-10,
+.world-map path.country--top-10 {
+  background: color-mix(in srgb, theme.$theme-accent 80%, white);
+  fill: color-mix(in srgb, theme.$theme-accent 80%, white);
+}
+
+.legend__swatch--top-50,
+.world-map path.country--top-50 {
+  background: color-mix(in srgb, theme.$theme-accent 60%, white);
+  fill: color-mix(in srgb, theme.$theme-accent 60%, white);
+}
+
+.legend__swatch--top-100,
+.world-map path.country--top-100 {
+  background: color-mix(in srgb, theme.$theme-accent 40%, white);
+  fill: color-mix(in srgb, theme.$theme-accent 40%, white);
+}
+
+.legend__swatch--top-200,
+.world-map path.country--top-200 {
+  background: color-mix(in srgb, theme.$theme-accent 20%, white);
+  fill: color-mix(in srgb, theme.$theme-accent 20%, white);
 }
 
 .map-wrap {
@@ -112,10 +152,6 @@
   stroke: theme.$theme-surface;
   stroke-linejoin: round;
   stroke-width: 0.7;
-}
-
-.world-map path.country--charted {
-  fill: theme.$theme-accent;
 }
 
 .table-wrap {

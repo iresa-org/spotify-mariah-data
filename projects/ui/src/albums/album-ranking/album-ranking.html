@@ -3,10 +3,13 @@
         <lib-album-list
             [records]="records()"
             [collectionLabel]="collectionLabel()"
-            (albumSelected)="onAlbumSelected($event)"></lib-album-list>
+            (albumSelected)="onAlbumSelected($event)"
+            (recordStatsChanged)="selectedAlbumRecordStats.set($event)"></lib-album-list>
     </lib-master-content>
 
     <lib-detail-content>
-        <lib-album-track-list [selectedAlbum]="selectedAlbum()"></lib-album-track-list>
+        <lib-album-track-list
+            [selectedAlbum]="selectedAlbum()"
+            [recordStats]="selectedAlbumRecordStats()"></lib-album-track-list>
     </lib-detail-content>
 </lib-master-detail>
