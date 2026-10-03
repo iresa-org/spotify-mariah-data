@@ -24,7 +24,6 @@ export const SELECTED_EPS = [
   'spotify:album:2FOaKrTyadDqoCFkXOPN9m', // Thank God I Found You EP
   'spotify:album:296UXUMM4R8K0m7h0UKegl', // Can't Take That Away (Mariah's Theme) EP
   'spotify:album:3Jx6tgsjoX2oL7vqfnb89j', // Against All Odds (Take A Look at Me Now) EP
-  'spotify:album:3NCgseZSBZ6bOyqch7qQJz', // Never Too Far / Don't Stop (Funkin 4 Jamaica)
   'spotify:album:3XZySQA89fA3UjV0cVrlL5', // Through The Rain - EP
   'spotify:album:7KvgKCcgXHuHfQL8B6i3JT', // The One - EP
   'spotify:album:1dLppu2ZNH9PvG1YgekYqm', // Boy (I Need You) - EP
