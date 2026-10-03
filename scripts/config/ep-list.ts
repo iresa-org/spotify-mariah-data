@@ -55,4 +55,5 @@ export const SELECTED_EPS = [
   'spotify:album:0jpGebANqbNNKbWHq2XhEM', // MTV Unplugged EP
   'spotify:album:2WnZUGeARPOUEBQJxqBftE', // Sweetheart EP
   'spotify:album:33Mfzj0B0jfExUap38bJYE', // Didn't Mean To Turn You On (with Rochelle Jordan)
+  'spotify:album:2Rapap6E6bz6m8rTRjtxXH', // Volare / Nothing Is Impossible (Live From The Milano Cortina 2026 Olympic Winter Games)
 ];
