@@ -2,11 +2,13 @@
 
 :host {
   display: block;
+  min-width: 0;
 }
 
 .charts-page {
   display: grid;
   gap: 20px;
+  min-width: 0;
 }
 
 .page-header {
@@ -156,6 +158,8 @@
 
 .table-wrap {
   margin-top: 12px;
+  max-width: 100%;
+  min-width: 0;
   overflow-x: auto;
 }
 

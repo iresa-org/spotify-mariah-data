@@ -1,6 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 type ChartType = 'songs' | 'artists';
 type RankMovement = 'up' | 'down' | 'tie';
@@ -96,11 +99,15 @@ const MAP_HEIGHT = 480;
 export class SpotifyCharts implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly route = inject(ActivatedRoute);
+  private readonly breakpointObserver = inject(BreakpointObserver);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly displayNames = new Intl.DisplayNames(['en'], { type: 'region' });
+  private mapRequest: Subscription | null = null;
 
   readonly chartType = signal<ChartType>('songs');
   readonly payload = signal<ChartPayload<SongEntry | ArtistEntry> | null>(null);
   readonly mapFeatures = signal<MapFeature[]>([]);
+  readonly isMobile = signal(false);
   readonly loading = signal(true);
   readonly error = signal(false);
 
@@ -136,6 +143,21 @@ export class SpotifyCharts implements OnInit {
   });
 
   ngOnInit(): void {
+    this.breakpointObserver
+      .observe('(max-width: 1024px)')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(({ matches }) => {
+        this.isMobile.set(matches);
+        if (matches) {
+          this.mapRequest?.unsubscribe();
+          this.mapRequest = null;
+          this.mapFeatures.set([]);
+        } else {
+          const payload = this.payload();
+          if (payload) this.loadMap(payload);
+        }
+      });
+
     const routeType = this.route.snapshot.data['chartType'];
     this.chartType.set(routeType === 'artists' ? 'artists' : 'songs');
     const chartUrl = this.chartType() === 'songs' ? SONGS_URL : ARTISTS_URL;
@@ -143,10 +165,7 @@ export class SpotifyCharts implements OnInit {
     this.http.get<ChartPayload<SongEntry | ArtistEntry>>(chartUrl).subscribe({
       next: (payload) => {
         this.payload.set(payload);
-        this.http.get<GeoJsonFeatureCollection>(GEO_URL).subscribe({
-          next: (geoJson) => this.mapFeatures.set(this.createMapFeatures(geoJson, payload.countries)),
-          error: () => this.mapFeatures.set([]),
-        });
+        if (!this.isMobile()) this.loadMap(payload);
         this.loading.set(false);
       },
       error: () => {
@@ -154,6 +173,20 @@ export class SpotifyCharts implements OnInit {
         this.loading.set(false);
       },
     });
+  }
+
+  private loadMap(payload: ChartPayload<SongEntry | ArtistEntry>): void {
+    if (this.mapRequest && !this.mapRequest.closed) return;
+
+    this.mapRequest = this.http
+      .get<GeoJsonFeatureCollection>(GEO_URL)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (geoJson) => {
+          if (!this.isMobile()) this.mapFeatures.set(this.createMapFeatures(geoJson, payload.countries));
+        },
+        error: () => this.mapFeatures.set([]),
+      });
   }
 
   countryName(code: string): string {
