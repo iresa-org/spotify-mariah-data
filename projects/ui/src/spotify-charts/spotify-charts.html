@@ -87,9 +87,11 @@
           <tr>
             <th scope="row" data-label="Country">{{ row.countryName }}</th>
             <td class="rank" data-label="Rank" [attr.aria-label]="rankMovementLabel(row.rank, row.entryStatus)">
-              {{ row.rank }}
-              <span class="rank__movement rank__movement--{{ rankMovement(row.entryStatus) }}" aria-hidden="true">
-                {{ rankMovement(row.entryStatus) === 'up' ? '↑' : rankMovement(row.entryStatus) === 'down' ? '↓' : '=' }}
+              <span class="rank__value">
+                {{ row.rank }}
+                <span class="rank__movement rank__movement--{{ rankMovement(row.entryStatus) }}" aria-hidden="true">
+                  {{ rankMovement(row.entryStatus) === 'up' ? '↑' : rankMovement(row.entryStatus) === 'down' ? '↓' : '=' }}
+                </span>
               </span>
             </td>
             @if (isSongs()) {
