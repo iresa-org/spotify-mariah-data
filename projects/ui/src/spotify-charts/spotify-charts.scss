@@ -297,4 +297,131 @@ td a {
   .legend {
     padding-top: 0;
   }
+
+  .panel {
+    padding: 12px;
+  }
+
+  .table-wrap {
+    overflow: visible;
+  }
+
+  table {
+    min-width: 0;
+  }
+
+  thead {
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  tbody {
+    display: grid;
+    gap: 10px;
+  }
+
+  tbody tr {
+    background: theme.$theme-bg;
+    border: 1px solid theme.$theme-border;
+    border-radius: 10px;
+    display: grid;
+    gap: 5px 10px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: 8px 10px;
+  }
+
+  th,
+  td {
+    border-bottom: 0;
+    min-width: 0;
+    padding: 0;
+  }
+
+  tbody th,
+  tbody td {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 5px;
+    white-space: normal;
+  }
+
+  tbody th::before,
+  tbody td::before {
+    color: theme.$theme-muted;
+    content: attr(data-label);
+    flex: 0 0 auto;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  tbody th {
+    grid-column: span 2;
+  }
+
+  tbody th::before,
+  tbody .rank::before {
+    display: none;
+  }
+
+  tbody .rank {
+    grid-column: span 1;
+    align-items: center;
+    justify-content: flex-end;
+    width: auto;
+  }
+
+  tbody .chart-song {
+    grid-column: 1 / -1;
+    flex-wrap: wrap;
+  }
+
+  tbody .chart-song a,
+  tbody .chart-song > strong {
+    min-width: 0;
+  }
+
+  tbody .chart-song strong {
+    display: inline;
+  }
+
+  tbody .chart-song .muted {
+    display: inline;
+    margin-top: 0;
+  }
+
+  tbody .number {
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px;
+    text-align: left;
+  }
+
+  tbody .number::before {
+    font-size: 0.55rem;
+    letter-spacing: 0;
+  }
+}
+
+@media (max-width: 340px) {
+  tbody tr {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  tbody th {
+    grid-column: span 1;
+  }
+
+  tbody .rank {
+    justify-content: flex-end;
+  }
 }

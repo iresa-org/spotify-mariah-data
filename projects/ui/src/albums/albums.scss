@@ -30,8 +30,11 @@
 }
 
 .chart-wrap {
+  box-sizing: border-box;
   height: 280px;
   margin-top: 12px;
+  min-width: 0;
+  overflow: hidden;
   width: 100%;
 
   ngx-charts-bar-vertical,
@@ -74,5 +77,11 @@
     bottom: 16px;
     right: 16px;
     padding: 10px 14px;
+  }
+}
+
+@media (max-width: 600px) {
+  .chart-wrap {
+    height: clamp(360px, 110vw, 500px);
   }
 }

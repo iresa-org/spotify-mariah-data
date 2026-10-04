@@ -117,43 +117,77 @@
 }
 
 :host-context(.mobile) .grouped-table-wrap {
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
 }
 
 :host-context(.mobile) .grouped-table {
+  display: block;
   table-layout: auto;
 }
 
-:host-context(.mobile) .grouped-table td {
-  white-space: nowrap;
+:host-context(.mobile) .grouped-table thead {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
 }
 
-:host-context(.mobile) .grouped-table th {
-  display: none;
+:host-context(.mobile) .grouped-table tbody {
+  display: grid;
+  gap: 8px;
 }
 
-:host-context(.mobile) .grouped-table td {
-  padding: 6px 10px;
+:host-context(.mobile) .grouped-table tbody tr:not(.grouped-table__group-row) {
+  background: theme.$theme-surface;
+  border: 1px solid theme.$theme-border;
+  border-radius: 10px;
+  display: grid;
+  gap: 5px 10px;
+  grid-template-columns: 48px repeat(3, minmax(0, 1fr));
+  padding: 8px 10px;
+}
+
+:host-context(.mobile) .grouped-table tbody tr:not(.grouped-table__group-row) td {
+  align-items: baseline;
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  min-width: 0;
+  padding: 0;
+  white-space: normal;
 }
 
 :host-context(.mobile) .grouped-table__mobile-label {
+  color: theme.$theme-muted;
+  flex: 0 0 auto;
+  display: block;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+:host-context(.mobile) .grouped-table tbody tr:not(.grouped-table__group-row) td:nth-child(2) {
+  grid-column: span 3;
+}
+
+:host-context(.mobile) .grouped-table tbody tr:not(.grouped-table__group-row) td:nth-child(1) .grouped-table__mobile-label {
   display: none;
 }
 
-:host-context(.mobile) .grouped-table col:nth-child(1) {
-  width: auto !important;
-}
-
-:host-context(.mobile) .grouped-table col:nth-child(2) {
-  width: auto !important;
-}
-
-:host-context(.mobile) .grouped-table col:nth-child(n + 3) {
-  width: auto !important;
+:host-context(.mobile) .grouped-table__cell--align-end {
+  align-items: baseline;
+  justify-content: space-between;
+  text-align: left !important;
 }
 
 :host-context(.mobile) .grouped-table__group-row td {
+  display: block;
   padding: 8px 10px;
 }
 
