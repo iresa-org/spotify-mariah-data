@@ -70,9 +70,9 @@
         @for (item of navItems; track item.route) {
         <div class="nav__item" [class.nav__item--submenu-open]="openMobileSubmenuRoute() === item.route">
           @if (item.children?.length) {
-          <button type="button" class="nav__link nav__button" (click)="toggleSubmenu(item.route)"
+          <button type="button" class="nav__link nav__button" (click)="navigateToMenuParent(item.route)"
             [attr.aria-expanded]="openMobileSubmenuRoute() === item.route" [attr.aria-controls]="'submenu-' + item.route"
-            [attr.aria-label]="(openMobileSubmenuRoute() === item.route ? 'Close ' : 'Open ') + item.label + ' submenu'"
+            [attr.aria-label]="'Go to ' + item.label + ' default page and ' + (openMobileSubmenuRoute() === item.route ? 'close' : 'open') + ' submenu'"
             [title]="item.label">
             <fa-icon class="nav__icon" [icon]="item.icon" aria-hidden="true" />
             <span class="nav__label">{{ item.label }}</span>

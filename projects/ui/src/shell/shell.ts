@@ -128,6 +128,11 @@ export class Shell implements OnInit {
     this.openMobileSubmenuRoute.update((openRoute) => openRoute === route ? null : route);
   }
 
+  navigateToMenuParent(route: string): void {
+    this.toggleSubmenu(route);
+    this.router.navigate(route.split('/'));
+  }
+
   closeMobileSubmenu(): void {
     this.openMobileSubmenuRoute.set(null);
   }
