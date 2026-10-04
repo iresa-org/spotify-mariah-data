@@ -14,6 +14,7 @@
   } @else if (error()) {
   <section class="status status--error" role="alert">The chart data could not be loaded. Please try again later.</section>
   } @else {
+  @if (!isMobile()) {
   <section class="panel" aria-labelledby="map-heading">
     <div class="panel__heading">
       <div>
@@ -48,6 +49,7 @@
       </svg>
     </div>
   </section>
+  }
 
   <section class="panel" aria-labelledby="data-heading">
     <div class="panel__heading">
