@@ -30,6 +30,7 @@ export const routes: Routes = [
             {
                 path: 'charts',
                 children: [
+                    { path: '', redirectTo: 'songs', pathMatch: 'full' },
                     {
                         path: 'songs',
                         loadComponent: () => import('ui').then((c) => c.SpotifyCharts),
