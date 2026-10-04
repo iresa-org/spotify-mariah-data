@@ -3,7 +3,7 @@ import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angula
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { catchError, Subscription, timeout } from 'rxjs';
 
 type ChartType = 'songs' | 'artists';
 type RankMovement = 'up' | 'down' | 'tie';
@@ -87,9 +87,12 @@ interface ChartRow {
 
 const SONGS_URL = 'https://raw.githubusercontent.com/iresa-org/spotify-mariah-data/refs/heads/test_data/charts/daily-song-charts.json';
 const ARTISTS_URL = 'https://raw.githubusercontent.com/iresa-org/spotify-mariah-data/refs/heads/test_data/charts/daily-artist-charts.json';
-const GEO_URL = 'https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson';
+const SONGS_FALLBACK_URL = 'https://cdn.jsdelivr.net/gh/iresa-org/spotify-mariah-data@test_data/charts/daily-song-charts.json';
+const ARTISTS_FALLBACK_URL = 'https://cdn.jsdelivr.net/gh/iresa-org/spotify-mariah-data@test_data/charts/daily-artist-charts.json';
+const GEO_URL = 'https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_110m_admin_0_countries.geojson';
 const MAP_WIDTH = 960;
 const MAP_HEIGHT = 480;
+const CHART_REQUEST_TIMEOUT_MS = 8000;
 
 @Component({
   selector: 'lib-spotify-charts',
@@ -101,7 +104,9 @@ export class SpotifyCharts implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly breakpointObserver = inject(BreakpointObserver);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly displayNames = new Intl.DisplayNames(['en'], { type: 'region' });
+  private readonly displayNames = typeof Intl.DisplayNames === 'undefined'
+    ? null
+    : new Intl.DisplayNames(['en'], { type: 'region' });
   private mapRequest: Subscription | null = null;
 
   readonly chartType = signal<ChartType>('songs');
@@ -161,8 +166,15 @@ export class SpotifyCharts implements OnInit {
     const routeType = this.route.snapshot.data['chartType'];
     this.chartType.set(routeType === 'artists' ? 'artists' : 'songs');
     const chartUrl = this.chartType() === 'songs' ? SONGS_URL : ARTISTS_URL;
+    const fallbackUrl = this.chartType() === 'songs' ? SONGS_FALLBACK_URL : ARTISTS_FALLBACK_URL;
 
-    this.http.get<ChartPayload<SongEntry | ArtistEntry>>(chartUrl).subscribe({
+    this.http.get<ChartPayload<SongEntry | ArtistEntry>>(chartUrl).pipe(
+      timeout({ first: CHART_REQUEST_TIMEOUT_MS }),
+      catchError(() => this.http.get<ChartPayload<SongEntry | ArtistEntry>>(fallbackUrl).pipe(
+        timeout({ first: CHART_REQUEST_TIMEOUT_MS }),
+      )),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (payload) => {
         this.payload.set(payload);
         if (!this.isMobile()) this.loadMap(payload);
@@ -191,7 +203,7 @@ export class SpotifyCharts implements OnInit {
 
   countryName(code: string): string {
     try {
-      return this.displayNames.of(code) ?? code;
+      return this.displayNames?.of(code) ?? code;
     } catch {
       return code;
     }
