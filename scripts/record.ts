@@ -59,9 +59,26 @@ function updateRecordMap(recordMap: RecordMap, dailyChangeMap: Map<string, BaseD
   return recordMap;
 }
 
+function getEpSet(...sources: Array<Iterable<string> | undefined>): Set<string> {
+  const epSet = new Set<string>(SELECTED_EPS);
+
+  for (const source of sources) {
+    if (!source) continue;
+    for (const uri of source) {
+      epSet.add(uri);
+    }
+  }
+
+  return epSet;
+}
+
 function processReleaseRecords(input: string, albumDailyChanges: Map<string, BaseDailyChange>, epDailyChanges: Map<string, BaseDailyChange>, lastUpdate: string) {
   const previous = JSON.parse(input);
-  const epSet = new Set(SELECTED_EPS);
+  const epSet = getEpSet(
+    SELECTED_EPS,
+    Object.keys(previous.eps ?? {}),
+    epDailyChanges.keys()
+  );
   const albums: RecordMap = convertObjectToMap(previous.albums);
   const eps: RecordMap = convertObjectToMap(previous.eps);
 
@@ -80,9 +97,9 @@ function processReleaseRecords(input: string, albumDailyChanges: Map<string, Bas
 
 async function updateRecords(fileName: string, dailyCountOutput: DailyCountOutput, lastestUpdateDayStr: string) {
   const trackDailyChanges = processTrackDailyChange(dailyCountOutput);
-  const epSet = new Set(SELECTED_EPS);
   const albums = dailyCountOutput.albums ?? [];
   const eps = dailyCountOutput.eps ?? [];
+  const epSet = getEpSet(SELECTED_EPS, eps.map(ep => ep.uri));
   const explicitEpUris = new Set(eps.map(ep => ep.uri));
   const albumDailyChanges = processReleaseDailyChange(albums.filter(album => !epSet.has(album.uri)));
   const epDailyChanges = processReleaseDailyChange([
