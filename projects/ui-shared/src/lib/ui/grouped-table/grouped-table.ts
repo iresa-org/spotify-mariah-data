@@ -56,6 +56,7 @@ export class GroupedTableComponent<T> {
   readonly groups = input.required<ReadonlyArray<GroupedTableGroup<T>>>();
   readonly ariaLabel = input('Grouped data table');
   readonly emptyMessage = input('No rows to display.');
+  readonly showMobileLabels = input(true);
 
   readonly cellTemplates = contentChildren(GroupedTableCellDirective);
 

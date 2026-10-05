@@ -190,7 +190,7 @@ export class AlbumTrackList {
 
   readonly tableColumns: ReadonlyArray<GroupedTableColumn<AlbumTrackTableRow>> = [
     { id: 'rank', header: '#', width: '44px', value: (row) => row.rank },
-    { id: 'trackName', header: 'Track', width: '320px', value: (row) => row.trackName },
+    { id: 'trackName', header: 'Track', width: '220px', value: (row) => row.trackName },
     { id: 'total', header: 'Total', width: '112px', align: 'end', value: (row) => row.total },
     { id: 'daily', header: 'Daily', width: '112px', align: 'end', value: (row) => row.daily },
     { id: 'change', header: 'Change', width: '112px', align: 'end', value: (row) => row.change },

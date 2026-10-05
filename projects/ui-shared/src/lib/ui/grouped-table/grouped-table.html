@@ -4,6 +4,7 @@
     cdk-table
     [dataSource]="flattenedRows()"
     class="grouped-table"
+    [class.grouped-table--compact-mobile]="!showMobileLabels()"
     [attr.aria-label]="ariaLabel()"
   >
     <colgroup>
@@ -50,7 +51,9 @@
         cdk-cell
         [class.grouped-table__cell--align-end]="column.align === 'end'"
       >
+        @if (showMobileLabels()) {
         <span class="grouped-table__mobile-label">{{ column.header }}</span>
+        }
         @if (getCellTemplate(column.id); as cellTemplate) {
         <ng-container
           [ngTemplateOutlet]="cellTemplate"

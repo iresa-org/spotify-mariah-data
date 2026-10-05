@@ -116,16 +116,16 @@
   display: none;
 }
 
-:host-context(.mobile) .grouped-table-wrap {
+[data-mobile='true'] .grouped-table-wrap {
   overflow: visible;
 }
 
-:host-context(.mobile) .grouped-table {
+[data-mobile='true'] .grouped-table {
   display: block;
   table-layout: auto;
 }
 
-:host-context(.mobile) .grouped-table thead {
+[data-mobile='true'] .grouped-table thead {
   border: 0;
   clip: rect(0, 0, 0, 0);
   height: 1px;
@@ -136,22 +136,27 @@
   width: 1px;
 }
 
-:host-context(.mobile) .grouped-table tbody {
+[data-mobile='true'] .grouped-table tbody {
   display: grid;
   gap: 8px;
 }
 
-:host-context(.mobile) .grouped-table tbody tr:not(.grouped-table__group-row) {
+[data-mobile='true'] .grouped-table tbody tr:not(.grouped-table__group-row) {
   background: theme.$theme-surface;
   border: 1px solid theme.$theme-border;
   border-radius: 10px;
   display: grid;
-  gap: 5px 10px;
-  grid-template-columns: 48px repeat(3, minmax(0, 1fr));
+  gap: 2px 6px;
+  grid-template-columns: 32px minmax(0, 1fr) repeat(3, minmax(0, auto));
   padding: 8px 10px;
 }
 
-:host-context(.mobile) .grouped-table tbody tr:not(.grouped-table__group-row) td {
+[data-mobile='true'][data-compact-mobile='true'] .grouped-table tbody tr:not(.grouped-table__group-row) {
+  gap: 4px 6px;
+  grid-template-columns: 26px minmax(0, 1fr) auto auto auto;
+}
+
+[data-mobile='true'] .grouped-table tbody tr:not(.grouped-table__group-row) td {
   align-items: baseline;
   display: flex;
   flex-direction: row;
@@ -161,7 +166,7 @@
   white-space: normal;
 }
 
-:host-context(.mobile) .grouped-table__mobile-label {
+[data-mobile='true'] .grouped-table__mobile-label {
   color: theme.$theme-muted;
   flex: 0 0 auto;
   display: block;
@@ -172,25 +177,25 @@
   white-space: nowrap;
 }
 
-:host-context(.mobile) .grouped-table tbody tr:not(.grouped-table__group-row) td:nth-child(2) {
-  grid-column: span 3;
+[data-mobile='true'] .grouped-table tbody tr:not(.grouped-table__group-row) td:nth-child(2) {
+  grid-column: auto;
 }
 
-:host-context(.mobile) .grouped-table tbody tr:not(.grouped-table__group-row) td:nth-child(1) .grouped-table__mobile-label {
+[data-mobile='true'] .grouped-table tbody tr:not(.grouped-table__group-row) td:nth-child(1) .grouped-table__mobile-label {
   display: none;
 }
 
-:host-context(.mobile) .grouped-table__cell--align-end {
+[data-mobile='true'] .grouped-table__cell--align-end {
   align-items: baseline;
   justify-content: space-between;
   text-align: left !important;
 }
 
-:host-context(.mobile) .grouped-table__group-row td {
+[data-mobile='true'] .grouped-table__group-row td {
   display: block;
   padding: 8px 10px;
 }
 
-:host-context(.mobile) .grouped-table__group-chip {
+[data-mobile='true'] .grouped-table__group-chip {
   background: theme.$theme-surface;
 }

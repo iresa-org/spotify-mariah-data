@@ -14,8 +14,8 @@
         </div>
     </div>
 
-    <lib-grouped-table [class.mobile]="isMobile()" [ariaLabel]="album.albumDetails.name + ' track list'"
-        [columns]="tableColumns" [groups]="tableGroups()">
+    <lib-grouped-table [attr.data-mobile]="isMobile() ? 'true' : null" [ariaLabel]="album.albumDetails.name + ' track list'"
+        [columns]="tableColumns" [groups]="tableGroups()" [showMobileLabels]="false">
         <ng-template libGroupedTableCell="rank" let-row>
             <span class="rank">{{ row.rank }}</span>
         </ng-template>
