@@ -26,26 +26,26 @@
 
         <ng-template libGroupedTableCell="total" let-row>
             @if (isMobile()) {
-            <span> {{ row.total | formatCompact }}</span>
+            <span class="track-value"> {{ row.total | formatCompact }}</span>
             } @else {
-            <span> {{ row.total | number }}</span>
+            <span class="track-value"> {{ row.total | number }}</span>
             }
         </ng-template>
 
         <ng-template libGroupedTableCell="daily" let-row>
             @if (isMobile()) {
-            <span [class.delta-positive]="row.daily >= 0" [class.delta-negative]="row.daily < 0">
+            <span class="track-value" [class.delta-positive]="row.daily >= 0" [class.delta-negative]="row.daily < 0">
                 {{ row.daily | formatCompact }}
             </span>
             } @else {
-            <span [class.delta-positive]="row.daily >= 0" [class.delta-negative]="row.daily < 0">
+            <span class="track-value" [class.delta-positive]="row.daily >= 0" [class.delta-negative]="row.daily < 0">
                 {{ row.daily | number }}
             </span>
             }
         </ng-template>
 
         <ng-template libGroupedTableCell="change" let-row>
-            <span [class.delta-positive]="row.change >= 0" [class.delta-negative]="row.change < 0">
+            <span class="track-value" [class.delta-positive]="row.change >= 0" [class.delta-negative]="row.change < 0">
                 {{ row.change | percentWithSign:'1.0-1' }}
             </span>
         </ng-template>

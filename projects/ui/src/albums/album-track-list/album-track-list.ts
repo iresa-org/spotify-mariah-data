@@ -189,11 +189,11 @@ export class AlbumTrackList {
   readonly hasMultipleDiscs = computed(() => this.albumTrackGroups().length > 1);
 
   readonly tableColumns: ReadonlyArray<GroupedTableColumn<AlbumTrackTableRow>> = [
-    { id: 'rank', header: '#', width: '44px', value: (row) => row.rank },
-    { id: 'trackName', header: 'Track', width: '220px', value: (row) => row.trackName },
-    { id: 'total', header: 'Total', width: '112px', align: 'end', value: (row) => row.total },
-    { id: 'daily', header: 'Daily', width: '112px', align: 'end', value: (row) => row.daily },
-    { id: 'change', header: 'Change', width: '112px', align: 'end', value: (row) => row.change },
+    { id: 'rank', header: '#', width: '8%', value: (row) => row.rank },
+    { id: 'trackName', header: 'Track', width: '38%', value: (row) => row.trackName },
+    { id: 'total', header: 'Total', width: '18%', align: 'end', value: (row) => row.total },
+    { id: 'daily', header: 'Daily', width: '18%', align: 'end', value: (row) => row.daily },
+    { id: 'change', header: 'Change', width: '18%', align: 'end', value: (row) => row.change },
   ];
 
   readonly tableGroups = computed<ReadonlyArray<GroupedTableGroup<AlbumTrackTableRow>>>(() => {

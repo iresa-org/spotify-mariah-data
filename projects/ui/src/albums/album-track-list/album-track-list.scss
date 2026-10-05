@@ -187,6 +187,11 @@
   white-space: normal;
 }
 
+.track-value {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
 .empty-detail {
   align-content: center;
   color: theme.$theme-muted;
