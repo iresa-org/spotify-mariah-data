@@ -31,6 +31,8 @@ export class AlbumList implements OnInit {
 
   readonly collectionLabel = input('Albums');
 
+  readonly recordCollection = input<'albums' | 'eps'>('albums');
+
   readonly albums = computed(() =>
     this.records().slice().sort(
       (a, b) => toNumber(b.dailyChanges.change) - toNumber(a.dailyChanges.change)
@@ -69,12 +71,12 @@ export class AlbumList implements OnInit {
 
   ngOnInit(): void {
     this.historicDataApi.loadAllTimeRecords().subscribe({
-      next: ({ albums }) => this.allTimeRecordMap.set(albums),
+      next: data => this.allTimeRecordMap.set(data[this.recordCollection()]),
       error: () => this.allTimeRecordError.set(true),
     });
 
     this.historicDataApi.loadYtdRecords().subscribe({
-      next: ({ albums }) => this.yearRecordMap.set(albums),
+      next: data => this.yearRecordMap.set(data[this.recordCollection()]),
       error: () => this.yearRecordError.set(true),
     });
   }

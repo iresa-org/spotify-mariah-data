@@ -3,6 +3,7 @@
         <lib-album-list
             [records]="records()"
             [collectionLabel]="collectionLabel()"
+            [recordCollection]="recordCollection()"
             (albumSelected)="onAlbumSelected($event)"
             (recordStatsChanged)="selectedAlbumRecordStats.set($event)"></lib-album-list>
     </lib-master-content>

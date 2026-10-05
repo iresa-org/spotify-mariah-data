@@ -43,6 +43,8 @@ export class AlbumRanking {
 
   readonly collectionLabel = input('Albums');
 
+  readonly recordCollection = input<'albums' | 'eps'>('albums');
+
   constructor() {
     effect(() => {
       if (!this.isMobile()) {

@@ -28,8 +28,18 @@ describe('AlbumList', () => {
     };
 
     const historicDataApiStub = {
-      loadAllTimeRecords: () => of({ albums: { 'album-1': { date: '2026-08-07', change: '10' } } }),
-      loadYtdRecords: () => of({ albums: { 'album-1': { date: '2026-08-07', change: '10' } } }),
+      loadAllTimeRecords: () =>
+        of({
+          albums: { 'album-1': { date: '2026-08-07', change: '10' } },
+          eps: { 'ep-1': { date: '2026-08-07', change: '20' } },
+          tracks: {},
+        }),
+      loadYtdRecords: () =>
+        of({
+          albums: { 'album-1': { date: '2026-08-07', change: '10' } },
+          eps: { 'ep-1': { date: '2026-08-07', change: '20' } },
+          tracks: {},
+        }),
     };
 
     await TestBed.configureTestingModule({
@@ -50,7 +60,16 @@ describe('AlbumList', () => {
   });
 
   it('should recognize all-time and year records for the latest update day', () => {
-    expect(component.hasRecord('album-1', 'allTime')).toBeTrue();
-    expect(component.hasRecord('album-1', 'ytd')).toBeTrue();
+    expect(component.hasRecord('album-1', 'allTime')).toBe(true);
+    expect(component.hasRecord('album-1', 'ytd')).toBe(true);
+  });
+
+  it('should use EP record data when displaying EPs', () => {
+    const epFixture = TestBed.createComponent(AlbumList);
+    epFixture.componentRef.setInput('recordCollection', 'eps');
+    epFixture.detectChanges();
+
+    expect(epFixture.componentInstance.hasRecord('ep-1', 'allTime')).toBe(true);
+    expect(epFixture.componentInstance.hasRecord('ep-1', 'ytd')).toBe(true);
   });
 });

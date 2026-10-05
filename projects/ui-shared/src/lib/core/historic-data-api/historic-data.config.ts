@@ -10,6 +10,7 @@ export interface MonthlyData {
 export interface RecordData {
   tracks: RecordEntry;
   albums: RecordEntry;
+  eps: RecordEntry;
 }
 
 export type RecordEntry = Record<string, { change: string; date: string }>;
