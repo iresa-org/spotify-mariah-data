@@ -15,7 +15,7 @@ export class YtdTopAlbums {
   readonly periodLabel = input.required<string>();
 
   readonly title = computed(() =>
-    this.isYtdPeriod() ? 'Year-to-date Streams by Album' : `${this.periodLabel()} Streams by Album`
+    this.isYtdPeriod() ? 'YTD Streams by Album' : `${this.periodLabel()} Streams by Album`
   );
 
   readonly metricLabel = computed(() => (this.isYtdPeriod() ? 'YTD Streams' : 'Streams'));

@@ -53,6 +53,24 @@
         {{ counts['featured'].percentChange | percentWithSign }}
       </p>
     </article>
+
+    <article class="kpi-card">
+      <p class="kpi-card__label">Solo Streams</p>
+      <p class="kpi-card__value">{{ counts['solo'].count | formatCompact }}</p>
+      <p class="kpi-card__delta" [class.kpi-card__delta--positive]="+counts['solo'].percentChange >= 0"
+        [class.kpi-card__delta--negative]="+counts['solo'].percentChange < 0">
+        {{ counts['solo'].percentChange | percentWithSign }}
+      </p>
+    </article>
+
+    <article class="kpi-card">
+      <p class="kpi-card__label">Video Streams</p>
+      <p class="kpi-card__value">{{ counts['videos'].count | formatCompact }}</p>
+      <p class="kpi-card__delta" [class.kpi-card__delta--positive]="+counts['videos'].percentChange >= 0"
+        [class.kpi-card__delta--negative]="+counts['videos'].percentChange < 0">
+        {{ counts['videos'].percentChange | percentWithSign }}
+      </p>
+    </article>
   </section>
   }
 
