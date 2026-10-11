@@ -1,4 +1,4 @@
-import { mkdir } from 'node:fs/promises';
+import { mkdir, readFile } from 'node:fs/promises';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium, type BrowserContext, type Page } from 'playwright';
@@ -27,7 +27,8 @@ export async function launchSpotifyChartsContext(): Promise<BrowserContext> {
     }
   }
 
-  console.log(storageState);
+  const storageStateFile = STORAGE_STATE_PATH ?? path.join(process.cwd(), 'auth', 'spotify-charts-auth.txt');
+  console.log(await readFile(storageStateFile, 'utf8'));
 
   const context = await chromium.launchPersistentContext(AUTH_DIR, {
     headless: HEADLESS,
