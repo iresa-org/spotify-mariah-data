@@ -27,6 +27,8 @@ export async function launchSpotifyChartsContext(): Promise<BrowserContext> {
     }
   }
 
+  console.log(storageState);
+
   const context = await chromium.launchPersistentContext(AUTH_DIR, {
     headless: HEADLESS,
     viewport: { width: 1440, height: 1000 },
