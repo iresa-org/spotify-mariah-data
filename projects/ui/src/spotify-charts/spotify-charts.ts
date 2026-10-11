@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -167,10 +167,11 @@ export class SpotifyCharts implements OnInit {
     this.chartType.set(routeType === 'artists' ? 'artists' : 'songs');
     const chartUrl = this.chartType() === 'songs' ? SONGS_URL : ARTISTS_URL;
     const fallbackUrl = this.chartType() === 'songs' ? SONGS_FALLBACK_URL : ARTISTS_FALLBACK_URL;
+    const cacheBustParams = new HttpParams().set('salt', Date.now().toString());
 
-    this.http.get<ChartPayload<SongEntry | ArtistEntry>>(chartUrl).pipe(
+    this.http.get<ChartPayload<SongEntry | ArtistEntry>>(chartUrl, { params: cacheBustParams }).pipe(
       timeout({ first: CHART_REQUEST_TIMEOUT_MS }),
-      catchError(() => this.http.get<ChartPayload<SongEntry | ArtistEntry>>(fallbackUrl).pipe(
+      catchError(() => this.http.get<ChartPayload<SongEntry | ArtistEntry>>(fallbackUrl, { params: cacheBustParams }).pipe(
         timeout({ first: CHART_REQUEST_TIMEOUT_MS }),
       )),
       takeUntilDestroyed(this.destroyRef),
