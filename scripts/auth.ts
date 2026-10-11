@@ -1,4 +1,4 @@
-import { mkdir, readFile } from 'node:fs/promises';
+import { mkdir } from 'node:fs/promises';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium, type BrowserContext, type Page } from 'playwright';
@@ -7,7 +7,6 @@ const CHARTS_URL = 'https://charts.spotify.com/charts/view/regional-global-daily
 const CHART_REQUEST_URL = 'https://charts-spotify-com-service.spotify.com/auth/v0/charts/regional-global-daily/latest';
 const AUTH_DIR = process.env.SPOTIFY_CHARTS_AUTH_DIR ?? path.join(process.cwd(), 'auth', 'spotify-charts');
 const STORAGE_STATE = process.env.SPOTIFY_CHARTS_STORAGE_STATE;
-const STORAGE_STATE_PATH = process.env.SPOTIFY_CHARTS_STORAGE_STATE_PATH;
 const LOGIN_TIMEOUT_MS = Number(process.env.SPOTIFY_CHARTS_LOGIN_TIMEOUT_MS ?? '120000');
 const AUTH_VERIFY_TIMEOUT_MS = Number(process.env.SPOTIFY_CHARTS_AUTH_VERIFY_TIMEOUT_MS ?? '30000');
 const HEADLESS = process.env.SPOTIFY_CHARTS_HEADLESS
@@ -18,7 +17,7 @@ type SpotifyChartsStorageState = Awaited<ReturnType<BrowserContext['storageState
 export async function launchSpotifyChartsContext(): Promise<BrowserContext> {
   await mkdir(AUTH_DIR, { recursive: true });
 
-  let storageState: string | SpotifyChartsStorageState | undefined = STORAGE_STATE_PATH;
+  let storageState: SpotifyChartsStorageState | undefined;
   if (STORAGE_STATE?.trim()) {
     try {
       storageState = JSON.parse(STORAGE_STATE) as SpotifyChartsStorageState;
@@ -27,15 +26,20 @@ export async function launchSpotifyChartsContext(): Promise<BrowserContext> {
     }
   }
 
-  const storageStateFile = STORAGE_STATE_PATH ?? path.join(process.cwd(), 'auth', 'spotify-charts-auth.txt');
-  console.log(await readFile(storageStateFile, 'utf8'));
-
   const context = await chromium.launchPersistentContext(AUTH_DIR, {
     headless: HEADLESS,
     viewport: { width: 1440, height: 1000 },
-    args: process.env.CI === 'true' ? ['--no-sandbox', '--disable-setuid-sandbox'] : [],
-    ...(storageState ? { storageState } : {})
+    args: process.env.CI === 'true' ? ['--no-sandbox', '--disable-setuid-sandbox'] : []
   });
+
+  if (storageState) {
+    try {
+      await context.setStorageState(storageState);
+    } catch (error) {
+      await context.close();
+      throw error;
+    }
+  }
 
   if (process.env.CI === 'true') {
     const cookieNames = (await context.cookies('https://charts.spotify.com'))
