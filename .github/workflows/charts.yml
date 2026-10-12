@@ -30,5 +30,8 @@ jobs:
           test -n "$SPOTIFY_CHARTS_STORAGE_STATE"
           npm run charts
 
+      - name: Mark workspace as safe for Git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
       - name: Commit chart data
         uses: stefanzweifel/git-auto-commit-action@v7
