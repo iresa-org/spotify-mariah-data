@@ -91,7 +91,7 @@
         </div>
         }
         @if( followers()) {
-        <div class="audience-stat">
+        <div class="audience-stat audience-stat--followers">
           <p class="audience-stat__label">Followers</p>
           <p class="audience-stat__value">{{ followers()!.count | formatCompact }}</p>
           @if (+followers()!.change !== 0) {

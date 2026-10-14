@@ -367,7 +367,7 @@
   align-items: center;
   justify-content: center;
   gap: 0;
-  min-width: 20px;
+  flex: 0 0 3.5rem;
 }
 
 .track-card__movement-icon {
@@ -432,6 +432,16 @@
     grid-template-columns: 1fr;
   }
 
+  .audience-stats {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: calc(50% + 9px) minmax(0, 1fr);
+  }
+
+  .audience-stat--followers {
+    grid-column: 2;
+  }
+
   .audience-stat {
     margin-top: 12px;
   }
@@ -456,6 +466,10 @@
 
   .kpi-card {
     padding: 12px 14px;
+  }
+
+  .audience-stats {
+    grid-template-columns: calc(50% + 7px) minmax(0, 1fr);
   }
 
   .kpi-card__value {
