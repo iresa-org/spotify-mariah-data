@@ -51,7 +51,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           BRANCH_NAME: ${{ github.ref_name }}
         run: |
-          set -euo pipefail
+          set -eu
           if [ "$BRANCH_NAME" = "data" ]; then
             echo "Current branch is data; no sync PR is needed."
             exit 0
