@@ -274,8 +274,8 @@ export async function saveDailySongCharts(charts: DailySongCharts): Promise<void
 
   for (const [country, chart] of Object.entries(charts.countries)) {
     const matches = chart.entries.filter(hasMariahCarey);
-    console.log(`${country} songs: ${chart.entries.length} entries; Mariah Carey: ${matches.length > 0 ? 'yes' : 'no'}`);
     if (matches.length > 0) {
+      console.log(`${country} songs: ${chart.entries.length} entries; Mariah Carey: yes`);
       countries[country] = {
         entries: matches,
         ...(chart.updatedDate === undefined ? {} : { updatedDate: chart.updatedDate })
