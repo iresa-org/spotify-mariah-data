@@ -29,7 +29,8 @@ jobs:
           CI: true
         run: |
           test -n "$SPOTIFY_CHARTS_STORAGE_STATE"
-          npm run charts
+          set -o pipefail
+          npm run charts 2>&1 | tee "$RUNNER_TEMP/charts.log"
 
       - name: Mark workspace as safe for Git
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
@@ -64,4 +65,5 @@ jobs:
           fi
 
           gh pr create --base data --head "$BRANCH_NAME" \
-            --title "Sync stats into data"
+            --title "Sync stats into data" \
+            --body-file "$RUNNER_TEMP/charts.log"
