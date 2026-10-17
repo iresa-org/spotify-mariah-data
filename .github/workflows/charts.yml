@@ -27,6 +27,7 @@ jobs:
         env:
           SPOTIFY_CHARTS_STORAGE_STATE: ${{ secrets.SPOTIFY_CHARTS_STORAGE_STATE }}
           CI: true
+        shell: bash
         run: |
           test -n "$SPOTIFY_CHARTS_STORAGE_STATE"
           set -o pipefail
