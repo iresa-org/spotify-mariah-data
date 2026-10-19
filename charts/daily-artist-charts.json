@@ -1,101 +1,101 @@
 {
-  "updatedDate": "2026-10-17",
+  "updatedDate": "2026-10-18",
   "countries": {
     "AU": {
       "entries": [
         {
-          "rank": 183,
+          "rank": 195,
           "name": "Mariah Carey",
           "uri": "spotify:artist:4iHNK0tOyZPYnBU7nGAgpQ",
           "imageUri": "https://i.scdn.co/image/ab6761610000517421453384a10b1f8e18877f63",
-          "previousRank": 182,
+          "previousRank": 183,
           "peakRank": 2,
-          "appearancesOnChart": 1074,
-          "consecutiveAppearancesOnChart": 4,
+          "appearancesOnChart": 1075,
+          "consecutiveAppearancesOnChart": 5,
           "entryStatus": "MOVED_DOWN"
         }
       ],
-      "updatedDate": "2026-10-17"
+      "updatedDate": "2026-10-18"
     },
     "NZ": {
       "entries": [
         {
-          "rank": 107,
+          "rank": 115,
           "name": "Mariah Carey",
           "uri": "spotify:artist:4iHNK0tOyZPYnBU7nGAgpQ",
           "imageUri": "https://i.scdn.co/image/ab6761610000517421453384a10b1f8e18877f63",
-          "previousRank": 105,
+          "previousRank": 107,
           "peakRank": 2,
-          "appearancesOnChart": 1823,
-          "consecutiveAppearancesOnChart": 1823,
+          "appearancesOnChart": 1824,
+          "consecutiveAppearancesOnChart": 1824,
           "entryStatus": "MOVED_DOWN"
         }
       ],
-      "updatedDate": "2026-10-17"
+      "updatedDate": "2026-10-18"
     },
     "PH": {
       "entries": [
         {
-          "rank": 75,
+          "rank": 88,
           "name": "Mariah Carey",
           "uri": "spotify:artist:4iHNK0tOyZPYnBU7nGAgpQ",
           "imageUri": "https://i.scdn.co/image/ab6761610000517421453384a10b1f8e18877f63",
-          "previousRank": 74,
+          "previousRank": 75,
           "peakRank": 5,
-          "appearancesOnChart": 1823,
-          "consecutiveAppearancesOnChart": 1823,
+          "appearancesOnChart": 1824,
+          "consecutiveAppearancesOnChart": 1824,
           "entryStatus": "MOVED_DOWN"
         }
       ],
-      "updatedDate": "2026-10-17"
+      "updatedDate": "2026-10-18"
     },
     "ZA": {
       "entries": [
         {
-          "rank": 79,
+          "rank": 50,
           "name": "Mariah Carey",
           "uri": "spotify:artist:4iHNK0tOyZPYnBU7nGAgpQ",
           "imageUri": "https://i.scdn.co/image/ab6761610000517421453384a10b1f8e18877f63",
-          "previousRank": 76,
+          "previousRank": 79,
           "peakRank": 5,
-          "appearancesOnChart": 1823,
-          "consecutiveAppearancesOnChart": 1823,
-          "entryStatus": "MOVED_DOWN"
+          "appearancesOnChart": 1824,
+          "consecutiveAppearancesOnChart": 1824,
+          "entryStatus": "MOVED_UP"
         }
       ],
-      "updatedDate": "2026-10-17"
+      "updatedDate": "2026-10-18"
     },
     "AE": {
       "entries": [
         {
-          "rank": 176,
+          "rank": 180,
           "name": "Mariah Carey",
           "uri": "spotify:artist:4iHNK0tOyZPYnBU7nGAgpQ",
           "imageUri": "https://i.scdn.co/image/ab6761610000517421453384a10b1f8e18877f63",
-          "previousRank": 157,
+          "previousRank": 176,
           "peakRank": 4,
-          "appearancesOnChart": 1794,
-          "consecutiveAppearancesOnChart": 118,
+          "appearancesOnChart": 1795,
+          "consecutiveAppearancesOnChart": 119,
           "entryStatus": "MOVED_DOWN"
         }
       ],
-      "updatedDate": "2026-10-17"
+      "updatedDate": "2026-10-18"
     },
     "GB": {
       "entries": [
         {
-          "rank": 187,
+          "rank": 194,
           "name": "Mariah Carey",
           "uri": "spotify:artist:4iHNK0tOyZPYnBU7nGAgpQ",
           "imageUri": "https://i.scdn.co/image/ab6761610000517421453384a10b1f8e18877f63",
-          "previousRank": -1,
+          "previousRank": 187,
           "peakRank": 2,
-          "appearancesOnChart": 509,
-          "consecutiveAppearancesOnChart": 1,
-          "entryStatus": "RE_ENTRY"
+          "appearancesOnChart": 510,
+          "consecutiveAppearancesOnChart": 2,
+          "entryStatus": "MOVED_DOWN"
         }
       ],
-      "updatedDate": "2026-10-17"
+      "updatedDate": "2026-10-18"
     }
   }
 }
