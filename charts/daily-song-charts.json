@@ -1,45 +1,27 @@
 {
-  "updatedDate": "2026-10-18",
+  "updatedDate": "2026-10-19",
   "countries": {
     "ZA": {
       "entries": [
         {
-          "rank": 51,
+          "rank": 60,
           "name": "We Belong Together",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 28196,
+          "streams": 19895,
           "uri": "spotify:track:4EI8VuxUuIHKfafU72emqz",
-          "previousRank": 119,
+          "previousRank": 51,
           "peakRank": 20,
-          "appearancesOnChart": 1711,
-          "consecutiveAppearancesOnChart": 291,
-          "entryStatus": "MOVED_UP",
+          "appearancesOnChart": 1712,
+          "consecutiveAppearancesOnChart": 292,
+          "entryStatus": "MOVED_DOWN",
           "peakDate": "2024-08-18",
           "entryRank": 190,
           "entryDate": "2020-05-17"
-        },
-        {
-          "rank": 141,
-          "name": "Endless Love (with Mariah Carey)",
-          "artists": [
-            "Luther Vandross",
-            "Mariah Carey"
-          ],
-          "streams": 17757,
-          "uri": "spotify:track:7IljDTNkQEyy77CcaRbiAj",
-          "previousRank": -1,
-          "peakRank": 116,
-          "appearancesOnChart": 85,
-          "consecutiveAppearancesOnChart": 1,
-          "entryStatus": "RE_ENTRY",
-          "peakDate": "2025-06-22",
-          "entryRank": 181,
-          "entryDate": "2023-06-18"
         }
       ],
-      "updatedDate": "2026-10-18"
+      "updatedDate": "2026-10-19"
     }
   }
 }
