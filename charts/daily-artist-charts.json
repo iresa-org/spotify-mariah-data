@@ -1,101 +1,85 @@
 {
-  "updatedDate": "2026-10-18",
+  "updatedDate": "2026-10-19",
   "countries": {
     "AU": {
       "entries": [
         {
-          "rank": 195,
+          "rank": 199,
           "name": "Mariah Carey",
           "uri": "spotify:artist:4iHNK0tOyZPYnBU7nGAgpQ",
           "imageUri": "https://i.scdn.co/image/ab6761610000517421453384a10b1f8e18877f63",
-          "previousRank": 183,
+          "previousRank": 195,
           "peakRank": 2,
-          "appearancesOnChart": 1075,
-          "consecutiveAppearancesOnChart": 5,
+          "appearancesOnChart": 1076,
+          "consecutiveAppearancesOnChart": 6,
           "entryStatus": "MOVED_DOWN"
         }
       ],
-      "updatedDate": "2026-10-18"
+      "updatedDate": "2026-10-19"
     },
     "NZ": {
       "entries": [
         {
-          "rank": 115,
+          "rank": 120,
           "name": "Mariah Carey",
           "uri": "spotify:artist:4iHNK0tOyZPYnBU7nGAgpQ",
           "imageUri": "https://i.scdn.co/image/ab6761610000517421453384a10b1f8e18877f63",
-          "previousRank": 107,
+          "previousRank": 115,
           "peakRank": 2,
-          "appearancesOnChart": 1824,
-          "consecutiveAppearancesOnChart": 1824,
+          "appearancesOnChart": 1825,
+          "consecutiveAppearancesOnChart": 1825,
           "entryStatus": "MOVED_DOWN"
         }
       ],
-      "updatedDate": "2026-10-18"
+      "updatedDate": "2026-10-19"
     },
     "PH": {
       "entries": [
         {
-          "rank": 88,
+          "rank": 83,
           "name": "Mariah Carey",
           "uri": "spotify:artist:4iHNK0tOyZPYnBU7nGAgpQ",
           "imageUri": "https://i.scdn.co/image/ab6761610000517421453384a10b1f8e18877f63",
-          "previousRank": 75,
+          "previousRank": 88,
           "peakRank": 5,
-          "appearancesOnChart": 1824,
-          "consecutiveAppearancesOnChart": 1824,
-          "entryStatus": "MOVED_DOWN"
+          "appearancesOnChart": 1825,
+          "consecutiveAppearancesOnChart": 1825,
+          "entryStatus": "MOVED_UP"
         }
       ],
-      "updatedDate": "2026-10-18"
+      "updatedDate": "2026-10-19"
     },
     "ZA": {
       "entries": [
         {
-          "rank": 50,
+          "rank": 75,
           "name": "Mariah Carey",
           "uri": "spotify:artist:4iHNK0tOyZPYnBU7nGAgpQ",
           "imageUri": "https://i.scdn.co/image/ab6761610000517421453384a10b1f8e18877f63",
-          "previousRank": 79,
+          "previousRank": 50,
           "peakRank": 5,
-          "appearancesOnChart": 1824,
-          "consecutiveAppearancesOnChart": 1824,
-          "entryStatus": "MOVED_UP"
+          "appearancesOnChart": 1825,
+          "consecutiveAppearancesOnChart": 1825,
+          "entryStatus": "MOVED_DOWN"
         }
       ],
-      "updatedDate": "2026-10-18"
+      "updatedDate": "2026-10-19"
     },
     "AE": {
       "entries": [
         {
-          "rank": 180,
+          "rank": 164,
           "name": "Mariah Carey",
           "uri": "spotify:artist:4iHNK0tOyZPYnBU7nGAgpQ",
           "imageUri": "https://i.scdn.co/image/ab6761610000517421453384a10b1f8e18877f63",
-          "previousRank": 176,
+          "previousRank": 180,
           "peakRank": 4,
-          "appearancesOnChart": 1795,
-          "consecutiveAppearancesOnChart": 119,
-          "entryStatus": "MOVED_DOWN"
+          "appearancesOnChart": 1796,
+          "consecutiveAppearancesOnChart": 120,
+          "entryStatus": "MOVED_UP"
         }
       ],
-      "updatedDate": "2026-10-18"
-    },
-    "GB": {
-      "entries": [
-        {
-          "rank": 194,
-          "name": "Mariah Carey",
-          "uri": "spotify:artist:4iHNK0tOyZPYnBU7nGAgpQ",
-          "imageUri": "https://i.scdn.co/image/ab6761610000517421453384a10b1f8e18877f63",
-          "previousRank": 187,
-          "peakRank": 2,
-          "appearancesOnChart": 510,
-          "consecutiveAppearancesOnChart": 2,
-          "entryStatus": "MOVED_DOWN"
-        }
-      ],
-      "updatedDate": "2026-10-18"
+      "updatedDate": "2026-10-19"
     }
   }
 }
