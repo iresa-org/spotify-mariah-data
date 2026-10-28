@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { type BrowserContext, type Page, type Response } from 'playwright';
 import { launchSpotifyChartsContext } from '../auth.ts';
+import { findGlobalChartDate, findNumber, findString, isRecord, normalizeCountryCode, text } from './chart-helpers.ts';
 import { withChartNavigationLock } from './navigation.ts';
 
 const GLOBAL_CHART_URL = 'https://charts.spotify.com/charts/view/regional-global-daily/latest';
@@ -51,40 +52,6 @@ interface ResponseCapture {
   countries: Set<string>;
   pending: Promise<void>[];
   statuses: Map<string, number>;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
-}
-
-function text(value: unknown): string | undefined {
-  return typeof value === 'string' && value.trim() ? value.trim() : undefined;
-}
-
-function number(value: unknown): number | undefined {
-  if (typeof value === 'number' && Number.isFinite(value)) return value;
-  if (typeof value === 'string' && /^\d+$/.test(value)) return Number(value);
-  return undefined;
-}
-
-function findString(record: Record<string, unknown>, keys: string[]): string | undefined {
-  for (const key of keys) {
-    const value = text(record[key]);
-    if (value) return value;
-  }
-  return undefined;
-}
-
-function findNumber(record: Record<string, unknown>, keys: string[]): number | undefined {
-  for (const key of keys) {
-    const value = number(record[key]);
-    if (value !== undefined) return value;
-  }
-  return undefined;
-}
-
-function normalizeCountryCode(countryCode: string): string {
-  return countryCode.toUpperCase() === 'GLOBAL' ? 'global' : countryCode.toUpperCase();
 }
 
 function getChartUrl(countryCode: string): string {
@@ -225,6 +192,15 @@ async function loadChartPage(page: Page, url: string, countryCode: string, captu
   }
 }
 
+export async function fetchLatestDailySongChartDate(page: Page): Promise<string | undefined> {
+  const capture = collectResponses(page);
+  await withChartNavigationLock(async () => {
+    await loadChartPage(page, GLOBAL_CHART_URL, 'GLOBAL', capture);
+  });
+
+  return findGlobalChartDate(capture.responses, /\/regional-([a-z]+)-daily\/latest/i);
+}
+
 export async function fetchDailySongCharts(page: Page): Promise<DailySongCharts> {
   const capture = collectResponses(page);
   await withChartNavigationLock(async () => {
@@ -265,15 +241,15 @@ export async function fetchDailySongCharts(page: Page): Promise<DailySongCharts>
   return { countries, ...(updatedDate === undefined ? {} : { updatedDate }) };
 }
 
-function hasMariahCarey(entry: DailySongChartEntry): boolean {
-  return [entry.name, ...(entry.artists ?? [])].some((value) => value.toLowerCase() === MARIAH_CAREY);
+function matchesArtistName(entry: DailySongChartEntry, artistName: string): boolean {
+  return [entry.name, ...(entry.artists ?? [])].some((value) => value.toLowerCase() === artistName.toLowerCase());
 }
 
 export async function saveDailySongCharts(charts: DailySongCharts): Promise<void> {
   const countries: Record<string, DailySongChart> = {};
 
   for (const [country, chart] of Object.entries(charts.countries)) {
-    const matches = chart.entries.filter(hasMariahCarey);
+    const matches = chart.entries.filter((entry) => matchesArtistName(entry, MARIAH_CAREY));
     if (matches.length > 0) {
       console.log(`${country} songs: ${chart.entries.length} entries; Mariah Carey: yes`);
       countries[country] = {
