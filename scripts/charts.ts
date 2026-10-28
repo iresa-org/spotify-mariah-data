@@ -13,6 +13,19 @@ const CHART_FILES = {
 
 type ChartType = keyof typeof CHART_FILES;
 
+function formatDateKey(date: Date): string {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const day = `${date.getDate()}`.padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function getExpectedLatestChartDate(referenceDate: Date = new Date()): string {
+  const date = new Date(referenceDate);
+  date.setDate(date.getDate() - 1);
+  return formatDateKey(date);
+}
+
 async function getLatestStoredChartDate(chartType: ChartType): Promise<string | undefined> {
   const filePath = path.join(process.cwd(), 'charts', CHART_FILES[chartType]);
 
@@ -28,7 +41,12 @@ async function getLatestStoredChartDate(chartType: ChartType): Promise<string | 
   return undefined;
 }
 
-async function checkChartUpdate(context: BrowserContext, chartType: ChartType): Promise<boolean> {
+type ChartUpdateStatus = {
+  needsUpdate: boolean;
+  publishedDate: string | undefined;
+};
+
+async function checkChartUpdate(context: BrowserContext, chartType: ChartType): Promise<ChartUpdateStatus> {
   const page = await context.newPage();
   try {
     const publishedDate = chartType === 'song'
@@ -36,27 +54,60 @@ async function checkChartUpdate(context: BrowserContext, chartType: ChartType): 
       : (await fetchLatestDailyArtistChartDate(page))?.trim();
 
     const storedDate = await getLatestStoredChartDate(chartType);
+    const expectedLatestDate = getExpectedLatestChartDate();
 
     if (!storedDate) {
       console.log(`No saved ${chartType} chart date found. Proceeding with the next scan.`);
-      return true;
+      return { needsUpdate: true, publishedDate };
     }
 
     if (!publishedDate) {
       console.warn(`Spotify ${chartType} chart did not publish an updatedDate. Will retry later.`);
-      return false;
+      return { needsUpdate: false, publishedDate: undefined };
+    }
+
+    if (publishedDate !== expectedLatestDate) {
+      console.log(
+        `Latest ${chartType} chart date is ${publishedDate}, but the expected update date is ${expectedLatestDate}; waiting for a new update.`
+      );
+      return { needsUpdate: false, publishedDate };
     }
 
     if (publishedDate !== storedDate) {
-      console.log(`New ${chartType} chart updated date found: ${publishedDate}`);
-      return true;
+      console.log(`New ${chartType} chart updated date found: ${publishedDate} (expected latest date before today).`);
+      return { needsUpdate: true, publishedDate };
     }
 
-    console.log(`Latest ${chartType} chart date is still ${publishedDate}; waiting for a new update.`);
-    return false;
+    console.log(`Latest ${chartType} chart date ${publishedDate} has already been scanned; waiting for the next update.`);
+    return { needsUpdate: false, publishedDate };
   } catch (error) {
     console.warn(`Unable to verify the latest ${chartType} chart date. Retrying later.`, error);
-    return false;
+    return { needsUpdate: false, publishedDate: undefined };
+  } finally {
+    await page.close();
+  }
+}
+
+async function isChartReady(context: BrowserContext, chartType: ChartType): Promise<boolean> {
+  const expectedDate = getExpectedLatestChartDate();
+  const storedDate = await getLatestStoredChartDate(chartType);
+
+  if (storedDate === expectedDate) {
+    console.log(`${chartType} chart already matches the expected latest date (${expectedDate}).`);
+    return true;
+  }
+
+  const page = await context.newPage();
+  try {
+    const liveDate = chartType === 'song'
+      ? (await fetchLatestDailySongChartDate(page))?.trim()
+      : (await fetchLatestDailyArtistChartDate(page))?.trim();
+
+    const ready = liveDate === expectedDate;
+    if (ready) {
+      console.log(`Live ${chartType} chart date matches the expected latest date (${expectedDate}).`);
+    }
+    return ready;
   } finally {
     await page.close();
   }
@@ -64,19 +115,24 @@ async function checkChartUpdate(context: BrowserContext, chartType: ChartType): 
 
 async function waitForNewChartDate(context: BrowserContext): Promise<void> {
   while (true) {
-    const songNeedsUpdate = await checkChartUpdate(context, 'song');
-    const artistNeedsUpdate = await checkChartUpdate(context, 'artist');
+    const songReady = await isChartReady(context, 'song');
+    const artistReady = await isChartReady(context, 'artist');
 
-    if (songNeedsUpdate && artistNeedsUpdate) {
-      console.log('Both song and artist chart updates are available. Starting chart scan.');
+    if (songReady && artistReady) {
+      console.log('Both song and artist charts are ready. Starting chart scan.');
       return;
     }
 
+    const nextCheckType = songReady ? 'artist' : 'song';
     console.log(
-      `No new chart update detected. Checking again in ${Math.round(POLL_INTERVAL_MS / 1000)} seconds.`
+      `Waiting for the remaining chart update. Next check: ${nextCheckType}. Re-checking in ${Math.round(POLL_INTERVAL_MS / 1000)} seconds.`
     );
     await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
   }
+}
+
+function publishedDateMatchesExpected(date: string): boolean {
+  return date === getExpectedLatestChartDate();
 }
 
 async function main() {
