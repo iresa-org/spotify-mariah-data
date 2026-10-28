@@ -93,10 +93,12 @@ async function waitForNewChartDate(context: BrowserContext): Promise<void> {
 
   while (true) {
     const chartNeedsUpdate = new Map<ChartType, boolean>();
+    const pendingChartTypes: ChartType[] = [];
 
     for (const chartType of ['song', 'artist'] as const) {
       const storedDate = await getLatestStoredChartDate(chartType);
       const lastSeenDate = lastSeenDates.get(chartType);
+      const hasLatest = storedDate && publishedDateMatchesExpected(storedDate)
 
       if (storedDate && lastSeenDate && storedDate === lastSeenDate) {
         console.log(`Skipping ${chartType} chart recheck; already scanned ${storedDate}.`);
@@ -104,6 +106,16 @@ async function waitForNewChartDate(context: BrowserContext): Promise<void> {
         continue;
       }
 
+      if (hasLatest) {
+        chartNeedsUpdate.set(chartType, false);
+        console.log(`${chartType} chart already has the latest update (${storedDate}).`);
+        continue;
+      }
+
+      pendingChartTypes.push(chartType);
+    }
+
+    for (const chartType of pendingChartTypes) {
       const result = await checkChartUpdate(context, chartType);
       chartNeedsUpdate.set(chartType, result.needsUpdate);
 
@@ -117,11 +129,21 @@ async function waitForNewChartDate(context: BrowserContext): Promise<void> {
       return;
     }
 
+    const songHasLatest = await getLatestStoredChartDate('song');
+    const artistHasLatest = await getLatestStoredChartDate('artist');
+    const nextCheckType = !songHasLatest || !publishedDateMatchesExpected(songHasLatest)
+      ? 'song'
+      : 'artist';
+
     console.log(
-      `No new chart update detected. Checking again in ${Math.round(POLL_INTERVAL_MS / 1000)} seconds.`
+      `Waiting for the remaining chart update. Next check: ${nextCheckType}. Re-checking in ${Math.round(POLL_INTERVAL_MS / 1000)} seconds.`
     );
     await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
   }
+}
+
+function publishedDateMatchesExpected(date: string): boolean {
+  return date === getExpectedLatestChartDate();
 }
 
 async function main() {
