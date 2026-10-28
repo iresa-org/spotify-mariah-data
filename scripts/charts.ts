@@ -28,7 +28,12 @@ async function getLatestStoredChartDate(chartType: ChartType): Promise<string | 
   return undefined;
 }
 
-async function checkChartUpdate(context: BrowserContext, chartType: ChartType): Promise<boolean> {
+type ChartUpdateStatus = {
+  needsUpdate: boolean;
+  publishedDate: string | undefined;
+};
+
+async function checkChartUpdate(context: BrowserContext, chartType: ChartType): Promise<ChartUpdateStatus> {
   const page = await context.newPage();
   try {
     const publishedDate = chartType === 'song'
@@ -39,35 +44,54 @@ async function checkChartUpdate(context: BrowserContext, chartType: ChartType): 
 
     if (!storedDate) {
       console.log(`No saved ${chartType} chart date found. Proceeding with the next scan.`);
-      return true;
+      return { needsUpdate: true, publishedDate };
     }
 
     if (!publishedDate) {
       console.warn(`Spotify ${chartType} chart did not publish an updatedDate. Will retry later.`);
-      return false;
+      return { needsUpdate: false, publishedDate: undefined };
     }
 
     if (publishedDate !== storedDate) {
       console.log(`New ${chartType} chart updated date found: ${publishedDate}`);
-      return true;
+      return { needsUpdate: true, publishedDate };
     }
 
     console.log(`Latest ${chartType} chart date is still ${publishedDate}; waiting for a new update.`);
-    return false;
+    return { needsUpdate: false, publishedDate };
   } catch (error) {
     console.warn(`Unable to verify the latest ${chartType} chart date. Retrying later.`, error);
-    return false;
+    return { needsUpdate: false, publishedDate: undefined };
   } finally {
     await page.close();
   }
 }
 
 async function waitForNewChartDate(context: BrowserContext): Promise<void> {
-  while (true) {
-    const songNeedsUpdate = await checkChartUpdate(context, 'song');
-    const artistNeedsUpdate = await checkChartUpdate(context, 'artist');
+  const lastSeenDates = new Map<ChartType, string>();
 
-    if (songNeedsUpdate && artistNeedsUpdate) {
+  while (true) {
+    const chartNeedsUpdate = new Map<ChartType, boolean>();
+
+    for (const chartType of ['song', 'artist'] as const) {
+      const storedDate = await getLatestStoredChartDate(chartType);
+      const lastSeenDate = lastSeenDates.get(chartType);
+
+      if (storedDate && lastSeenDate && storedDate === lastSeenDate) {
+        console.log(`Skipping ${chartType} chart recheck; already scanned ${storedDate}.`);
+        chartNeedsUpdate.set(chartType, false);
+        continue;
+      }
+
+      const result = await checkChartUpdate(context, chartType);
+      chartNeedsUpdate.set(chartType, result.needsUpdate);
+
+      if (result.publishedDate) {
+        lastSeenDates.set(chartType, result.publishedDate);
+      }
+    }
+
+    if (chartNeedsUpdate.get('song') && chartNeedsUpdate.get('artist')) {
       console.log('Both song and artist chart updates are available. Starting chart scan.');
       return;
     }
