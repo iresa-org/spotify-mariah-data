@@ -48,7 +48,7 @@ async function checkChartUpdate(context: BrowserContext, chartType: ChartType): 
     }
 
     if (publishedDate !== storedDate) {
-      console.log(`New ${chartType} chart update published on ${publishedDate}.`);
+      console.log(`New ${chartType} chart updated date found: ${publishedDate}`);
       return true;
     }
 
@@ -67,8 +67,8 @@ async function waitForNewChartDate(context: BrowserContext): Promise<void> {
     const songNeedsUpdate = await checkChartUpdate(context, 'song');
     const artistNeedsUpdate = await checkChartUpdate(context, 'artist');
 
-    if (songNeedsUpdate || artistNeedsUpdate) {
-      console.log('A new chart update is available. Starting chart scan.');
+    if (songNeedsUpdate && artistNeedsUpdate) {
+      console.log('Both song and artist chart updates are available. Starting chart scan.');
       return;
     }
 
