@@ -94,8 +94,6 @@ async function isChartLatest(chartType: ChartType): Promise<boolean> {
 }
 
 async function waitForNewChartDate(context: BrowserContext): Promise<void> {
-  const lastCheckedDates = new Map<ChartType, string>();
-
   while (true) {
     const songLatest = await isChartLatest('song');
     const artistLatest = await isChartLatest('artist');
@@ -110,17 +108,9 @@ async function waitForNewChartDate(context: BrowserContext): Promise<void> {
     if (!artistLatest) chartTypesToCheck.push('artist');
 
     for (const chartType of chartTypesToCheck) {
-      const storedDate = await getLatestStoredChartDate(chartType);
-      const lastCheckedDate = lastCheckedDates.get(chartType);
-
-      if (storedDate && lastCheckedDate && storedDate === lastCheckedDate) {
-        console.log(`Skipping ${chartType} chart recheck; already checked ${storedDate}.`);
-        continue;
-      }
-
       const result = await checkChartUpdate(context, chartType);
-      if (result.publishedDate) {
-        lastCheckedDates.set(chartType, result.publishedDate);
+      if (result.needsUpdate) {
+        console.log(`Chart update detected for ${chartType}.`);
       }
     }
 
