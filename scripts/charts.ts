@@ -88,35 +88,42 @@ async function checkChartUpdate(context: BrowserContext, chartType: ChartType): 
   }
 }
 
+async function isChartReady(context: BrowserContext, chartType: ChartType): Promise<boolean> {
+  const expectedDate = getExpectedLatestChartDate();
+  const storedDate = await getLatestStoredChartDate(chartType);
+
+  if (storedDate === expectedDate) {
+    console.log(`${chartType} chart already matches the expected latest date (${expectedDate}).`);
+    return true;
+  }
+
+  const page = await context.newPage();
+  try {
+    const liveDate = chartType === 'song'
+      ? (await fetchLatestDailySongChartDate(page))?.trim()
+      : (await fetchLatestDailyArtistChartDate(page))?.trim();
+
+    const ready = liveDate === expectedDate;
+    if (ready) {
+      console.log(`Live ${chartType} chart date matches the expected latest date (${expectedDate}).`);
+    }
+    return ready;
+  } finally {
+    await page.close();
+  }
+}
+
 async function waitForNewChartDate(context: BrowserContext): Promise<void> {
-  const seenLatestDates = new Map<ChartType, string>();
-
   while (true) {
-    const expectedDate = getExpectedLatestChartDate();
-    const songLatest =
-      seenLatestDates.get('song') === expectedDate ||
-      publishedDateMatchesExpected((await getLatestStoredChartDate('song')) ?? '');
-    const artistLatest =
-      seenLatestDates.get('artist') === expectedDate ||
-      publishedDateMatchesExpected((await getLatestStoredChartDate('artist')) ?? '');
+    const songReady = await isChartReady(context, 'song');
+    const artistReady = await isChartReady(context, 'artist');
 
-    if (songLatest && artistLatest) {
-      console.log('Both song and artist charts have the latest update. Starting chart scan.');
+    if (songReady && artistReady) {
+      console.log('Both song and artist charts are ready. Starting chart scan.');
       return;
     }
 
-    const chartTypesToCheck: ChartType[] = [];
-    if (!songLatest) chartTypesToCheck.push('song');
-    if (!artistLatest) chartTypesToCheck.push('artist');
-
-    for (const chartType of chartTypesToCheck) {
-      const result = await checkChartUpdate(context, chartType);
-      if (result.publishedDate === expectedDate) {
-        seenLatestDates.set(chartType, expectedDate);
-      }
-    }
-
-    const nextCheckType = chartTypesToCheck[0] ?? 'song';
+    const nextCheckType = songReady ? 'artist' : 'song';
     console.log(
       `Waiting for the remaining chart update. Next check: ${nextCheckType}. Re-checking in ${Math.round(POLL_INTERVAL_MS / 1000)} seconds.`
     );
