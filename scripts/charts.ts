@@ -13,6 +13,19 @@ const CHART_FILES = {
 
 type ChartType = keyof typeof CHART_FILES;
 
+function formatDateKey(date: Date): string {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const day = `${date.getDate()}`.padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function getExpectedLatestChartDate(referenceDate: Date = new Date()): string {
+  const date = new Date(referenceDate);
+  date.setDate(date.getDate() - 1);
+  return formatDateKey(date);
+}
+
 async function getLatestStoredChartDate(chartType: ChartType): Promise<string | undefined> {
   const filePath = path.join(process.cwd(), 'charts', CHART_FILES[chartType]);
 
@@ -41,6 +54,7 @@ async function checkChartUpdate(context: BrowserContext, chartType: ChartType): 
       : (await fetchLatestDailyArtistChartDate(page))?.trim();
 
     const storedDate = await getLatestStoredChartDate(chartType);
+    const expectedLatestDate = getExpectedLatestChartDate();
 
     if (!storedDate) {
       console.log(`No saved ${chartType} chart date found. Proceeding with the next scan.`);
@@ -52,12 +66,19 @@ async function checkChartUpdate(context: BrowserContext, chartType: ChartType): 
       return { needsUpdate: false, publishedDate: undefined };
     }
 
+    if (publishedDate !== expectedLatestDate) {
+      console.log(
+        `Latest ${chartType} chart date is ${publishedDate}, but the expected update date is ${expectedLatestDate}; waiting for a new update.`
+      );
+      return { needsUpdate: false, publishedDate };
+    }
+
     if (publishedDate !== storedDate) {
-      console.log(`New ${chartType} chart updated date found: ${publishedDate}`);
+      console.log(`New ${chartType} chart updated date found: ${publishedDate} (expected latest date before today).`);
       return { needsUpdate: true, publishedDate };
     }
 
-    console.log(`Latest ${chartType} chart date is still ${publishedDate}; waiting for a new update.`);
+    console.log(`Latest ${chartType} chart date ${publishedDate} has already been scanned; waiting for the next update.`);
     return { needsUpdate: false, publishedDate };
   } catch (error) {
     console.warn(`Unable to verify the latest ${chartType} chart date. Retrying later.`, error);
