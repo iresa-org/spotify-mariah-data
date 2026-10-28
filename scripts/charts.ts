@@ -88,15 +88,17 @@ async function checkChartUpdate(context: BrowserContext, chartType: ChartType): 
   }
 }
 
-async function isChartLatest(chartType: ChartType): Promise<boolean> {
-  const storedDate = await getLatestStoredChartDate(chartType);
-  return Boolean(storedDate && publishedDateMatchesExpected(storedDate));
-}
-
 async function waitForNewChartDate(context: BrowserContext): Promise<void> {
+  const seenLatestDates = new Map<ChartType, string>();
+
   while (true) {
-    const songLatest = await isChartLatest('song');
-    const artistLatest = await isChartLatest('artist');
+    const expectedDate = getExpectedLatestChartDate();
+    const songLatest =
+      seenLatestDates.get('song') === expectedDate ||
+      publishedDateMatchesExpected((await getLatestStoredChartDate('song')) ?? '');
+    const artistLatest =
+      seenLatestDates.get('artist') === expectedDate ||
+      publishedDateMatchesExpected((await getLatestStoredChartDate('artist')) ?? '');
 
     if (songLatest && artistLatest) {
       console.log('Both song and artist charts have the latest update. Starting chart scan.');
@@ -109,8 +111,8 @@ async function waitForNewChartDate(context: BrowserContext): Promise<void> {
 
     for (const chartType of chartTypesToCheck) {
       const result = await checkChartUpdate(context, chartType);
-      if (result.needsUpdate) {
-        console.log(`Chart update detected for ${chartType}.`);
+      if (result.publishedDate === expectedDate) {
+        seenLatestDates.set(chartType, expectedDate);
       }
     }
 
