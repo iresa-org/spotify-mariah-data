@@ -20,4 +20,6 @@ export const SELECTED_ALBUMS = [
   'spotify:album:7GTZRYNB0eAig7UTsb54XG',     // The Remixes
   'spotify:album:0jpGebANqbNNKbWHq2XhEM',     // MTV Unplugged EP
   'spotify:album:5OkzvMKeDtKPMogoEXEDyK',     // Merry Christmas (Japan Deluxe Anniversary Edition)
+  'spotify:album:0FHvF9pHph0NNZ4FlhFGRU',     // Glitter (Deluxe Edition)
+  
 ]
