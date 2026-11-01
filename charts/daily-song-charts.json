@@ -1,27 +1,49 @@
 {
-  "updatedDate": "2026-10-30",
+  "updatedDate": "2026-10-31",
   "countries": {
+    "NL": {
+      "entries": [
+        {
+          "rank": 192,
+          "name": "All I Want for Christmas Is You",
+          "artists": [
+            "Mariah Carey"
+          ],
+          "streams": 28037,
+          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
+          "previousRank": -1,
+          "peakRank": 1,
+          "appearancesOnChart": 570,
+          "consecutiveAppearancesOnChart": 1,
+          "entryStatus": "RE_ENTRY",
+          "peakDate": "2017-12-10",
+          "entryRank": 193,
+          "entryDate": "2017-11-02"
+        }
+      ],
+      "updatedDate": "2026-10-31"
+    },
     "ZA": {
       "entries": [
         {
-          "rank": 125,
+          "rank": 130,
           "name": "We Belong Together",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 22797,
+          "streams": 23422,
           "uri": "spotify:track:4EI8VuxUuIHKfafU72emqz",
-          "previousRank": 82,
+          "previousRank": 125,
           "peakRank": 20,
-          "appearancesOnChart": 1723,
-          "consecutiveAppearancesOnChart": 303,
+          "appearancesOnChart": 1724,
+          "consecutiveAppearancesOnChart": 304,
           "entryStatus": "MOVED_DOWN",
           "peakDate": "2024-08-18",
           "entryRank": 190,
           "entryDate": "2020-05-17"
         }
       ],
-      "updatedDate": "2026-10-30"
+      "updatedDate": "2026-10-31"
     }
   }
 }
