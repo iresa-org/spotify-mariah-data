@@ -75,6 +75,153 @@
   text-transform: uppercase;
 }
 
+.song-sections {
+  display: grid;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.song-section {
+  background: color-mix(in srgb, theme.$theme-bg 72%, theme.$theme-surface 28%);
+  border: 1px solid theme.$theme-border;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.song-section__header {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.song-section__lead {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  min-width: 0;
+}
+
+.song-section__identity {
+  min-width: 0;
+}
+
+.song-section__name {
+  color: inherit;
+  display: block;
+  font-size: 1rem;
+  text-decoration-color: theme.$theme-accent;
+  text-underline-offset: 3px;
+}
+
+.song-section__count {
+  color: theme.$theme-muted;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.song-section__toggle {
+  align-items: center;
+  background: transparent;
+  border: 1px solid theme.$theme-border;
+  border-radius: 999px;
+  color: theme.$theme-text;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 0.8rem;
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+}
+
+.song-section__toggle:hover,
+.song-section__toggle:focus-visible {
+  border-color: theme.$theme-accent;
+  outline: none;
+}
+
+.song-section__countries {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.song-country {
+  align-items: center;
+  background: theme.$theme-surface;
+  border: 1px solid theme.$theme-border;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+}
+
+.song-country__name {
+  font-weight: 600;
+}
+
+.song-country__meta {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.song-country__meta .muted {
+  display: inline;
+  margin-top: 0;
+}
+
+.song-country__rank {
+  color: theme.$theme-accent;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.song-section__table-wrap {
+  margin-top: 12px;
+  overflow-x: auto;
+}
+
+.song-section__table {
+  border-collapse: collapse;
+  min-width: 700px;
+  width: 100%;
+}
+
+.song-section__table th,
+.song-section__table td {
+  border-bottom: 1px solid theme.$theme-border;
+  font-size: 0.8rem;
+  padding: 8px 6px;
+  text-align: left;
+}
+
+.song-section__table thead th {
+  color: theme.$theme-muted;
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.song-section__table tbody th,
+.song-section__table tbody td {
+  vertical-align: middle;
+}
+
+.song-section__table tbody tr:hover {
+  background: color-mix(in srgb, theme.$theme-bg 70%, transparent);
+}
+
 .legend {
   align-items: center;
   color: theme.$theme-muted;
@@ -292,6 +439,100 @@ td a {
     align-items: flex-start;
     flex-direction: column;
     gap: 14px;
+  }
+
+  .song-section {
+    padding: 12px;
+  }
+
+  .song-section__header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .song-section__lead {
+    width: 100%;
+  }
+
+  .song-section__count {
+    align-self: flex-end;
+  }
+
+  .song-section__table-wrap {
+    overflow: visible;
+  }
+
+  .song-section__table {
+    display: block;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .song-section__table thead {
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  .song-section__table tbody {
+    display: grid;
+    gap: 10px;
+  }
+
+  .song-section__table tbody tr {
+    background: theme.$theme-bg;
+    border: 1px solid theme.$theme-border;
+    border-radius: 10px;
+    display: grid;
+    gap: 5px 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 8px 10px;
+  }
+
+  .song-section__table th,
+  .song-section__table td {
+    border-bottom: 0;
+    min-width: 0;
+    padding: 0;
+  }
+
+  .song-section__table tbody th,
+  .song-section__table tbody td {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    white-space: normal;
+  }
+
+  .song-section__table tbody th::before,
+  .song-section__table tbody td::before {
+    color: theme.$theme-muted;
+    content: attr(data-label);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .song-section__table tbody th {
+    grid-column: span 2;
+  }
+
+  .song-section__table tbody td.rank {
+    grid-column: span 1;
+    width: auto;
+  }
+
+  .song-section__table .number {
+    text-align: left;
   }
 
   .legend {

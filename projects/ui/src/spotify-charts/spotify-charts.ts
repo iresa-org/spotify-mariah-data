@@ -2,6 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { catchError, Subscription, timeout } from 'rxjs';
 
 type ChartType = 'songs' | 'artists';
@@ -84,6 +86,29 @@ interface ChartRow {
   entryDate?: string;
 }
 
+interface SongSectionCountry {
+  countryCode: string;
+  countryName: string;
+  rank: number;
+  streams?: number;
+  previousRank?: number;
+  peakRank?: number;
+  appearancesOnChart?: number;
+  consecutiveAppearancesOnChart?: number;
+  entryStatus?: string;
+  peakDate?: string;
+  entryRank?: number;
+  entryDate?: string;
+}
+
+interface SongSection {
+  key: string;
+  name: string;
+  artists: string;
+  uri?: string;
+  countries: SongSectionCountry[];
+}
+
 const SONGS_URL = 'https://raw.githubusercontent.com/iresa-org/spotify-mariah-data/refs/heads/test_data/charts/daily-song-charts.json';
 const ARTISTS_URL = 'https://raw.githubusercontent.com/iresa-org/spotify-mariah-data/refs/heads/test_data/charts/daily-artist-charts.json';
 const SONGS_FALLBACK_URL = 'https://cdn.jsdelivr.net/gh/iresa-org/spotify-mariah-data@test_data/charts/daily-song-charts.json';
@@ -95,6 +120,7 @@ const CHART_REQUEST_TIMEOUT_MS = 8000;
 
 @Component({
   selector: 'lib-spotify-charts',
+  imports: [FontAwesomeModule],
   templateUrl: './spotify-charts.html',
   styleUrl: './spotify-charts.scss',
 })
@@ -112,6 +138,9 @@ export class SpotifyCharts implements OnInit {
   readonly mapFeatures = signal<MapFeature[]>([]);
   readonly loading = signal(true);
   readonly error = signal(false);
+  readonly expandedSongs = signal<Record<string, boolean>>({});
+  readonly expandIcon = faChevronDown;
+  readonly collapseIcon = faChevronUp;
 
   readonly isSongs = computed(() => this.chartType() === 'songs');
   readonly title = computed(() => this.isSongs() ? 'Song charts' : 'Artist charts');
@@ -141,8 +170,63 @@ export class SpotifyCharts implements OnInit {
         entryRank: song.entryRank,
         entryDate: song.entryDate,
       };
-    })).sort((a, b) => a.countryName.localeCompare(b.countryName) || a.rank - b.rank);
+    })).sort((a, b) => this.compareCountryRows(a, b));
   });
+
+  readonly songSections = computed<SongSection[]>(() => {
+    if (!this.isSongs()) return [];
+
+    const sections = new Map<string, SongSection>();
+    const countries = this.payload()?.countries ?? {};
+
+    for (const [countryCode, country] of Object.entries(countries)) {
+      for (const entry of country.entries) {
+        const song = entry as SongEntry;
+        const key = song.uri || `${song.name}::${song.artists.join(',')}`;
+        const section = sections.get(key) ?? {
+          key,
+          name: song.name,
+          artists: song.artists?.join(', ') ?? '',
+          uri: song.uri,
+          countries: [],
+        };
+
+        section.countries.push({
+          countryCode,
+          countryName: this.countryName(countryCode),
+          rank: song.rank,
+          streams: song.streams,
+          previousRank: song.previousRank,
+          peakRank: song.peakRank,
+          appearancesOnChart: song.appearancesOnChart,
+          consecutiveAppearancesOnChart: song.consecutiveAppearancesOnChart,
+          entryStatus: song.entryStatus,
+          peakDate: song.peakDate,
+          entryRank: song.entryRank,
+          entryDate: song.entryDate,
+        });
+
+        sections.set(key, section);
+      }
+    }
+
+    return [...sections.values()].sort((a, b) => {
+      const aBestRank = Math.min(...a.countries.map((country) => country.rank));
+      const bBestRank = Math.min(...b.countries.map((country) => country.rank));
+      return aBestRank - bBestRank || a.name.localeCompare(b.name);
+    });
+  });
+
+  private compareCountryRows(a: ChartRow, b: ChartRow): number {
+    const aGlobal = this.isGlobalCode(a.countryCode);
+    const bGlobal = this.isGlobalCode(b.countryCode);
+    if (aGlobal !== bGlobal) return aGlobal ? -1 : 1;
+    return a.countryName.localeCompare(b.countryName) || a.rank - b.rank;
+  }
+
+  private isGlobalCode(code: string): boolean {
+    return ['global', 'world'].includes(code.trim().toLowerCase());
+  }
 
   ngOnInit(): void {
     const routeType = this.route.snapshot.data['chartType'];
@@ -185,15 +269,32 @@ export class SpotifyCharts implements OnInit {
   }
 
   countryName(code: string): string {
+    const normalized = code?.trim();
+    if (!normalized) return '';
+    if (['global', 'world'].includes(normalized.toLowerCase())) return 'Global';
+
     try {
-      return this.displayNames?.of(code) ?? code;
+      const name = this.displayNames?.of(normalized.toUpperCase()) ?? normalized;
+      return name.charAt(0).toUpperCase() + name.slice(1);
     } catch {
-      return code;
+      return normalized;
     }
   }
 
   formatNumber(value: number | undefined): string {
-    return value === undefined ? '-' : new Intl.NumberFormat('en-US').format(value);
+    if (value === undefined || value === -1) return '-';
+    return new Intl.NumberFormat('en-US').format(value);
+  }
+
+  isSongExpanded(songKey: string): boolean {
+    return this.expandedSongs()[songKey] ?? true;
+  }
+
+  toggleSong(songKey: string): void {
+    this.expandedSongs.update((current) => ({
+      ...current,
+      [songKey]: !(current[songKey] ?? true),
+    }));
   }
 
   rankMovement(status: string | undefined): RankMovement {
