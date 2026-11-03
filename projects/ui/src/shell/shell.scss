@@ -452,7 +452,8 @@
   flex-direction: column;
   min-height: 0;
   overflow: auto;
-  padding: 24px;
+  padding: 24px 24px calc(24px + 96px);
+  scroll-padding-bottom: 96px;
 }
 
 @media (min-width: 1025px) {
