@@ -112,7 +112,7 @@ export class Overview implements OnInit, OnDestroy {
   countryFlagUrl(countryName: string): string | null {
     const countryCode = this.countryCodeFromName(countryName);
     if (!countryCode || countryCode === 'globe') return null;
-    return `/assets/flags/4x3/${countryCode}.svg`;
+    return `${this.appBasePath()}/assets/flags/4x3/${countryCode}.svg`;
   }
 
   countryNeedsGlobe(countryName: string): boolean {
@@ -128,6 +128,11 @@ export class Overview implements OnInit, OnDestroy {
     const [, month, day] = parts;
     return `${MONTH_NAMES[month] ?? month} ${day}`;
   };
+
+  private appBasePath(): string {
+    const pathname = window.location.pathname.replace(/\/+$/, '');
+    return pathname.startsWith('/spotify-mariah-data') ? '/spotify-mariah-data' : '';
+  }
 
   private countryCodeFromName(countryName: string): string | null {
     const normalized = countryName.trim();

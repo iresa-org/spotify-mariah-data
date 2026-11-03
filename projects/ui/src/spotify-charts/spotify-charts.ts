@@ -292,12 +292,17 @@ export class SpotifyCharts implements OnInit {
       return null;
     }
 
-    return `url("/assets/flags/4x3/${flagCode.toLowerCase()}.svg")`;
+    return `url("${this.appBasePath()}/assets/flags/4x3/${flagCode.toLowerCase()}.svg")`;
   }
 
   countryNeedsGlobe(code: string): boolean {
     const normalized = code?.trim();
     return !!normalized && ['global', 'world'].includes(normalized.toLowerCase());
+  }
+
+  private appBasePath(): string {
+    const pathname = window.location.pathname.replace(/\/+$/, '');
+    return pathname.startsWith('/spotify-mariah-data') ? '/spotify-mariah-data' : '';
   }
 
   formatNumber(value: number | undefined): string {
