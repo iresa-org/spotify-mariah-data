@@ -452,8 +452,8 @@
   flex-direction: column;
   min-height: 0;
   overflow: auto;
-  padding: 24px 24px calc(24px + 96px);
-  scroll-padding-bottom: 96px;
+  padding: 24px;
+  scroll-padding-bottom: 88px;
 }
 
 @media (min-width: 1025px) {
@@ -680,8 +680,7 @@ thead th {
   .dashboard__content {
     flex: 1 0 auto;
     overflow: visible;
-    padding-bottom: calc(24px + 96px);
-    scroll-padding-bottom: 96px;
+    scroll-padding-bottom: 88px;
   }
 
   .kpis {
@@ -873,8 +872,8 @@ thead th {
 
 @media (max-width: 640px) {
   .dashboard__content {
-    padding: 14px 14px calc(14px + 96px);
-    scroll-padding-bottom: 96px;
+    padding: 14px;
+    scroll-padding-bottom: 88px;
   }
 
   .content-header {
