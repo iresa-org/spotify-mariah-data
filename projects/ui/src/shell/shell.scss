@@ -2,7 +2,8 @@
 
 :host {
   display: block;
-  height: 100vh;
+  min-height: 100vh;
+  height: auto;
   overflow: hidden;
   color: theme.$theme-text;
   font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
@@ -453,7 +454,7 @@
   min-height: 0;
   overflow: auto;
   padding: 24px;
-  scroll-padding-bottom: 88px;
+  scroll-padding-bottom: 0;
 }
 
 @media (min-width: 1025px) {
@@ -655,7 +656,7 @@ thead th {
 @media (max-width: 1024px) {
   :host {
     height: auto;
-    min-height: 100vh;
+    min-height: 100dvh;
     overflow: visible;
   }
 
@@ -663,8 +664,9 @@ thead th {
     display: flex;
     flex-direction: column;
     height: auto;
-    min-height: 100%;
+    min-height: 100dvh;
     overflow: visible !important;
+    padding-bottom: 0;
   }
 
   .dashboard__sidebar {
@@ -679,8 +681,9 @@ thead th {
 
   .dashboard__content {
     flex: 1 0 auto;
+    min-height: 0;
     overflow: visible;
-    scroll-padding-bottom: 88px;
+    scroll-padding-bottom: 0;
   }
 
   .kpis {
@@ -873,7 +876,7 @@ thead th {
 @media (max-width: 640px) {
   .dashboard__content {
     padding: 14px;
-    scroll-padding-bottom: 88px;
+    scroll-padding-bottom: 0;
   }
 
   .content-header {

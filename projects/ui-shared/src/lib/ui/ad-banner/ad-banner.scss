@@ -133,15 +133,38 @@
   padding-right: 42px;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
   .ad-banner {
-    bottom: 12px;
+    position: static;
+    inset: auto;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    display: flex;
+    justify-content: center;
+    padding: 0 14px 0;
+    margin-top: 0;
+    pointer-events: auto;
+    z-index: 1;
   }
 
   .ad-banner__inner {
     grid-template-columns: auto minmax(0, 1fr);
-    width: fit-content;
-    max-width: min(94vw, 520px);
+    max-width: none;
+    width: 100%;
+    padding-right: 42px;
+  }
+}
+
+@media (max-width: 640px) {
+  .ad-banner {
+    padding: 0 10px 12px;
+  }
+
+  .ad-banner__inner {
+    grid-template-columns: auto minmax(0, 1fr);
+    width: 100%;
+    max-width: none;
     padding-right: 42px;
   }
 }
