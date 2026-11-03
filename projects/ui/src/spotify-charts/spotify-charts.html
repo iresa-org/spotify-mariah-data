@@ -94,7 +94,16 @@
             <tbody>
               @for (country of song.countries; track country.countryCode) {
               <tr>
-                <th scope="row" data-label="Country">{{ country.countryName }}</th>
+                <th scope="row" data-label="Country">
+                  <span class="country-label">
+                    @if (countryNeedsGlobe(country.countryCode)) {
+                    <span class="country-flag country-flag--globe" aria-hidden="true">🌐</span>
+                    } @else if (countryFlagUrl(country.countryCode); as flagUrl) {
+                    <span class="country-flag" [style.background-image]="flagUrl" aria-hidden="true"></span>
+                    }
+                    <span>{{ country.countryName }}</span>
+                  </span>
+                </th>
                 <td class="rank" data-label="Rank">
                   <span class="rank__value">
                     {{ country.rank }}
@@ -144,7 +153,16 @@
         <tbody>
           @for (row of rows(); track row.countryCode + row.rank + row.name) {
           <tr>
-            <th scope="row" data-label="Country">{{ row.countryName }}</th>
+            <th scope="row" data-label="Country">
+              <span class="country-label">
+                @if (countryNeedsGlobe(row.countryCode)) {
+                <span class="country-flag country-flag--globe" aria-hidden="true">🌐</span>
+                } @else if (countryFlagUrl(row.countryCode); as flagUrl) {
+                <span class="country-flag" [style.background-image]="flagUrl" aria-hidden="true"></span>
+                }
+                <span>{{ row.countryName }}</span>
+              </span>
+            </th>
             <td class="rank" data-label="Rank" [attr.aria-label]="rankMovementLabel(row.rank, row.entryStatus)">
               <span class="rank__value">
                 {{ row.rank }}

@@ -114,7 +114,15 @@
         @for (city of topCities(); track city.city; let i = $index) {
         <li class="city-row">
           <span class="city-row__rank">{{ i + 1 }}</span>
-          <span class="city-row__name">{{ city.city }}<span class="city-row__country">{{ city.country }}</span></span>
+          <span class="city-row__name">
+            @if (countryNeedsGlobe(city.country)) {
+            <span class="city-row__flag city-row__flag--globe" aria-label="Global flag" aria-hidden="true">🌐</span>
+            } @else if (countryFlagUrl(city.country); as flagUrl) {
+            <span class="city-row__flag" [style.background-image]="'url(' + flagUrl + ')'" aria-hidden="true"></span>
+            }
+            <span class="city-row__city-name">{{ city.city }}</span>
+            <span class="city-row__country">{{ city.country }}</span>
+          </span>
           <span class="city-row__count">{{ city.numberOfListeners | formatCompact}}</span>
         </li>
         }

@@ -222,6 +222,35 @@
   background: color-mix(in srgb, theme.$theme-bg 70%, transparent);
 }
 
+.country-label {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+}
+
+.country-flag {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  display: inline-block;
+  flex: 0 0 auto;
+  height: 1em;
+  width: 1.333em;
+}
+
+.country-flag--globe {
+  align-items: center;
+  background: none;
+  box-shadow: none;
+  display: inline-flex;
+  font-size: 1em;
+  height: auto;
+  justify-content: center;
+  width: auto;
+}
+
 .legend {
   align-items: center;
   color: theme.$theme-muted;

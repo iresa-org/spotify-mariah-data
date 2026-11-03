@@ -281,6 +281,25 @@ export class SpotifyCharts implements OnInit {
     }
   }
 
+  countryFlagUrl(code: string): string | null {
+    const normalized = code?.trim();
+    if (!normalized || ['global', 'world'].includes(normalized.toLowerCase())) {
+      return null;
+    }
+
+    const flagCode = normalized.toUpperCase();
+    if (flagCode.length !== 2) {
+      return null;
+    }
+
+    return `url("/assets/flags/4x3/${flagCode.toLowerCase()}.svg")`;
+  }
+
+  countryNeedsGlobe(code: string): boolean {
+    const normalized = code?.trim();
+    return !!normalized && ['global', 'world'].includes(normalized.toLowerCase());
+  }
+
   formatNumber(value: number | undefined): string {
     if (value === undefined || value === -1) return '-';
     return new Intl.NumberFormat('en-US').format(value);

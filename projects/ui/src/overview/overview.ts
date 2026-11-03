@@ -109,6 +109,16 @@ export class Overview implements OnInit, OnDestroy {
 
   yAxisTickFormat = (val: number) => formatCompact(val);
 
+  countryFlagUrl(countryName: string): string | null {
+    const countryCode = this.countryCodeFromName(countryName);
+    if (!countryCode || countryCode === 'globe') return null;
+    return `/assets/flags/4x3/${countryCode}.svg`;
+  }
+
+  countryNeedsGlobe(countryName: string): boolean {
+    return this.countryCodeFromName(countryName) === 'globe';
+  }
+
   xAxisTickFormat = (val: string) => {
     if (!val) return val;
 
@@ -118,4 +128,66 @@ export class Overview implements OnInit, OnDestroy {
     const [, month, day] = parts;
     return `${MONTH_NAMES[month] ?? month} ${day}`;
   };
+
+  private countryCodeFromName(countryName: string): string | null {
+    const normalized = countryName.trim();
+    if (!normalized) return null;
+
+    const lower = normalized.toLowerCase();
+    if (['global', 'world'].includes(lower)) {
+      return 'globe';
+    }
+
+    if (/^[a-z]{2}$/i.test(normalized)) {
+      return normalized.toLowerCase();
+    }
+
+    const nameMap: Record<string, string> = {
+      'united states': 'us',
+      'united states of america': 'us',
+      'united kingdom': 'gb',
+      'great britain': 'gb',
+      'england': 'gb',
+      'scotland': 'gb',
+      'wales': 'gb',
+      'canada': 'ca',
+      'australia': 'au',
+      'new zealand': 'nz',
+      'switzerland': 'ch',
+      'south africa': 'za',
+      'germany': 'de',
+      'france': 'fr',
+      'spain': 'es',
+      'italy': 'it',
+      'netherlands': 'nl',
+      'brazil': 'br',
+      'mexico': 'mx',
+      'argentina': 'ar',
+      'japan': 'jp',
+      'south korea': 'kr',
+      'singapore': 'sg',
+      'india': 'in',
+      'sweden': 'se',
+      'norway': 'no',
+      'denmark': 'dk',
+      'finland': 'fi',
+      'ireland': 'ie',
+      'belgium': 'be',
+      'hong kong': 'hk',
+      'philippines': 'ph',
+      'united arab emirates': 'ae',
+      'saudi arabia': 'sa',
+      'turkey': 'tr',
+      'portugal': 'pt',
+      'greece': 'gr',
+      'poland': 'pl',
+      'czech republic': 'cz',
+      'austria': 'at',
+      'hungary': 'hu',
+      'iceland': 'is',
+      'romania': 'ro',
+    };
+
+    return nameMap[lower] ?? null;
+  }
 }

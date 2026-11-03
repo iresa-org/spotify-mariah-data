@@ -299,11 +299,42 @@
 }
 
 .city-row__name {
+  align-items: center;
+  display: flex;
   flex: 1;
   font-size: 0.95rem;
   font-weight: 500;
+  gap: 8px;
   min-width: 0;
   overflow-wrap: anywhere;
+}
+
+.city-row__city-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.city-row__flag {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  display: inline-block;
+  flex: 0 0 auto;
+  height: 1em;
+  width: 1.333em;
+}
+
+.city-row__flag--globe {
+  align-items: center;
+  background: none;
+  box-shadow: none;
+  display: inline-flex;
+  font-size: 1em;
+  height: auto;
+  justify-content: center;
+  width: auto;
 }
 
 .city-row__country {
