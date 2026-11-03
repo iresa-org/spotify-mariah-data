@@ -680,6 +680,8 @@ thead th {
   .dashboard__content {
     flex: 1 0 auto;
     overflow: visible;
+    padding-bottom: calc(24px + 96px);
+    scroll-padding-bottom: 96px;
   }
 
   .kpis {
@@ -871,7 +873,8 @@ thead th {
 
 @media (max-width: 640px) {
   .dashboard__content {
-    padding: 14px;
+    padding: 14px 14px calc(14px + 96px);
+    scroll-padding-bottom: 96px;
   }
 
   .content-header {
