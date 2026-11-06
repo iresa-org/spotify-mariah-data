@@ -20,8 +20,12 @@ function formatDateKey(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
-function normalizeChartDate(date: string | undefined): string | undefined {
+function normalizeChartDate(date: Date | string | undefined, referenceDate: Date = new Date()): string | undefined {
   if (!date) return undefined;
+
+  if (date instanceof Date) {
+    return formatDateKey(new Date(date.getFullYear(), date.getMonth(), date.getDate()));
+  }
 
   const trimmed = date.trim();
   if (!trimmed) return undefined;
@@ -38,9 +42,15 @@ function normalizeChartDate(date: string | undefined): string | undefined {
     return formatDateKey(new Date(Number(year), Number(month) - 1, Number(day)));
   }
 
+  const monthDayMatch = trimmed.match(/^(\d{1,2})[/-](\d{1,2})$/);
+  if (monthDayMatch) {
+    const [, month, day] = monthDayMatch;
+    return formatDateKey(new Date(referenceDate.getFullYear(), Number(month) - 1, Number(day)));
+  }
+
   const parsed = new Date(trimmed);
   if (!Number.isNaN(parsed.getTime())) {
-    return formatDateKey(parsed);
+    return formatDateKey(new Date(parsed.getFullYear(), parsed.getMonth(), parsed.getDate()));
   }
 
   return trimmed;
@@ -48,6 +58,7 @@ function normalizeChartDate(date: string | undefined): string | undefined {
 
 function getExpectedLatestChartDate(referenceDate: Date = new Date()): string {
   const date = new Date(referenceDate);
+  date.setHours(0, 0, 0, 0);
   date.setDate(date.getDate() - 1);
   return formatDateKey(date);
 }
@@ -60,7 +71,7 @@ function getExpectedChartDates(referenceDate: Date = new Date()): string[] {
 }
 
 function isExpectedChartDate(date: string | undefined, referenceDate: Date = new Date()): boolean {
-  const normalizedDate = normalizeChartDate(date);
+  const normalizedDate = normalizeChartDate(date, referenceDate);
   return normalizedDate !== undefined && getExpectedChartDates(referenceDate).includes(normalizedDate);
 }
 
