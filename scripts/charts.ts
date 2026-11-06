@@ -50,7 +50,7 @@ function normalizeChartDate(date: Date | string | undefined, referenceDate: Date
 
   const parsed = new Date(trimmed);
   if (!Number.isNaN(parsed.getTime())) {
-    return formatDateKey(new Date(parsed.getFullYear(), parsed.getMonth(), parsed.getDate()));
+    return formatDateKey(new Date(parsed.getUTCFullYear(), parsed.getUTCMonth(), parsed.getUTCDate()));
   }
 
   return trimmed;
