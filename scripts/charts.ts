@@ -20,10 +20,48 @@ function formatDateKey(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
+function normalizeChartDate(date: string | undefined): string | undefined {
+  if (!date) return undefined;
+
+  const trimmed = date.trim();
+  if (!trimmed) return undefined;
+
+  const isoDateMatch = trimmed.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})(?:[T\s].*)?$/);
+  if (isoDateMatch) {
+    const [, year, month, day] = isoDateMatch;
+    return formatDateKey(new Date(Number(year), Number(month) - 1, Number(day)));
+  }
+
+  const slashDateMatch = trimmed.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/);
+  if (slashDateMatch) {
+    const [, month, day, year] = slashDateMatch;
+    return formatDateKey(new Date(Number(year), Number(month) - 1, Number(day)));
+  }
+
+  const parsed = new Date(trimmed);
+  if (!Number.isNaN(parsed.getTime())) {
+    return formatDateKey(parsed);
+  }
+
+  return trimmed;
+}
+
 function getExpectedLatestChartDate(referenceDate: Date = new Date()): string {
   const date = new Date(referenceDate);
   date.setDate(date.getDate() - 1);
   return formatDateKey(date);
+}
+
+function getExpectedChartDates(referenceDate: Date = new Date()): string[] {
+  return [...new Set([
+    getExpectedLatestChartDate(referenceDate),
+    formatDateKey(referenceDate)
+  ])];
+}
+
+function isExpectedChartDate(date: string | undefined, referenceDate: Date = new Date()): boolean {
+  const normalizedDate = normalizeChartDate(date);
+  return normalizedDate !== undefined && getExpectedChartDates(referenceDate).includes(normalizedDate);
 }
 
 async function getLatestStoredChartDate(chartType: ChartType): Promise<string | undefined> {
@@ -33,7 +71,7 @@ async function getLatestStoredChartDate(chartType: ChartType): Promise<string | 
     const content = await readFile(filePath, 'utf8');
     const parsed = JSON.parse(content) as { updatedDate?: unknown };
     const date = typeof parsed.updatedDate === 'string' ? parsed.updatedDate.trim() : undefined;
-    if (date) return date;
+    return normalizeChartDate(date);
   } catch {
     // Ignore missing or unreadable chart files during the initial startup check.
   }
@@ -49,9 +87,11 @@ type ChartUpdateStatus = {
 async function checkChartUpdate(context: BrowserContext, chartType: ChartType): Promise<ChartUpdateStatus> {
   const page = await context.newPage();
   try {
-    const publishedDate = chartType === 'song'
-      ? (await fetchLatestDailySongChartDate(page))?.trim()
-      : (await fetchLatestDailyArtistChartDate(page))?.trim();
+    const publishedDate = normalizeChartDate(
+      chartType === 'song'
+        ? (await fetchLatestDailySongChartDate(page))?.trim()
+        : (await fetchLatestDailyArtistChartDate(page))?.trim()
+    );
 
     const storedDate = await getLatestStoredChartDate(chartType);
     const expectedLatestDate = getExpectedLatestChartDate();
@@ -66,7 +106,7 @@ async function checkChartUpdate(context: BrowserContext, chartType: ChartType): 
       return { needsUpdate: false, publishedDate: undefined };
     }
 
-    if (publishedDate !== expectedLatestDate) {
+    if (!isExpectedChartDate(publishedDate)) {
       console.log(
         `Latest ${chartType} chart date is ${publishedDate}, but the expected update date is ${expectedLatestDate}; waiting for a new update.`
       );
@@ -92,18 +132,20 @@ async function isChartReady(context: BrowserContext, chartType: ChartType): Prom
   const expectedDate = getExpectedLatestChartDate();
   const storedDate = await getLatestStoredChartDate(chartType);
 
-  if (storedDate === expectedDate) {
+  if (storedDate === expectedDate || isExpectedChartDate(storedDate)) {
     console.log(`${chartType} chart already matches the expected latest date (${expectedDate}).`);
     return true;
   }
 
   const page = await context.newPage();
   try {
-    const liveDate = chartType === 'song'
-      ? (await fetchLatestDailySongChartDate(page))?.trim()
-      : (await fetchLatestDailyArtistChartDate(page))?.trim();
+    const liveDate = normalizeChartDate(
+      chartType === 'song'
+        ? (await fetchLatestDailySongChartDate(page))?.trim()
+        : (await fetchLatestDailyArtistChartDate(page))?.trim()
+    );
 
-    const ready = liveDate === expectedDate;
+    const ready = isExpectedChartDate(liveDate);
     if (ready) {
       console.log(`Live ${chartType} chart date matches the expected latest date (${expectedDate}).`);
     }
@@ -132,7 +174,7 @@ async function waitForNewChartDate(context: BrowserContext): Promise<void> {
 }
 
 function publishedDateMatchesExpected(date: string): boolean {
-  return date === getExpectedLatestChartDate();
+  return isExpectedChartDate(date);
 }
 
 async function main() {
