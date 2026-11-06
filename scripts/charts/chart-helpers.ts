@@ -36,10 +36,10 @@ export function findGlobalChartDate(
   responses: Array<{ url: string; updatedDate?: string }>,
   chartUrlPattern: RegExp
 ): string | undefined {
-  const globalResponse = responses.find((response) => {
+  const globalResponses = responses.filter((response) => {
     const match = response.url.match(chartUrlPattern);
     return match?.[1]?.toUpperCase() === 'GLOBAL';
   });
 
-  return globalResponse?.updatedDate;
+  return globalResponses.at(-1)?.updatedDate;
 }
