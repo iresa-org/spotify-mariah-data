@@ -59,15 +59,12 @@ function normalizeChartDate(date: Date | string | undefined, referenceDate: Date
 function getExpectedLatestChartDate(referenceDate: Date = new Date()): string {
   const date = new Date(referenceDate);
   date.setHours(0, 0, 0, 0);
-  date.setDate(date.getDate() - 1);
+  date.setDate(date.getDate() + 1);
   return formatDateKey(date);
 }
 
 function getExpectedChartDates(referenceDate: Date = new Date()): string[] {
-  return [...new Set([
-    getExpectedLatestChartDate(referenceDate),
-    formatDateKey(referenceDate)
-  ])];
+  return [getExpectedLatestChartDate(referenceDate)];
 }
 
 function isExpectedChartDate(date: string | undefined, referenceDate: Date = new Date()): boolean {
@@ -105,8 +102,9 @@ async function checkChartUpdate(context: BrowserContext, chartType: ChartType): 
     );
 
     const storedDate = await getLatestStoredChartDate(chartType);
-    const expectedLatestDate = getExpectedLatestChartDate();
-    console.log(`[DEBUG] ${chartType} expected=${expectedLatestDate} actual=${publishedDate ?? 'none'} stored=${storedDate ?? 'none'}`);
+    const expectedLatestDate = storedDate
+      ? getExpectedLatestChartDate(new Date(`${storedDate}T00:00:00`))
+      : getExpectedLatestChartDate();
 
     if (!storedDate) {
       console.log(`No saved ${chartType} chart date found. Proceeding with the next scan.`);
@@ -141,8 +139,10 @@ async function checkChartUpdate(context: BrowserContext, chartType: ChartType): 
 }
 
 async function isChartReady(context: BrowserContext, chartType: ChartType): Promise<boolean> {
-  const expectedDate = getExpectedLatestChartDate();
   const storedDate = await getLatestStoredChartDate(chartType);
+  const expectedDate = storedDate
+    ? getExpectedLatestChartDate(new Date(`${storedDate}T00:00:00`))
+    : getExpectedLatestChartDate();
 
   if (storedDate === expectedDate || isExpectedChartDate(storedDate)) {
     console.log(`${chartType} chart already matches the expected latest date (${expectedDate}).`);
@@ -157,8 +157,7 @@ async function isChartReady(context: BrowserContext, chartType: ChartType): Prom
         : (await fetchLatestDailyArtistChartDate(page))?.trim()
     );
 
-    console.log(`[DEBUG] ${chartType} live=${liveDate ?? 'none'} expected=${expectedDate}`);
-    const ready = isExpectedChartDate(liveDate);
+    const ready = isExpectedChartDate(liveDate, new Date(`${storedDate ?? new Date().toISOString().slice(0, 10)}T00:00:00`));
     if (ready) {
       console.log(`Live ${chartType} chart date matches the expected latest date (${expectedDate}).`);
     }
