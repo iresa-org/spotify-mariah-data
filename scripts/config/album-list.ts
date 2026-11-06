@@ -5,7 +5,6 @@ export const SELECTED_ALBUMS = [
   'spotify:album:1GzBLltCCKsiIJM3T3AWj3',     // Music Box: 30th Anniversary Edition
   'spotify:album:3KGlZ9YeHexP80A3scG86n',     // Daydream (30th Anniversary Edition)
   'spotify:album:2VtWkFLhMJAFsWkHAXwosS',     // Caution (Japan Version)
-  'spotify:album:2hHFZLYnwsYOOxTCrlNvg0',     // Glitter
   'spotify:album:2tVxdAJ16NY9bpjb1h5fQc',     // Me. I Am Mariah…The Elusive Chanteuse (Deluxe)
   'spotify:album:31MluXLYC0ZnCSfUZ5T4GX',     // E=MC2 (Deluxe Version)
   'spotify:album:3RPImDZ7Ihh5YR5iJh1gH1',     // Memoirs of an imperfect Angel
