@@ -106,6 +106,7 @@ async function checkChartUpdate(context: BrowserContext, chartType: ChartType): 
 
     const storedDate = await getLatestStoredChartDate(chartType);
     const expectedLatestDate = getExpectedLatestChartDate();
+    console.log(`[DEBUG] ${chartType} expected=${expectedLatestDate} actual=${publishedDate ?? 'none'} stored=${storedDate ?? 'none'}`);
 
     if (!storedDate) {
       console.log(`No saved ${chartType} chart date found. Proceeding with the next scan.`);
@@ -156,6 +157,7 @@ async function isChartReady(context: BrowserContext, chartType: ChartType): Prom
         : (await fetchLatestDailyArtistChartDate(page))?.trim()
     );
 
+    console.log(`[DEBUG] ${chartType} live=${liveDate ?? 'none'} expected=${expectedDate}`);
     const ready = isExpectedChartDate(liveDate);
     if (ready) {
       console.log(`Live ${chartType} chart date matches the expected latest date (${expectedDate}).`);
