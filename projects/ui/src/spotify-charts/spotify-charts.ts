@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -139,6 +139,21 @@ export class SpotifyCharts implements OnInit {
   readonly loading = signal(true);
   readonly error = signal(false);
   readonly expandedSongs = signal<Record<string, boolean>>({});
+  readonly selectedSongKey = signal<string | null>(null);
+  private geoJson: GeoJsonFeatureCollection | null = null;
+
+  private readonly refreshMapFeatures = effect(() => {
+    const geoJson = this.geoJson;
+    const payload = this.payload();
+    const selectedSongKey = this.selectedSongKey();
+
+    if (!geoJson || !payload) {
+      this.mapFeatures.set([]);
+      return;
+    }
+
+    this.mapFeatures.set(this.createMapFeatures(geoJson, payload.countries, selectedSongKey));
+  });
   readonly expandIcon = faChevronDown;
   readonly collapseIcon = faChevronUp;
 
@@ -217,6 +232,12 @@ export class SpotifyCharts implements OnInit {
     });
   });
 
+  readonly filteredSongSections = computed(() => {
+    const selectedSongKey = this.selectedSongKey();
+    const songSections = this.songSections();
+    return selectedSongKey ? songSections.filter((song) => song.key === selectedSongKey) : songSections;
+  });
+
   private compareCountryRows(a: ChartRow, b: ChartRow): number {
     const aGlobal = this.isGlobalCode(a.countryCode);
     const bGlobal = this.isGlobalCode(b.countryCode);
@@ -229,6 +250,7 @@ export class SpotifyCharts implements OnInit {
   }
 
   ngOnInit(): void {
+    this.selectedSongKey.set(null);
     const routeType = this.route.snapshot.data['chartType'];
     this.chartType.set(routeType === 'artists' ? 'artists' : 'songs');
     const chartUrl = this.chartType() === 'songs' ? SONGS_URL : ARTISTS_URL;
@@ -262,9 +284,13 @@ export class SpotifyCharts implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (geoJson) => {
-          this.mapFeatures.set(this.createMapFeatures(geoJson, payload.countries));
+          this.geoJson = geoJson;
+          this.mapFeatures.set(this.createMapFeatures(geoJson, payload.countries, this.selectedSongKey()));
         },
-        error: () => this.mapFeatures.set([]),
+        error: () => {
+          this.geoJson = null;
+          this.mapFeatures.set([]);
+        },
       });
   }
 
@@ -321,6 +347,10 @@ export class SpotifyCharts implements OnInit {
     }));
   }
 
+  onSongSelectionChange(value: string): void {
+    this.selectedSongKey.set(value === 'all' ? null : value);
+  }
+
   rankMovement(status: string | undefined): RankMovement {
     if (status === 'MOVED_UP') return 'up';
     if (status === 'MOVED_DOWN') return 'down';
@@ -346,16 +376,32 @@ export class SpotifyCharts implements OnInit {
     return trackId ? `https://open.spotify.com/track/${trackId}` : null;
   }
 
-  private createMapFeatures(geoJson: GeoJsonFeatureCollection, countries: Record<string, CountryChart<SongEntry | ArtistEntry>>): MapFeature[] {
+  private createMapFeatures(
+    geoJson: GeoJsonFeatureCollection,
+    countries: Record<string, CountryChart<SongEntry | ArtistEntry>>,
+    selectedSongKey: string | null,
+  ): MapFeature[] {
     return geoJson.features.flatMap((feature) => {
       if (!feature.geometry) return [];
       const properties = feature.properties;
       const code = (properties['ISO_A2'] ?? properties['ISO_A2_EH'] ?? properties['ISO3166-1-Alpha-2'] ?? '').toUpperCase();
       if (!code || code === '-99') return [];
-      const bestRank = countries[code]?.entries.reduce<number | null>(
+
+      const entries = countries[code]?.entries ?? [];
+      const relevantEntries = selectedSongKey
+        ? entries.filter((entry) => {
+          const song = entry as SongEntry;
+          if (!song.name) return false;
+          const key = song.uri || `${song.name}::${song.artists?.join(',') ?? ''}`;
+          return key === selectedSongKey;
+        })
+        : entries;
+
+      const bestRank = relevantEntries.reduce<number | null>(
         (best, entry) => best === null || entry.rank < best ? entry.rank : best,
         null,
       ) ?? null;
+
       return [{
         code,
         name: this.countryName(code),

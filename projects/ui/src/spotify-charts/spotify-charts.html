@@ -56,10 +56,21 @@
         <p class="panel__eyebrow">Song coverage</p>
         <h3 id="song-sections-heading">Countries charting each song</h3>
       </div>
-      <span class="row-count">{{ songSections().length }} songs</span>
+      <div class="panel__heading__controls">
+        <label class="song-filter" for="song-filter">
+          <span>Song</span>
+          <select id="song-filter" [value]="selectedSongKey() ?? 'all'" (change)="onSongSelectionChange($any($event.target).value)">
+            <option value="all">All songs</option>
+            @for (song of songSections(); track song.key) {
+            <option [value]="song.key">{{ song.name }}</option>
+            }
+          </select>
+        </label>
+        <span class="row-count">{{ filteredSongSections().length }} songs</span>
+      </div>
     </div>
     <div class="song-sections">
-      @for (song of songSections(); track song.key) {
+      @for (song of filteredSongSections(); track song.key) {
       <article class="song-section">
         <header class="song-section__header">
           <div class="song-section__lead">

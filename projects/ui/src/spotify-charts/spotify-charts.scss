@@ -55,6 +55,32 @@
   justify-content: space-between;
 }
 
+.panel__heading__controls {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.song-filter {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+  color: theme.$theme-muted;
+  font-size: 0.78rem;
+}
+
+.song-filter select {
+  background: theme.$theme-bg;
+  border: 1px solid theme.$theme-border;
+  border-radius: 8px;
+  color: theme.$theme-text;
+  font: inherit;
+  min-width: 180px;
+  padding: 7px 10px;
+}
+
 .panel__heading h3 {
   font-size: 1.05rem;
   margin: 0;
@@ -381,9 +407,9 @@ tbody th {
 }
 
 .rank {
-  color: theme.$theme-muted;
+  color: theme.$theme-text;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
   width: 70px;
 }
