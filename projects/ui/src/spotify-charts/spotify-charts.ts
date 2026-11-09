@@ -162,7 +162,6 @@ export class SpotifyCharts implements OnInit {
   readonly subtitle = computed(() => this.isSongs()
     ? 'Where Mariah Carey songs are charting in Spotify\'s daily Top 200.'
     : 'Where Mariah Carey is charting as an artist in Spotify\'s daily Top 200.');
-  readonly countries = computed(() => Object.keys(this.payload()?.countries ?? {}).length);
   readonly rows = computed<ChartRow[]>(() => {
     const countries = this.payload()?.countries ?? {};
     return Object.entries(countries).flatMap(([countryCode, country]) => country.entries.map((entry) => {
@@ -236,6 +235,15 @@ export class SpotifyCharts implements OnInit {
     const selectedSongKey = this.selectedSongKey();
     const songSections = this.songSections();
     return selectedSongKey ? songSections.filter((song) => song.key === selectedSongKey) : songSections;
+  });
+
+  readonly countries = computed(() => {
+    const selectedSongKey = this.selectedSongKey();
+    if (selectedSongKey) {
+      return this.songSections().find((song) => song.key === selectedSongKey)?.countries.length ?? 0;
+    }
+
+    return Object.keys(this.payload()?.countries ?? {}).length;
   });
 
   private compareCountryRows(a: ChartRow, b: ChartRow): number {
