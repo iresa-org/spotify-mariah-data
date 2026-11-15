@@ -1,95 +1,51 @@
 {
-  "updatedDate": "2026-11-13",
+  "updatedDate": "2026-11-14",
   "countries": {
     "global": {
       "entries": [
         {
-          "rank": 21,
+          "rank": 9,
           "name": "All I Want for Christmas Is You",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 2276620,
+          "streams": 2840963,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 28,
+          "previousRank": 21,
           "peakRank": 1,
-          "appearancesOnChart": 544,
-          "consecutiveAppearancesOnChart": 13,
+          "appearancesOnChart": 545,
+          "consecutiveAppearancesOnChart": 14,
           "entryStatus": "MOVED_UP",
           "peakDate": "2017-12-23",
           "entryRank": 177,
           "entryDate": "2017-11-11"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "AU": {
       "entries": [
         {
-          "rank": 72,
+          "rank": 32,
           "name": "All I Want for Christmas Is You",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 59466,
+          "streams": 79405,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 151,
+          "previousRank": 72,
           "peakRank": 1,
-          "appearancesOnChart": 414,
-          "consecutiveAppearancesOnChart": 7,
+          "appearancesOnChart": 415,
+          "consecutiveAppearancesOnChart": 8,
           "entryStatus": "MOVED_UP",
           "peakDate": "2017-12-23",
           "entryRank": 196,
           "entryDate": "2017-11-18"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "AT": {
-      "entries": [
-        {
-          "rank": 6,
-          "name": "All I Want for Christmas Is You",
-          "artists": [
-            "Mariah Carey"
-          ],
-          "streams": 24164,
-          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 5,
-          "peakRank": 1,
-          "appearancesOnChart": 530,
-          "consecutiveAppearancesOnChart": 13,
-          "entryStatus": "MOVED_DOWN",
-          "peakDate": "2017-12-17",
-          "entryRank": 187,
-          "entryDate": "2017-11-11"
-        }
-      ],
-      "updatedDate": "2026-11-13"
-    },
-    "BE": {
-      "entries": [
-        {
-          "rank": 61,
-          "name": "All I Want for Christmas Is You",
-          "artists": [
-            "Mariah Carey"
-          ],
-          "streams": 18259,
-          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 58,
-          "peakRank": 1,
-          "appearancesOnChart": 556,
-          "consecutiveAppearancesOnChart": 13,
-          "entryStatus": "MOVED_DOWN",
-          "peakDate": "2017-12-09",
-          "entryRank": 109,
-          "entryDate": "2017-01-01"
-        }
-      ],
-      "updatedDate": "2026-11-13"
-    },
-    "CA": {
       "entries": [
         {
           "rank": 4,
@@ -97,21 +53,109 @@
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 119708,
+          "streams": 27402,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 8,
+          "previousRank": 6,
           "peakRank": 1,
-          "appearancesOnChart": 543,
-          "consecutiveAppearancesOnChart": 13,
+          "appearancesOnChart": 531,
+          "consecutiveAppearancesOnChart": 14,
+          "entryStatus": "MOVED_UP",
+          "peakDate": "2017-12-17",
+          "entryRank": 187,
+          "entryDate": "2017-11-11"
+        }
+      ],
+      "updatedDate": "2026-11-14"
+    },
+    "BE": {
+      "entries": [
+        {
+          "rank": 29,
+          "name": "All I Want for Christmas Is You",
+          "artists": [
+            "Mariah Carey"
+          ],
+          "streams": 24700,
+          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
+          "previousRank": 61,
+          "peakRank": 1,
+          "appearancesOnChart": 557,
+          "consecutiveAppearancesOnChart": 14,
+          "entryStatus": "MOVED_UP",
+          "peakDate": "2017-12-09",
+          "entryRank": 109,
+          "entryDate": "2017-01-01"
+        }
+      ],
+      "updatedDate": "2026-11-14"
+    },
+    "BG": {
+      "entries": [
+        {
+          "rank": 157,
+          "name": "All I Want for Christmas Is You",
+          "artists": [
+            "Mariah Carey"
+          ],
+          "streams": 2530,
+          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
+          "previousRank": -1,
+          "peakRank": 1,
+          "appearancesOnChart": 357,
+          "consecutiveAppearancesOnChart": 1,
+          "entryStatus": "RE_ENTRY",
+          "peakDate": "2017-12-24",
+          "entryRank": 18,
+          "entryDate": "2017-11-28"
+        }
+      ],
+      "updatedDate": "2026-11-14"
+    },
+    "CA": {
+      "entries": [
+        {
+          "rank": 1,
+          "name": "All I Want for Christmas Is You",
+          "artists": [
+            "Mariah Carey"
+          ],
+          "streams": 177062,
+          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
+          "previousRank": 4,
+          "peakRank": 1,
+          "appearancesOnChart": 544,
+          "consecutiveAppearancesOnChart": 14,
           "entryStatus": "MOVED_UP",
           "peakDate": "2017-12-24",
           "entryRank": 192,
           "entryDate": "2017-11-02"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "CR": {
+      "entries": [
+        {
+          "rank": 57,
+          "name": "All I Want for Christmas Is You",
+          "artists": [
+            "Mariah Carey"
+          ],
+          "streams": 12396,
+          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
+          "previousRank": 87,
+          "peakRank": 1,
+          "appearancesOnChart": 401,
+          "consecutiveAppearancesOnChart": 14,
+          "entryStatus": "MOVED_UP",
+          "peakDate": "2021-12-25",
+          "entryRank": 155,
+          "entryDate": "2017-12-01"
+        }
+      ],
+      "updatedDate": "2026-11-14"
+    },
+    "CZ": {
       "entries": [
         {
           "rank": 87,
@@ -119,173 +163,173 @@
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 9275,
+          "streams": 13830,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 95,
+          "previousRank": 172,
           "peakRank": 1,
-          "appearancesOnChart": 400,
-          "consecutiveAppearancesOnChart": 13,
+          "appearancesOnChart": 480,
+          "consecutiveAppearancesOnChart": 8,
           "entryStatus": "MOVED_UP",
-          "peakDate": "2021-12-25",
-          "entryRank": 155,
-          "entryDate": "2017-12-01"
-        }
-      ],
-      "updatedDate": "2026-11-13"
-    },
-    "CZ": {
-      "entries": [
-        {
-          "rank": 172,
-          "name": "All I Want for Christmas Is You",
-          "artists": [
-            "Mariah Carey"
-          ],
-          "streams": 12213,
-          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 166,
-          "peakRank": 1,
-          "appearancesOnChart": 479,
-          "consecutiveAppearancesOnChart": 7,
-          "entryStatus": "MOVED_DOWN",
           "peakDate": "2017-12-02",
           "entryRank": 120,
           "entryDate": "2017-11-09"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "DK": {
       "entries": [
         {
-          "rank": 11,
+          "rank": 5,
           "name": "All I Want for Christmas Is You",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 43724,
+          "streams": 53441,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 8,
+          "previousRank": 11,
           "peakRank": 1,
-          "appearancesOnChart": 552,
-          "consecutiveAppearancesOnChart": 13,
-          "entryStatus": "MOVED_DOWN",
+          "appearancesOnChart": 553,
+          "consecutiveAppearancesOnChart": 14,
+          "entryStatus": "MOVED_UP",
           "peakDate": "2017-12-09",
           "entryRank": 146,
           "entryDate": "2017-11-01"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "EE": {
       "entries": [
         {
-          "rank": 55,
+          "rank": 49,
           "name": "All I Want for Christmas Is You",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 2044,
+          "streams": 2071,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 86,
+          "previousRank": 55,
           "peakRank": 1,
-          "appearancesOnChart": 439,
-          "consecutiveAppearancesOnChart": 13,
+          "appearancesOnChart": 440,
+          "consecutiveAppearancesOnChart": 14,
           "entryStatus": "MOVED_UP",
           "peakDate": "2017-12-23",
           "entryRank": 36,
           "entryDate": "2017-11-28"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "FI": {
       "entries": [
         {
-          "rank": 61,
+          "rank": 27,
           "name": "All I Want for Christmas Is You",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 20778,
+          "streams": 24208,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 57,
+          "previousRank": 61,
           "peakRank": 1,
-          "appearancesOnChart": 494,
-          "consecutiveAppearancesOnChart": 13,
-          "entryStatus": "MOVED_DOWN",
+          "appearancesOnChart": 495,
+          "consecutiveAppearancesOnChart": 14,
+          "entryStatus": "MOVED_UP",
           "peakDate": "2017-12-23",
           "entryRank": 165,
           "entryDate": "2017-11-05"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
-    "DE": {
+    "FR": {
       "entries": [
         {
-          "rank": 25,
+          "rank": 170,
           "name": "All I Want for Christmas Is You",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 154773,
+          "streams": 69275,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 19,
+          "previousRank": -1,
           "peakRank": 1,
-          "appearancesOnChart": 493,
-          "consecutiveAppearancesOnChart": 13,
-          "entryStatus": "MOVED_DOWN",
+          "appearancesOnChart": 341,
+          "consecutiveAppearancesOnChart": 1,
+          "entryStatus": "RE_ENTRY",
+          "peakDate": "2017-12-24",
+          "entryRank": 193,
+          "entryDate": "2017-11-26"
+        }
+      ],
+      "updatedDate": "2026-11-14"
+    },
+    "DE": {
+      "entries": [
+        {
+          "rank": 8,
+          "name": "All I Want for Christmas Is You",
+          "artists": [
+            "Mariah Carey"
+          ],
+          "streams": 201203,
+          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
+          "previousRank": 25,
+          "peakRank": 1,
+          "appearancesOnChart": 494,
+          "consecutiveAppearancesOnChart": 14,
+          "entryStatus": "MOVED_UP",
           "peakDate": "2017-12-23",
           "entryRank": 157,
           "entryDate": "2017-11-12"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "GR": {
       "entries": [
         {
-          "rank": 185,
+          "rank": 89,
           "name": "All I Want for Christmas Is You",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 12258,
+          "streams": 17612,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": -1,
+          "previousRank": 185,
           "peakRank": 1,
-          "appearancesOnChart": 450,
-          "consecutiveAppearancesOnChart": 1,
-          "entryStatus": "RE_ENTRY",
+          "appearancesOnChart": 451,
+          "consecutiveAppearancesOnChart": 2,
+          "entryStatus": "MOVED_UP",
           "peakDate": "2017-12-24",
           "entryRank": 71,
           "entryDate": "2017-11-18"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "HU": {
       "entries": [
         {
-          "rank": 130,
+          "rank": 79,
           "name": "All I Want for Christmas Is You",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 9155,
+          "streams": 10376,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 128,
+          "previousRank": 130,
           "peakRank": 1,
-          "appearancesOnChart": 495,
-          "consecutiveAppearancesOnChart": 7,
-          "entryStatus": "MOVED_DOWN",
+          "appearancesOnChart": 496,
+          "consecutiveAppearancesOnChart": 8,
+          "entryStatus": "MOVED_UP",
           "peakDate": "2017-12-03",
           "entryRank": 132,
           "entryDate": "2017-11-09"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "IS": {
       "entries": [
@@ -295,153 +339,21 @@
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 4219,
+          "streams": 5052,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
           "previousRank": 2,
           "peakRank": 1,
-          "appearancesOnChart": 560,
-          "consecutiveAppearancesOnChart": 13,
+          "appearancesOnChart": 561,
+          "consecutiveAppearancesOnChart": 14,
           "entryStatus": "NO_CHANGE",
           "peakDate": "2020-11-29",
           "entryRank": 84,
           "entryDate": "2017-11-01"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "IE": {
-      "entries": [
-        {
-          "rank": 9,
-          "name": "All I Want for Christmas Is You",
-          "artists": [
-            "Mariah Carey"
-          ],
-          "streams": 30888,
-          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 11,
-          "peakRank": 1,
-          "appearancesOnChart": 561,
-          "consecutiveAppearancesOnChart": 13,
-          "entryStatus": "MOVED_UP",
-          "peakDate": "2017-12-08",
-          "entryRank": 112,
-          "entryDate": "2017-11-01"
-        }
-      ],
-      "updatedDate": "2026-11-13"
-    },
-    "LV": {
-      "entries": [
-        {
-          "rank": 197,
-          "name": "All I Want for Christmas Is You",
-          "artists": [
-            "Mariah Carey"
-          ],
-          "streams": 1483,
-          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 178,
-          "peakRank": 1,
-          "appearancesOnChart": 426,
-          "consecutiveAppearancesOnChart": 7,
-          "entryStatus": "MOVED_DOWN",
-          "peakDate": "2017-12-23",
-          "entryRank": 30,
-          "entryDate": "2017-11-28"
-        }
-      ],
-      "updatedDate": "2026-11-13"
-    },
-    "LT": {
-      "entries": [
-        {
-          "rank": 100,
-          "name": "All I Want for Christmas Is You",
-          "artists": [
-            "Mariah Carey"
-          ],
-          "streams": 2595,
-          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 65,
-          "peakRank": 1,
-          "appearancesOnChart": 446,
-          "consecutiveAppearancesOnChart": 13,
-          "entryStatus": "MOVED_DOWN",
-          "peakDate": "2017-12-16",
-          "entryRank": 22,
-          "entryDate": "2017-11-28"
-        }
-      ],
-      "updatedDate": "2026-11-13"
-    },
-    "LU": {
-      "entries": [
-        {
-          "rank": 27,
-          "name": "All I Want for Christmas Is You",
-          "artists": [
-            "Mariah Carey"
-          ],
-          "streams": 1198,
-          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 33,
-          "peakRank": 1,
-          "appearancesOnChart": 381,
-          "consecutiveAppearancesOnChart": 2,
-          "entryStatus": "MOVED_UP",
-          "peakDate": "2017-12-10",
-          "entryRank": 15,
-          "entryDate": "2017-11-30"
-        }
-      ],
-      "updatedDate": "2026-11-13"
-    },
-    "NL": {
-      "entries": [
-        {
-          "rank": 51,
-          "name": "All I Want for Christmas Is You",
-          "artists": [
-            "Mariah Carey"
-          ],
-          "streams": 60942,
-          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 36,
-          "peakRank": 1,
-          "appearancesOnChart": 583,
-          "consecutiveAppearancesOnChart": 14,
-          "entryStatus": "MOVED_DOWN",
-          "peakDate": "2017-12-10",
-          "entryRank": 193,
-          "entryDate": "2017-11-02"
-        }
-      ],
-      "updatedDate": "2026-11-13"
-    },
-    "NZ": {
-      "entries": [
-        {
-          "rank": 112,
-          "name": "All I Want for Christmas Is You",
-          "artists": [
-            "Mariah Carey"
-          ],
-          "streams": 10000,
-          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 192,
-          "peakRank": 1,
-          "appearancesOnChart": 377,
-          "consecutiveAppearancesOnChart": 2,
-          "entryStatus": "MOVED_UP",
-          "peakDate": "2017-12-23",
-          "entryRank": 142,
-          "entryDate": "2017-11-24"
-        }
-      ],
-      "updatedDate": "2026-11-13"
-    },
-    "NO": {
       "entries": [
         {
           "rank": 7,
@@ -449,173 +361,349 @@
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 46510,
+          "streams": 38591,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 4,
+          "previousRank": 9,
           "peakRank": 1,
-          "appearancesOnChart": 583,
-          "consecutiveAppearancesOnChart": 13,
-          "entryStatus": "MOVED_DOWN",
+          "appearancesOnChart": 562,
+          "consecutiveAppearancesOnChart": 14,
+          "entryStatus": "MOVED_UP",
+          "peakDate": "2017-12-08",
+          "entryRank": 112,
+          "entryDate": "2017-11-01"
+        }
+      ],
+      "updatedDate": "2026-11-14"
+    },
+    "IT": {
+      "entries": [
+        {
+          "rank": 115,
+          "name": "All I Want for Christmas Is You",
+          "artists": [
+            "Mariah Carey"
+          ],
+          "streams": 57410,
+          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
+          "previousRank": -1,
+          "peakRank": 1,
+          "appearancesOnChart": 372,
+          "consecutiveAppearancesOnChart": 1,
+          "entryStatus": "RE_ENTRY",
+          "peakDate": "2017-12-24",
+          "entryRank": 128,
+          "entryDate": "2017-11-25"
+        }
+      ],
+      "updatedDate": "2026-11-14"
+    },
+    "JP": {
+      "entries": [
+        {
+          "rank": 185,
+          "name": "All I Want for Christmas Is You",
+          "artists": [
+            "Mariah Carey"
+          ],
+          "streams": 55531,
+          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
+          "previousRank": -1,
+          "peakRank": 1,
+          "appearancesOnChart": 383,
+          "consecutiveAppearancesOnChart": 1,
+          "entryStatus": "RE_ENTRY",
+          "peakDate": "2017-12-23",
+          "entryRank": 196,
+          "entryDate": "2017-11-19"
+        }
+      ],
+      "updatedDate": "2026-11-14"
+    },
+    "LV": {
+      "entries": [
+        {
+          "rank": 65,
+          "name": "All I Want for Christmas Is You",
+          "artists": [
+            "Mariah Carey"
+          ],
+          "streams": 1901,
+          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
+          "previousRank": 197,
+          "peakRank": 1,
+          "appearancesOnChart": 427,
+          "consecutiveAppearancesOnChart": 8,
+          "entryStatus": "MOVED_UP",
+          "peakDate": "2017-12-23",
+          "entryRank": 30,
+          "entryDate": "2017-11-28"
+        }
+      ],
+      "updatedDate": "2026-11-14"
+    },
+    "LT": {
+      "entries": [
+        {
+          "rank": 49,
+          "name": "All I Want for Christmas Is You",
+          "artists": [
+            "Mariah Carey"
+          ],
+          "streams": 3183,
+          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
+          "previousRank": 100,
+          "peakRank": 1,
+          "appearancesOnChart": 447,
+          "consecutiveAppearancesOnChart": 14,
+          "entryStatus": "MOVED_UP",
+          "peakDate": "2017-12-16",
+          "entryRank": 22,
+          "entryDate": "2017-11-28"
+        }
+      ],
+      "updatedDate": "2026-11-14"
+    },
+    "LU": {
+      "entries": [
+        {
+          "rank": 10,
+          "name": "All I Want for Christmas Is You",
+          "artists": [
+            "Mariah Carey"
+          ],
+          "streams": 1708,
+          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
+          "previousRank": 27,
+          "peakRank": 1,
+          "appearancesOnChart": 382,
+          "consecutiveAppearancesOnChart": 3,
+          "entryStatus": "MOVED_UP",
+          "peakDate": "2017-12-10",
+          "entryRank": 15,
+          "entryDate": "2017-11-30"
+        }
+      ],
+      "updatedDate": "2026-11-14"
+    },
+    "NL": {
+      "entries": [
+        {
+          "rank": 38,
+          "name": "All I Want for Christmas Is You",
+          "artists": [
+            "Mariah Carey"
+          ],
+          "streams": 64641,
+          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
+          "previousRank": 51,
+          "peakRank": 1,
+          "appearancesOnChart": 584,
+          "consecutiveAppearancesOnChart": 15,
+          "entryStatus": "MOVED_UP",
+          "peakDate": "2017-12-10",
+          "entryRank": 193,
+          "entryDate": "2017-11-02"
+        }
+      ],
+      "updatedDate": "2026-11-14"
+    },
+    "NZ": {
+      "entries": [
+        {
+          "rank": 70,
+          "name": "All I Want for Christmas Is You",
+          "artists": [
+            "Mariah Carey"
+          ],
+          "streams": 10614,
+          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
+          "previousRank": 112,
+          "peakRank": 1,
+          "appearancesOnChart": 378,
+          "consecutiveAppearancesOnChart": 3,
+          "entryStatus": "MOVED_UP",
+          "peakDate": "2017-12-23",
+          "entryRank": 142,
+          "entryDate": "2017-11-24"
+        }
+      ],
+      "updatedDate": "2026-11-14"
+    },
+    "NO": {
+      "entries": [
+        {
+          "rank": 3,
+          "name": "All I Want for Christmas Is You",
+          "artists": [
+            "Mariah Carey"
+          ],
+          "streams": 46556,
+          "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
+          "previousRank": 7,
+          "peakRank": 1,
+          "appearancesOnChart": 584,
+          "consecutiveAppearancesOnChart": 14,
+          "entryStatus": "MOVED_UP",
           "peakDate": "2017-12-02",
           "entryRank": 166,
           "entryDate": "2017-01-01"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "PL": {
       "entries": [
         {
-          "rank": 124,
+          "rank": 91,
           "name": "All I Want for Christmas Is You",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 46159,
+          "streams": 51147,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 109,
+          "previousRank": 124,
           "peakRank": 1,
-          "appearancesOnChart": 490,
-          "consecutiveAppearancesOnChart": 7,
-          "entryStatus": "MOVED_DOWN",
+          "appearancesOnChart": 491,
+          "consecutiveAppearancesOnChart": 8,
+          "entryStatus": "MOVED_UP",
           "peakDate": "2017-12-06",
           "entryRank": 170,
           "entryDate": "2017-11-10"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "PT": {
       "entries": [
         {
-          "rank": 197,
+          "rank": 86,
           "name": "All I Want for Christmas Is You",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 10551,
+          "streams": 15322,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": -1,
+          "previousRank": 197,
           "peakRank": 1,
-          "appearancesOnChart": 430,
-          "consecutiveAppearancesOnChart": 1,
-          "entryStatus": "RE_ENTRY",
+          "appearancesOnChart": 431,
+          "consecutiveAppearancesOnChart": 2,
+          "entryStatus": "MOVED_UP",
           "peakDate": "2017-12-24",
           "entryRank": 124,
           "entryDate": "2017-01-01"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "RO": {
       "entries": [
         {
-          "rank": 190,
+          "rank": 51,
           "name": "All I Want for Christmas Is You",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 6841,
+          "streams": 10542,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 151,
+          "previousRank": 190,
           "peakRank": 1,
-          "appearancesOnChart": 406,
-          "consecutiveAppearancesOnChart": 7,
-          "entryStatus": "MOVED_DOWN",
+          "appearancesOnChart": 407,
+          "consecutiveAppearancesOnChart": 8,
+          "entryStatus": "MOVED_UP",
           "peakDate": "2018-12-15",
           "entryRank": 160,
           "entryDate": "2018-11-15"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "SG": {
       "entries": [
         {
-          "rank": 191,
+          "rank": 97,
           "name": "All I Want for Christmas Is You",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 7768,
+          "streams": 9009,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": -1,
+          "previousRank": 191,
           "peakRank": 1,
-          "appearancesOnChart": 423,
-          "consecutiveAppearancesOnChart": 1,
-          "entryStatus": "RE_ENTRY",
+          "appearancesOnChart": 424,
+          "consecutiveAppearancesOnChart": 2,
+          "entryStatus": "MOVED_UP",
           "peakDate": "2017-12-24",
           "entryRank": 189,
           "entryDate": "2017-01-02"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "SK": {
       "entries": [
         {
-          "rank": 87,
+          "rank": 55,
           "name": "All I Want for Christmas Is You",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 6023,
+          "streams": 6821,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 93,
+          "previousRank": 87,
           "peakRank": 1,
-          "appearancesOnChart": 490,
-          "consecutiveAppearancesOnChart": 8,
+          "appearancesOnChart": 491,
+          "consecutiveAppearancesOnChart": 9,
           "entryStatus": "MOVED_UP",
           "peakDate": "2017-12-03",
           "entryRank": 43,
           "entryDate": "2017-11-25"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "ZA": {
       "entries": [
         {
-          "rank": 124,
+          "rank": 117,
           "name": "We Belong Together",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 21642,
+          "streams": 23309,
           "uri": "spotify:track:4EI8VuxUuIHKfafU72emqz",
-          "previousRank": 73,
+          "previousRank": 124,
           "peakRank": 20,
-          "appearancesOnChart": 1737,
-          "consecutiveAppearancesOnChart": 317,
-          "entryStatus": "MOVED_DOWN",
+          "appearancesOnChart": 1738,
+          "consecutiveAppearancesOnChart": 318,
+          "entryStatus": "MOVED_UP",
           "peakDate": "2024-08-18",
           "entryRank": 190,
           "entryDate": "2020-05-17"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "KR": {
       "entries": [
         {
-          "rank": 137,
+          "rank": 89,
           "name": "All I Want for Christmas Is You",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 14863,
+          "streams": 18019,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 140,
+          "previousRank": 137,
           "peakRank": 1,
-          "appearancesOnChart": 300,
-          "consecutiveAppearancesOnChart": 8,
+          "appearancesOnChart": 301,
+          "consecutiveAppearancesOnChart": 9,
           "entryStatus": "MOVED_UP",
           "peakDate": "2021-12-24",
           "entryRank": 158,
           "entryDate": "2021-11-02"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "SE": {
       "entries": [
@@ -625,107 +713,107 @@
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 67871,
+          "streams": 67431,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 12,
+          "previousRank": 6,
           "peakRank": 1,
-          "appearancesOnChart": 534,
-          "consecutiveAppearancesOnChart": 13,
-          "entryStatus": "MOVED_UP",
+          "appearancesOnChart": 535,
+          "consecutiveAppearancesOnChart": 14,
+          "entryStatus": "NO_CHANGE",
           "peakDate": "2017-12-03",
           "entryRank": 199,
           "entryDate": "2017-11-05"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "CH": {
       "entries": [
         {
-          "rank": 16,
+          "rank": 7,
           "name": "All I Want for Christmas Is You",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 17022,
+          "streams": 23013,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 14,
+          "previousRank": 16,
           "peakRank": 1,
-          "appearancesOnChart": 497,
-          "consecutiveAppearancesOnChart": 13,
-          "entryStatus": "MOVED_DOWN",
+          "appearancesOnChart": 498,
+          "consecutiveAppearancesOnChart": 14,
+          "entryStatus": "MOVED_UP",
           "peakDate": "2017-12-10",
           "entryRank": 127,
           "entryDate": "2017-11-19"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "AE": {
       "entries": [
         {
-          "rank": 94,
+          "rank": 76,
           "name": "All I Want for Christmas Is You",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 3233,
+          "streams": 3659,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 123,
+          "previousRank": 94,
           "peakRank": 1,
-          "appearancesOnChart": 347,
-          "consecutiveAppearancesOnChart": 8,
+          "appearancesOnChart": 348,
+          "consecutiveAppearancesOnChart": 9,
           "entryStatus": "MOVED_UP",
           "peakDate": "2019-12-24",
           "entryRank": 106,
           "entryDate": "2019-11-28"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "GB": {
       "entries": [
         {
-          "rank": 10,
+          "rank": 7,
           "name": "All I Want for Christmas Is You",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 202100,
+          "streams": 271458,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 15,
+          "previousRank": 10,
           "peakRank": 1,
-          "appearancesOnChart": 544,
-          "consecutiveAppearancesOnChart": 13,
+          "appearancesOnChart": 545,
+          "consecutiveAppearancesOnChart": 14,
           "entryStatus": "MOVED_UP",
           "peakDate": "2017-12-01",
           "entryRank": 167,
           "entryDate": "2017-11-05"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     },
     "US": {
       "entries": [
         {
-          "rank": 13,
+          "rank": 5,
           "name": "All I Want for Christmas Is You",
           "artists": [
             "Mariah Carey"
           ],
-          "streams": 675981,
+          "streams": 850684,
           "uri": "spotify:track:0bYg9bo50gSsH3LtXe2SQn",
-          "previousRank": 16,
+          "previousRank": 13,
           "peakRank": 1,
-          "appearancesOnChart": 523,
-          "consecutiveAppearancesOnChart": 13,
+          "appearancesOnChart": 524,
+          "consecutiveAppearancesOnChart": 14,
           "entryStatus": "MOVED_UP",
           "peakDate": "2017-12-24",
           "entryRank": 184,
           "entryDate": "2017-11-01"
         }
       ],
-      "updatedDate": "2026-11-13"
+      "updatedDate": "2026-11-14"
     }
   }
 }
