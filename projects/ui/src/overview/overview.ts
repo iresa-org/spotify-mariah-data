@@ -2,7 +2,7 @@ import { afterNextRender, Component, computed, ElementRef, inject, OnDestroy, On
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowDown, faArrowUp, faMinus } from '@fortawesome/free-solid-svg-icons';
-import { DailyDataApi, formatCompact, FormatCompactPipe, HistoricDataApi, NumberWithSignPipe, PercentWithSignPipe } from 'ui-shared';
+import { DailyDataApi, formatCompact, FormatCompactPipe, FormatSignedCompactPipe, HistoricDataApi, NumberWithSignPipe, PercentWithSignPipe } from 'ui-shared';
 
 interface ChartItem {
   name: string;
@@ -22,7 +22,7 @@ const MONTH_NAMES: Record<string, string> = {
 
 @Component({
   selector: 'lib-overview',
-  imports: [NgxChartsModule, FormatCompactPipe, PercentWithSignPipe, NumberWithSignPipe, FontAwesomeModule],
+  imports: [NgxChartsModule, FormatCompactPipe, FormatSignedCompactPipe, PercentWithSignPipe, NumberWithSignPipe, FontAwesomeModule],
   templateUrl: './overview.html',
   styleUrl: './overview.scss',
 })
