@@ -2,7 +2,14 @@ export type NumericLike = number | string;
 
 export function toNumber(value: NumericLike): number {
   const numericValue = Number(value);
-  return Number.isFinite(numericValue) ? numericValue : 0;
+  if (Number.isFinite(numericValue)) return numericValue;
+
+  if (typeof value !== 'string') return 0;
+
+  const groupedNumber = value.trim();
+  if (!/^[+-]?\d{1,3}(?:,\d{3})+(?:\.\d+)?$/.test(groupedNumber)) return 0;
+
+  return Number(groupedNumber.replaceAll(',', ''));
 }
 
 export function formatCompact(value: NumericLike): string {
