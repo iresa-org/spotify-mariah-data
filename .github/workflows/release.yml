@@ -1,0 +1,79 @@
+name: Cut release from test_data branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (4-digit year, e.g. 2026)"
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Validate version
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          if ! [[ "$VERSION" =~ ^[0-9]{4}$ ]]; then
+            echo "::error::Version must be a 4-digit year (e.g. 2026), got '$VERSION'."
+            exit 1
+          fi
+
+      - name: Checkout test_data branch
+        uses: actions/checkout@v6
+        with:
+          ref: test_data
+          fetch-depth: 0
+
+      - name: Ensure tag does not already exist
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          if git ls-remote --exit-code --tags origin "refs/tags/$VERSION" >/dev/null; then
+            echo "::error::Tag '$VERSION' already exists."
+            exit 1
+          fi
+
+      - name: Create and push tag
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "$VERSION" -m "Release $VERSION"
+          git push origin "refs/tags/$VERSION"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          gh release create "$VERSION" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "$VERSION" \
+            --verify-tag \
+            --generate-notes
+
+      - name: Use Node.js 24.16
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.16
+
+      - name: Clean up test_data
+        run: npm run cleanup
+
+      - name: Commit and push cleanup
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          git add -A daily records ytd
+          if git diff --cached --quiet; then
+            echo "Nothing to clean up."
+            exit 0
+          fi
+          git commit -m "Clean up data after $VERSION release"
+          git push origin HEAD:test_data
