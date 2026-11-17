@@ -94,7 +94,7 @@ function parseHistoricalMonthlyListeners(latestFiles: FileContentMap[]) {
 /**
  * Result structure
  * 
- * date --- subribers
+ * date --- subscribers
  */
 function parseHistoricalFollowers(latestFiles: FileContentMap[]) {
   const map = new Map<string, string>();

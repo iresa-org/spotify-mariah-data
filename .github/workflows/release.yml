@@ -1,0 +1,104 @@
+name: Cut release from test_data branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (4-digit year, e.g. 2026)"
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Validate version
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          if ! [[ "$VERSION" =~ ^[0-9]{4}$ ]]; then
+            echo "::error::Version must be a 4-digit year (e.g. 2026), got '$VERSION'."
+            exit 1
+          fi
+
+      - name: Checkout test_data branch
+        uses: actions/checkout@v6
+        with:
+          ref: test_data
+          fetch-depth: 0
+
+      - name: Ensure tag does not already exist
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          if git ls-remote --exit-code --tags origin "refs/tags/$VERSION" >/dev/null; then
+            echo "::error::Tag '$VERSION' already exists."
+            exit 1
+          fi
+
+      - name: Create and push tag
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "$VERSION" -m "Release $VERSION"
+          git push origin "refs/tags/$VERSION"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          gh release create "$VERSION" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "$VERSION" \
+            --verify-tag \
+            --generate-notes
+
+      - name: Clean up test_data
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Keep only the latest 90 daily files
+          find daily -maxdepth 1 -type f -regextype posix-extended -regex '.*/[0-9]{4}-[0-9]{2}-[0-9]{2}\.json' \
+            | sort | head -n -90 | xargs -r rm -f --
+          rm -f records/year.json
+          find ytd -maxdepth 1 -type f -delete
+
+      - name: Commit and push cleanup
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          git add -A daily records ytd
+          if git diff --cached --quiet; then
+            echo "Nothing to clean up."
+            exit 0
+          fi
+          git commit -m "Clean up data after $VERSION release"
+          git push origin HEAD:test_data
+
+      - name: Open PR into data branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -eu
+          git fetch origin data
+          if [ "$(git rev-list --count origin/data..HEAD)" -eq 0 ]; then
+            echo "test_data has no new commits for data; no PR needed."
+            exit 0
+          fi
+
+          existing_pr=$(gh pr list --base data --head test_data --state open --json number --jq '.[0].number')
+          if [ -n "$existing_pr" ]; then
+            echo "PR #$existing_pr already exists, skipping."
+            exit 0
+          fi
+
+          gh pr create --base data --head test_data \
+            --title "Clean up data after $VERSION release" \
+            --body "Automated cleanup after cutting release $VERSION: keeps the latest 90 daily files, removes records/year.json and all ytd files."

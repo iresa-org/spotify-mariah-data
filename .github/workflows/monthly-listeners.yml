@@ -1,6 +1,8 @@
 name: Monitor Spotify monthly listeners
 
 on:
+  schedule:
+    - cron: "30 16 * * *"
   workflow_dispatch:
 
 jobs:
