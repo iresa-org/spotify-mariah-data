@@ -48,19 +48,6 @@
     </article>
 
     <article class="kpi-card">
-      <p class="kpi-card__label">Featured Streams</p>
-      <p class="kpi-card__value">{{ counts['featured'].count | formatCompact }}</p>
-      <p class="kpi-card__delta" [class.kpi-card__delta--positive]="+counts['featured'].change >= 0"
-        [class.kpi-card__delta--negative]="+counts['featured'].change < 0">
-        {{ counts['featured'].change | formatSignedCompact }}
-      </p>
-      <p class="kpi-card__delta" [class.kpi-card__delta--positive]="+counts['featured'].percentChange >= 0"
-        [class.kpi-card__delta--negative]="+counts['featured'].percentChange < 0">
-        {{ counts['featured'].percentChange | percentWithSign }}
-      </p>
-    </article>
-
-    <article class="kpi-card">
       <p class="kpi-card__label">Solo Streams</p>
       <p class="kpi-card__value">{{ counts['solo'].count | formatCompact }}</p>
       <p class="kpi-card__delta" [class.kpi-card__delta--positive]="+counts['solo'].change >= 0"
@@ -70,6 +57,19 @@
       <p class="kpi-card__delta" [class.kpi-card__delta--positive]="+counts['solo'].percentChange >= 0"
         [class.kpi-card__delta--negative]="+counts['solo'].percentChange < 0">
         {{ counts['solo'].percentChange | percentWithSign }}
+      </p>
+    </article>
+
+    <article class="kpi-card">
+      <p class="kpi-card__label">Featured Streams</p>
+      <p class="kpi-card__value">{{ counts['featured'].count | formatCompact }}</p>
+      <p class="kpi-card__delta" [class.kpi-card__delta--positive]="+counts['featured'].change >= 0"
+        [class.kpi-card__delta--negative]="+counts['featured'].change < 0">
+        {{ counts['featured'].change | formatSignedCompact }}
+      </p>
+      <p class="kpi-card__delta" [class.kpi-card__delta--positive]="+counts['featured'].percentChange >= 0"
+        [class.kpi-card__delta--negative]="+counts['featured'].percentChange < 0">
+        {{ counts['featured'].percentChange | percentWithSign }}
       </p>
     </article>
 
