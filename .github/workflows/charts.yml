@@ -2,7 +2,8 @@ name: Run Spotify charts
 
 on:
   schedule:
-    - cron: "0 14 * * *"
+    # 13:30 UTC daily (8:30 AM EST). Scheduled runs can still be delayed.
+    - cron: "30 13 * * *"
   workflow_dispatch:
 
 jobs:

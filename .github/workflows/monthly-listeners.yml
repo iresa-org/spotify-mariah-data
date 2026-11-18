@@ -2,6 +2,7 @@ name: Monitor Spotify monthly listeners
 
 on:
   schedule:
+    # 16:30 UTC daily (11:30 AM EST). Scheduled runs can still be delayed.
     - cron: "30 16 * * *"
   workflow_dispatch:
 
