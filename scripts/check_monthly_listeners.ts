@@ -3,6 +3,7 @@ import { getLatestFile } from './utils/file.utils.ts';
 import { fetchMonthlyListeners } from './utils/monthly-listeners.utils.ts';
 
 const CHECK_INTERVAL_MS = 5 * 60 * 1000;
+const EXIT_DELAY_MS = 2 * 60 * 1000;
 const MAX_FETCH_ATTEMPTS = 5;
 const FETCH_RETRY_DELAY_MS = 30 * 1000;
 
@@ -58,6 +59,8 @@ async function main() {
         if (process.env.GITHUB_OUTPUT) {
           await appendFile(process.env.GITHUB_OUTPUT, 'changed=true\n');
         }
+        console.log(`Monthly listener change detected. Exiting in ${EXIT_DELAY_MS / 60000} minutes.`);
+        await new Promise((resolve) => setTimeout(resolve, EXIT_DELAY_MS));
         return;
       }
 
