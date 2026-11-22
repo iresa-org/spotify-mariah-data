@@ -3,7 +3,7 @@ import { getLatestFile } from './utils/file.utils.ts';
 import { fetchMonthlyListeners } from './utils/monthly-listeners.utils.ts';
 
 const CHECK_INTERVAL_MS = 5 * 60 * 1000;
-const EXIT_DELAY_MS = 2 * 60 * 1000;
+const EXIT_DELAY_MS = 5 * 60 * 1000;
 const MAX_FETCH_ATTEMPTS = 5;
 const FETCH_RETRY_DELAY_MS = 30 * 1000;
 
