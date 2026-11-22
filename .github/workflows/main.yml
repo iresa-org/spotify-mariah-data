@@ -32,6 +32,9 @@ jobs:
         # Value already defaults to true, but `persist-credentials` is required to push new commits to the repository.
         persist-credentials: true
 
+    - name: Mark workspace as safe for Git
+      run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
     - name: Use Node.js 24.16
       uses: actions/setup-node@v6
       with:
