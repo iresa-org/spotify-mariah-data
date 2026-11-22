@@ -17,6 +17,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Mark workspace as safe for Git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Use Node.js 24.16
         uses: actions/setup-node@v6
@@ -36,9 +41,6 @@ jobs:
           set -o pipefail
           npm run charts 2>&1 | tee "$RUNNER_TEMP/charts.log"
 
-      - name: Mark workspace as safe for Git
-        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
-
       - name: Commit chart data
         uses: stefanzweifel/git-auto-commit-action@v7
 
@@ -57,6 +59,7 @@ jobs:
           BRANCH_NAME: ${{ github.ref_name }}
         run: |
           set -eu
+            git fetch origin "$BRANCH_NAME"
           if [ "$BRANCH_NAME" = "data" ]; then
             echo "Current branch is data; no sync PR is needed."
             exit 0

@@ -3,6 +3,9 @@
 name: Scan for stats
 
 on:
+  schedule:
+    # 08:30 UTC daily (3:30 AM EST / 4:30 AM EDT). Scheduled runs can still be delayed.
+    - cron: "30 8 * * *"
   workflow_dispatch: # Enables the manual trigger button
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -16,6 +19,7 @@ jobs:
       # Give the default GITHUB_TOKEN write permission to commit and push the
       # added or changed files to the repository.
       contents: write
+      actions: write
       # Required for the `gh pr create` step to open a PR into the data branch.
       pull-requests: write
 
@@ -24,14 +28,11 @@ jobs:
       uses: actions/checkout@v6
       with:
         ref: ${{ github.head_ref }}
+        fetch-depth: 0
         # Value already defaults to true, but `persist-credentials` is required to push new commits to the repository.
         persist-credentials: true
 
-    # Running inside a container image gives files a different owner UID than the
-    # Actions runner expects, so git refuses to operate on the checkout ("dubious
-    # ownership") and later git commands (including git-auto-commit-action) silently
-    # see no changes. Mark the workspace as safe before any other git command runs.
-    - name: Mark workspace as safe for git
+    - name: Mark workspace as safe for Git
       run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
     - name: Use Node.js 24.16
@@ -41,6 +42,10 @@ jobs:
 
     - name: Install
       run: npm ci
+
+    - name: Monitor monthly listeners
+      id: monitor
+      run: node scripts/check_monthly_listeners.ts
 
     - name: Scan Spotify data
       run: node scripts/update_data.ts
@@ -85,6 +90,7 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
+        git fetch origin "${{ github.head_ref || github.ref_name }}"
         gh pr create --base data --head "${{ github.ref_name }}" \
           --title "Sync stats into data" \
           --body-file README.md \

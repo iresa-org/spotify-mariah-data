@@ -1,4 +1,6 @@
 name: Cut release from test_data branch
+env:
+  BRANCH_NAME: test_data
 
 on:
   workflow_dispatch:
@@ -27,8 +29,14 @@ jobs:
       - name: Checkout test_data branch
         uses: actions/checkout@v6
         with:
-          ref: test_data
+          ref: ${{ env.BRANCH_NAME }}
           fetch-depth: 0
+
+      - name: Pull latest test_data
+        run: |
+          git fetch origin "$BRANCH_NAME"
+          git checkout "$BRANCH_NAME"
+          git pull --ff-only origin "$BRANCH_NAME"
 
       - name: Ensure tag does not already exist
         env:
@@ -87,6 +95,7 @@ jobs:
           VERSION: ${{ inputs.version }}
         run: |
           set -eu
+          git fetch origin "$BRANCH_NAME"
           git fetch origin data
           if [ "$(git rev-list --count origin/data..HEAD)" -eq 0 ]; then
             echo "test_data has no new commits for data; no PR needed."
