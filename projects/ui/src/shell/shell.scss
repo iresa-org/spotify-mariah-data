@@ -362,6 +362,25 @@
 }
 
 @media (min-width: 1025px) {
+  :host {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+  }
+
+  .dashboard {
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  .dashboard__sidebar {
+    align-self: start;
+    height: 100vh;
+    height: 100dvh;
+    position: sticky;
+    top: 0;
+  }
+
   .dashboard--sidebar-minimized {
     grid-template-columns: 96px minmax(0, 1fr);
   }
