@@ -27,32 +27,26 @@
   background: theme.$theme-accent;
   border: 0;
   border-radius: 999px;
-  bottom: 20px;
   box-shadow: 0 10px 24px color-mix(in srgb, theme.$theme-text 20%, transparent);
   color: theme.$theme-accent-soft;
   cursor: pointer;
   display: inline-flex;
   font: inherit;
-  font-size: 0.85rem;
+  font-size: 1.35rem;
   font-weight: 700;
-  gap: 8px;
+  height: 44px;
   justify-content: center;
-  padding: 10px 16px;
+  left: 50%;
+  padding: 0;
   position: fixed;
-  right: 20px;
+  top: calc(12px + env(safe-area-inset-top, 0px));
+  transform: translateX(-50%);
+  width: 44px;
   z-index: 20;
 
   &:hover,
   &:focus-visible {
     filter: brightness(1.03);
     outline: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .scroll-top-btn {
-    bottom: 16px;
-    right: 16px;
-    padding: 10px 14px;
   }
 }

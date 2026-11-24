@@ -135,17 +135,14 @@
 
 @media (max-width: 1024px) {
   .ad-banner {
-    position: static;
-    inset: auto;
-    bottom: auto;
-    left: auto;
-    right: auto;
+    position: fixed;
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
     display: flex;
     justify-content: center;
-    padding: 0 14px 0;
+    padding: 0 14px;
     margin-top: 0;
-    pointer-events: auto;
-    z-index: 1;
+    pointer-events: none;
+    z-index: 1000;
   }
 
   .ad-banner__inner {
@@ -158,7 +155,7 @@
 
 @media (max-width: 640px) {
   .ad-banner {
-    padding: 0 10px 12px;
+    padding: 0 10px;
   }
 
   .ad-banner__inner {

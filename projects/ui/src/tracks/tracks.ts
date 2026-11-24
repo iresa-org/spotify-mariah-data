@@ -1,6 +1,6 @@
 import { DecimalPipe, DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { Component, computed, DestroyRef, effect, ElementRef, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
@@ -52,6 +52,9 @@ export class Tracks implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly dialog = inject(Dialog);
+  private readonly masterDetail = viewChild.required('masterDetail', {
+    read: ElementRef<HTMLElement>,
+  });
 
   private dialogRef: DialogRef<unknown, TrackDetailDialog> | null = null;
 
@@ -154,7 +157,10 @@ export class Tracks implements OnInit {
         this.dialogRef = null;
         this.selectedTrack.set(null);
       });
+      return;
     }
+
+    this.scrollMasterDetailToTop();
   }
 
   closeClicked(): void {
@@ -240,6 +246,42 @@ export class Tracks implements OnInit {
       container.scrollTo({ top: 0, behavior: 'smooth' });
     }
     this.document.defaultView?.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  private scrollMasterDetailToTop(): void {
+    requestAnimationFrame(() => {
+      const masterDetailEl = this.masterDetail().nativeElement;
+      const scrollContainer = this.findScrollContainer(masterDetailEl);
+
+      masterDetailEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scrollContainer?.scrollTo({ top: 0, behavior: 'smooth' });
+
+      masterDetailEl.scrollTop = 0;
+      for (const panel of masterDetailEl.querySelectorAll('.master, .detail')) {
+        if (panel instanceof HTMLElement) {
+          panel.scrollTop = 0;
+        }
+      }
+    });
+  }
+
+  private findScrollContainer(start: HTMLElement): HTMLElement | null {
+    let current = start.parentElement;
+
+    while (current) {
+      const style = getComputedStyle(current);
+      const canScrollY =
+        (style.overflowY === 'auto' || style.overflowY === 'scroll') &&
+        current.scrollHeight > current.clientHeight;
+
+      if (canScrollY) {
+        return current;
+      }
+
+      current = current.parentElement;
+    }
+
+    return this.document.scrollingElement instanceof HTMLElement ? this.document.scrollingElement : null;
   }
 
   private closeDialog(): void {

@@ -2,6 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
+import { vi } from 'vitest';
 import { DailyDataApi, HistoricDataApi } from 'ui-shared';
 import { Tracks } from './tracks';
 
@@ -54,8 +55,8 @@ describe('Tracks', () => {
   });
 
   it('should recognize all-time and year records for the latest update day', () => {
-    expect(component.hasRecord('track-1', 'allTime')).toBeTrue();
-    expect(component.hasRecord('track-1', 'ytd')).toBeTrue();
+    expect(component.hasRecord('track-1', 'allTime')).toBe(true);
+    expect(component.hasRecord('track-1', 'ytd')).toBe(true);
   });
 
   it('cycles a desktop column through ascending, descending, and default sorting', () => {
@@ -70,5 +71,45 @@ describe('Tracks', () => {
     component.sortBy('name');
     expect(component.list().map(track => track.uid)).toEqual(['track-2', 'track-1']);
     expect(component.getAriaSort('name')).toBe('none');
+  });
+
+  it('scrolls the split view to the top when selecting a desktop track', () => {
+    const masterDetail = fixture.nativeElement.querySelector('lib-master-detail') as HTMLElement;
+    const scrollIntoView = vi.fn();
+    masterDetail.scrollIntoView = scrollIntoView;
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
+      callback(0);
+      return 0;
+    });
+
+    try {
+      const track = component.list()[0];
+      if (!track) {
+        throw new Error('Expected a track in the test fixture');
+      }
+
+      component.onTrackSelected(track);
+      expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it('uses compact stream counts in the master pane when a track is selected', () => {
+    const track = component.list()[0];
+    if (!track) {
+      throw new Error('Expected a track in the test fixture');
+    }
+
+    track.playcount = 1_234_567;
+    track.change = 1_234;
+    component.selectedTrack.set(track);
+    fixture.detectChanges();
+
+    const row = [...fixture.nativeElement.querySelectorAll<HTMLTableRowElement>('tbody tr')].find(item =>
+      item.querySelector('.track-name')?.textContent?.trim() === track.name
+    );
+    expect(row?.querySelector('[data-label="Total"] .metric__value')?.textContent?.trim()).toBe('1.23M');
+    expect(row?.querySelector('[data-label="Daily"] .metric__value')?.textContent?.trim()).toBe('1.23K');
   });
 });
