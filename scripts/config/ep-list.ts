@@ -41,6 +41,7 @@ export const SELECTED_EPS = [
   'spotify:album:3nTlbpOjVbLnlRrBtESViC', // I'm That Chick - EP
   'spotify:album:0gCjpZYKA57HSPO3iUmNx3', // I Want To Know What Love Is (The Remixes)
   'spotify:album:2a5mf1uy3zxPzpMDvS9v85', // All I Want For Christmas Is You (Mariah's New Dance Mixes 2009)
+  'spotify:album:3gSWO2LRaNKZGU6MvDCyYU', // All I Want For Christmas Is You EP
   'spotify:album:0kEiliXOTWicMJonpQopbx', // Oh Santa! The Remixes
   'spotify:album:3GuMPsQbqKTv8aCSNVFxBF', // Auld Lang Syne (The New Year's Anthem) The Remixes
   'spotify:album:00IKlZAuwGQLqBJ1jjDSFC', // Triumphant (The Remixes)
